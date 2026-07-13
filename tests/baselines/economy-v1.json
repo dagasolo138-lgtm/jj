@@ -1,0 +1,583 @@
+{
+  "schemaVersion": 1,
+  "engine": "legacy-seasonal-economy",
+  "turnsPerScenario": 40,
+  "notes": "Captured before the Autarky2 agent-economy migration. Update only after an intentional balance change.",
+  "scenarios": [
+    {
+      "id": "balanced_agriculture",
+      "seed": 1831565814,
+      "turns": 40,
+      "ending": {
+        "denarii": 827,
+        "population": 31,
+        "food": 231,
+        "garrison": 5,
+        "buildingCount": 5,
+        "inventory": {
+          "ale": 0,
+          "clay": 0,
+          "cloth": 0,
+          "coal": 0,
+          "fish": 123,
+          "flour": 0,
+          "grain": 0,
+          "herbs": 0,
+          "honey": 0,
+          "iron": 0,
+          "leather": 0,
+          "livestock": 108,
+          "steel": 0,
+          "stone": 0,
+          "timber": 0,
+          "wood": 0,
+          "wool": 34
+        }
+      },
+      "metrics": {
+        "minDenarii": 467,
+        "minPopulation": 20,
+        "minFood": 147,
+        "maxPopulation": 31,
+        "maxFood": 273,
+        "bankruptTurns": 0,
+        "longestBankruptStreak": 0,
+        "firstBankruptcyTurn": null,
+        "firstPopulationZeroTurn": null,
+        "survived": true
+      },
+      "yearlyCheckpoints": [
+        {
+          "year": 1,
+          "denarii": 514,
+          "population": 21,
+          "food": 183,
+          "garrison": 5
+        },
+        {
+          "year": 2,
+          "denarii": 527,
+          "population": 21,
+          "food": 214,
+          "garrison": 5
+        },
+        {
+          "year": 3,
+          "denarii": 540,
+          "population": 22,
+          "food": 245,
+          "garrison": 5
+        },
+        {
+          "year": 4,
+          "denarii": 564,
+          "population": 24,
+          "food": 256,
+          "garrison": 5
+        },
+        {
+          "year": 5,
+          "denarii": 594,
+          "population": 25,
+          "food": 253,
+          "garrison": 5
+        },
+        {
+          "year": 6,
+          "denarii": 633,
+          "population": 27,
+          "food": 249,
+          "garrison": 5
+        },
+        {
+          "year": 7,
+          "denarii": 674,
+          "population": 28,
+          "food": 245,
+          "garrison": 5
+        },
+        {
+          "year": 8,
+          "denarii": 721,
+          "population": 29,
+          "food": 242,
+          "garrison": 5
+        },
+        {
+          "year": 9,
+          "denarii": 769,
+          "population": 30,
+          "food": 239,
+          "garrison": 5
+        },
+        {
+          "year": 10,
+          "denarii": 827,
+          "population": 31,
+          "food": 231,
+          "garrison": 5
+        }
+      ]
+    },
+    {
+      "id": "crushing_tax",
+      "seed": 1831565815,
+      "turns": 40,
+      "ending": {
+        "denarii": 797,
+        "population": 2,
+        "food": 147,
+        "garrison": 5,
+        "buildingCount": 3,
+        "inventory": {
+          "ale": 0,
+          "clay": 0,
+          "cloth": 0,
+          "coal": 0,
+          "fish": 8,
+          "flour": 0,
+          "grain": 2,
+          "herbs": 0,
+          "honey": 0,
+          "iron": 0,
+          "leather": 0,
+          "livestock": 137,
+          "steel": 0,
+          "stone": 0,
+          "timber": 0,
+          "wood": 0,
+          "wool": 50
+        }
+      },
+      "metrics": {
+        "minDenarii": 488,
+        "minPopulation": 1,
+        "minFood": 80,
+        "maxPopulation": 20,
+        "maxFood": 173,
+        "bankruptTurns": 0,
+        "longestBankruptStreak": 0,
+        "firstBankruptcyTurn": null,
+        "firstPopulationZeroTurn": null,
+        "survived": true
+      },
+      "yearlyCheckpoints": [
+        {
+          "year": 1,
+          "denarii": 633,
+          "population": 16,
+          "food": 157,
+          "garrison": 5
+        },
+        {
+          "year": 2,
+          "denarii": 730,
+          "population": 12,
+          "food": 133,
+          "garrison": 5
+        },
+        {
+          "year": 3,
+          "denarii": 796,
+          "population": 10,
+          "food": 108,
+          "garrison": 5
+        },
+        {
+          "year": 4,
+          "denarii": 833,
+          "population": 7,
+          "food": 93,
+          "garrison": 5
+        },
+        {
+          "year": 5,
+          "denarii": 858,
+          "population": 7,
+          "food": 87,
+          "garrison": 5
+        },
+        {
+          "year": 6,
+          "denarii": 874,
+          "population": 5,
+          "food": 87,
+          "garrison": 5
+        },
+        {
+          "year": 7,
+          "denarii": 869,
+          "population": 4,
+          "food": 94,
+          "garrison": 5
+        },
+        {
+          "year": 8,
+          "denarii": 855,
+          "population": 2,
+          "food": 108,
+          "garrison": 5
+        },
+        {
+          "year": 9,
+          "denarii": 830,
+          "population": 2,
+          "food": 128,
+          "garrison": 5
+        },
+        {
+          "year": 10,
+          "denarii": 797,
+          "population": 2,
+          "food": 147,
+          "garrison": 5
+        }
+      ]
+    },
+    {
+      "id": "military_overload",
+      "seed": 1831565816,
+      "turns": 40,
+      "ending": {
+        "denarii": 91,
+        "population": 10,
+        "food": 2,
+        "garrison": 3,
+        "buildingCount": 3,
+        "inventory": {
+          "ale": 0,
+          "clay": 0,
+          "cloth": 0,
+          "coal": 0,
+          "fish": 0,
+          "flour": 0,
+          "grain": 0,
+          "herbs": 0,
+          "honey": 0,
+          "iron": 0,
+          "leather": 0,
+          "livestock": 2,
+          "steel": 0,
+          "stone": 0,
+          "timber": 0,
+          "wood": 0,
+          "wool": 50
+        }
+      },
+      "metrics": {
+        "minDenarii": 59,
+        "minPopulation": 4,
+        "minFood": 0,
+        "maxPopulation": 20,
+        "maxFood": 140,
+        "bankruptTurns": 0,
+        "longestBankruptStreak": 0,
+        "firstBankruptcyTurn": null,
+        "firstPopulationZeroTurn": null,
+        "survived": true
+      },
+      "yearlyCheckpoints": [
+        {
+          "year": 1,
+          "denarii": 217,
+          "population": 20,
+          "food": 54,
+          "garrison": 25
+        },
+        {
+          "year": 2,
+          "denarii": 191,
+          "population": 15,
+          "food": 0,
+          "garrison": 18
+        },
+        {
+          "year": 3,
+          "denarii": 139,
+          "population": 4,
+          "food": 0,
+          "garrison": 6
+        },
+        {
+          "year": 4,
+          "denarii": 116,
+          "population": 7,
+          "food": 8,
+          "garrison": 4
+        },
+        {
+          "year": 5,
+          "denarii": 108,
+          "population": 8,
+          "food": 6,
+          "garrison": 4
+        },
+        {
+          "year": 6,
+          "denarii": 101,
+          "population": 8,
+          "food": 3,
+          "garrison": 4
+        },
+        {
+          "year": 7,
+          "denarii": 85,
+          "population": 7,
+          "food": 10,
+          "garrison": 3
+        },
+        {
+          "year": 8,
+          "denarii": 75,
+          "population": 8,
+          "food": 12,
+          "garrison": 3
+        },
+        {
+          "year": 9,
+          "denarii": 82,
+          "population": 10,
+          "food": 9,
+          "garrison": 3
+        },
+        {
+          "year": 10,
+          "denarii": 91,
+          "population": 10,
+          "food": 2,
+          "garrison": 3
+        }
+      ]
+    },
+    {
+      "id": "food_shortage",
+      "seed": 1831565817,
+      "turns": 40,
+      "ending": {
+        "denarii": 625,
+        "population": 2,
+        "food": 0,
+        "garrison": 0,
+        "buildingCount": 0,
+        "inventory": {
+          "ale": 0,
+          "clay": 0,
+          "cloth": 0,
+          "coal": 0,
+          "fish": 0,
+          "flour": 0,
+          "grain": 0,
+          "herbs": 0,
+          "honey": 0,
+          "iron": 0,
+          "leather": 0,
+          "livestock": 0,
+          "steel": 0,
+          "stone": 0,
+          "timber": 0,
+          "wood": 0,
+          "wool": 0
+        }
+      },
+      "metrics": {
+        "minDenarii": 180,
+        "minPopulation": 1,
+        "minFood": 0,
+        "maxPopulation": 25,
+        "maxFood": 5,
+        "bankruptTurns": 0,
+        "longestBankruptStreak": 0,
+        "firstBankruptcyTurn": null,
+        "firstPopulationZeroTurn": null,
+        "survived": true
+      },
+      "yearlyCheckpoints": [
+        {
+          "year": 1,
+          "denarii": 278,
+          "population": 5,
+          "food": 0,
+          "garrison": 0
+        },
+        {
+          "year": 2,
+          "denarii": 315,
+          "population": 2,
+          "food": 0,
+          "garrison": 0
+        },
+        {
+          "year": 3,
+          "denarii": 356,
+          "population": 1,
+          "food": 0,
+          "garrison": 0
+        },
+        {
+          "year": 4,
+          "denarii": 392,
+          "population": 2,
+          "food": 0,
+          "garrison": 0
+        },
+        {
+          "year": 5,
+          "denarii": 427,
+          "population": 2,
+          "food": 2,
+          "garrison": 0
+        },
+        {
+          "year": 6,
+          "denarii": 464,
+          "population": 1,
+          "food": 0,
+          "garrison": 0
+        },
+        {
+          "year": 7,
+          "denarii": 505,
+          "population": 1,
+          "food": 1,
+          "garrison": 0
+        },
+        {
+          "year": 8,
+          "denarii": 547,
+          "population": 1,
+          "food": 0,
+          "garrison": 0
+        },
+        {
+          "year": 9,
+          "denarii": 583,
+          "population": 1,
+          "food": 0,
+          "garrison": 0
+        },
+        {
+          "year": 10,
+          "denarii": 625,
+          "population": 2,
+          "food": 0,
+          "garrison": 0
+        }
+      ]
+    },
+    {
+      "id": "damaged_estate",
+      "seed": 1831565818,
+      "turns": 40,
+      "ending": {
+        "denarii": 192,
+        "population": 6,
+        "food": 1,
+        "garrison": 0,
+        "buildingCount": 4,
+        "inventory": {
+          "ale": 0,
+          "clay": 0,
+          "cloth": 0,
+          "coal": 0,
+          "fish": 1,
+          "flour": 0,
+          "grain": 0,
+          "herbs": 0,
+          "honey": 0,
+          "iron": 0,
+          "leather": 0,
+          "livestock": 0,
+          "steel": 0,
+          "stone": 0,
+          "timber": 0,
+          "wood": 0,
+          "wool": 0
+        }
+      },
+      "metrics": {
+        "minDenarii": 192,
+        "minPopulation": 3,
+        "minFood": 0,
+        "maxPopulation": 22,
+        "maxFood": 115,
+        "bankruptTurns": 0,
+        "longestBankruptStreak": 0,
+        "firstBankruptcyTurn": null,
+        "firstPopulationZeroTurn": null,
+        "survived": true
+      },
+      "yearlyCheckpoints": [
+        {
+          "year": 1,
+          "denarii": 431,
+          "population": 22,
+          "food": 68,
+          "garrison": 5
+        },
+        {
+          "year": 2,
+          "denarii": 468,
+          "population": 22,
+          "food": 16,
+          "garrison": 5
+        },
+        {
+          "year": 3,
+          "denarii": 459,
+          "population": 8,
+          "food": 0,
+          "garrison": 1
+        },
+        {
+          "year": 4,
+          "denarii": 420,
+          "population": 5,
+          "food": 0,
+          "garrison": 0
+        },
+        {
+          "year": 5,
+          "denarii": 374,
+          "population": 5,
+          "food": 6,
+          "garrison": 0
+        },
+        {
+          "year": 6,
+          "denarii": 344,
+          "population": 4,
+          "food": 0,
+          "garrison": 0
+        },
+        {
+          "year": 7,
+          "denarii": 298,
+          "population": 5,
+          "food": 6,
+          "garrison": 0
+        },
+        {
+          "year": 8,
+          "denarii": 273,
+          "population": 5,
+          "food": 0,
+          "garrison": 0
+        },
+        {
+          "year": 9,
+          "denarii": 227,
+          "population": 5,
+          "food": 6,
+          "garrison": 0
+        },
+        {
+          "year": 10,
+          "denarii": 192,
+          "population": 6,
+          "food": 1,
+          "garrison": 0
+        }
+      ]
+    }
+  ]
+}
