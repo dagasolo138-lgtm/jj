@@ -1,0 +1,15 @@
+{
+  "timestamp": "2026-04-17T17:22:45.907Z",
+  "durationMs": 62541,
+  "totalFindings": 3,
+  "totalBugs": 1,
+  "byPersona": {
+    "Noob": 1,
+    "Goat": 1,
+    "Avg": 1
+  },
+  "bySeverity": {
+    "pageerror": 0,
+    "console": 0
+  }
+}

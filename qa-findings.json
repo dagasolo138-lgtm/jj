@@ -1,0 +1,35 @@
+[
+  {
+    "ts": "2026-04-17T17:22:14.700Z",
+    "persona": "Noob",
+    "errors": [],
+    "bugs": []
+  },
+  {
+    "ts": "2026-04-17T17:22:15.503Z",
+    "persona": "Goat",
+    "errors": [],
+    "bugs": [
+      {
+        "persona": "Goat",
+        "turn": 7,
+        "note": "ended early",
+        "reason": "title_screen",
+        "iteration": 2,
+        "innerText": "♫\n♛\nThe Lord's Ledger\n\nA Medieval Economic Simulation\n\n◆\n\nThe old lord has passed, and the estate is now yours. Manage your treasury, keep your people fed, defend your borders, and honor the Church — for ten years, through spring planting and winter storms, through raids and feasts and the quiet decisions that shape a reign.\n\nEvery choice has consequences. There are no right answers — only trade-o",
+        "buttonLabels": [
+          "Mute music",
+          "❁\nEASY\nMore resources, gentler penalties",
+          "⚖\nNORMAL\nThe standard experience",
+          "☠\nHARD\nFewer resources, harsher realm"
+        ]
+      }
+    ]
+  },
+  {
+    "ts": "2026-04-17T17:22:45.730Z",
+    "persona": "Avg",
+    "errors": [],
+    "bugs": []
+  }
+]

@@ -1,0 +1,1139 @@
+@import "tailwindcss";
+
+@theme {
+  --font-heading: "Cinzel", serif;
+  --font-display: "Cinzel Decorative", "Cinzel", serif;
+  --font-body: "Crimson Text", serif;
+
+  /* Backgrounds — dark, layered */
+  --color-bg-deepest: #0f0d0a;
+  --color-bg-dark: #1a1610;
+  --color-bg-card: #231e16;
+  --color-bg-card-hover: #2d2619;
+  --color-bg-elevated: #2a2318;
+
+  /* Royal accents */
+  --color-royal-red: #8b1a1a;
+  --color-royal-red-bright: #c62828;
+  --color-royal-blue: #1a3a6b;
+  --color-royal-blue-bright: #2962a8;
+
+  /* Gold/Tan */
+  --color-gold: #c4a24a;
+  --color-gold-bright: #e8c44a;
+  --color-gold-dim: #8a7a3a;
+  --color-tan: #a89070;
+  --color-tan-light: #c8b090;
+  --color-tan-dark: #6a5a42;
+
+  /* Status */
+  --color-food-green: #4a8a3a;
+  --color-danger-red: #c62828;
+  --color-faith-purple: #6a4a8a;
+
+  /* Rarity */
+  --color-rarity-common: #8a7a5a;
+  --color-rarity-uncommon: #2a7a4a;
+  --color-rarity-rare: #2a4a8a;
+  --color-rarity-legendary: #8a5a1a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-body);
+  background-color: var(--color-bg-deepest);
+  color: var(--color-tan-light);
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+}
+
+/* Focus-visible outlines for keyboard navigation */
+*:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+button:focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 2px;
+}
+
+.tab-button:focus-visible {
+  outline: 2px solid #c4a24a;
+  outline-offset: -2px;
+}
+
+/* Critical resource pulse */
+@keyframes critical-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(198, 40, 40, 0.15); }
+  50% { box-shadow: 0 0 16px rgba(198, 40, 40, 0.35); }
+}
+
+.critical-pulse {
+  animation: critical-pulse 3s ease-in-out infinite;
+}
+
+/* Gold border glow for simulate button */
+@keyframes gold-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(196, 162, 74, 0.2), inset 0 0 8px rgba(196, 162, 74, 0.05); }
+  50% { box-shadow: 0 0 20px rgba(196, 162, 74, 0.4), inset 0 0 12px rgba(196, 162, 74, 0.1); }
+}
+
+.gold-glow {
+  animation: gold-glow 3s ease-in-out infinite;
+}
+
+/* Tab content fade-in */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.tab-fade-in {
+  animation: fade-in 200ms ease;
+}
+
+/* Card stagger animation */
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Turn flash border */
+@keyframes turn-flash {
+  0% { box-shadow: inset 0 0 0 3px rgba(232, 196, 74, 0.6); }
+  100% { box-shadow: inset 0 0 0 3px rgba(232, 196, 74, 0); }
+}
+
+/* Button pressed feedback */
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* Build button click flash */
+@keyframes btn-flash {
+  0% { background-color: rgba(255, 255, 255, 0.3); }
+  100% { background-color: transparent; }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-deepest);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-tan-dark);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gold-dim);
+}
+
+/* Decorative rule with diamond center */
+.decorative-rule {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.decorative-rule::before,
+.decorative-rule::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-gold-dim);
+}
+
+/* ============================================================
+   TAVERN STYLES
+   ============================================================ */
+
+/* Tavern enter/exit overlay transition */
+@keyframes tavern-enter {
+  0% { opacity: 0; }
+  40% { opacity: 1; background-color: rgba(10, 8, 4, 1); }
+  100% { opacity: 1; background-color: transparent; }
+}
+
+.tavern-enter {
+  animation: tavern-enter 600ms ease forwards;
+}
+
+/* Tavern grain texture overlay */
+.tavern-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* Tavern card hover glow */
+.tavern-card {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.tavern-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px rgba(196, 162, 74, 0.25);
+}
+
+/* Knight's Gambit card flip */
+@keyframes gambit-flip {
+  0% { transform: rotateY(180deg); }
+  100% { transform: rotateY(0deg); }
+}
+
+.gambit-flip {
+  animation: gambit-flip 500ms ease forwards;
+}
+
+/* Gold particle burst for win */
+@keyframes gold-burst {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(var(--tx), var(--ty)) scale(0.3); }
+}
+
+/* Screen shake for loss */
+@keyframes tavern-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+
+.tavern-shake {
+  animation: tavern-shake 300ms ease;
+}
+
+/* Red vignette for loss */
+@keyframes red-vignette {
+  0% { opacity: 0.5; }
+  100% { opacity: 0; }
+}
+
+/* Float up text for rats game */
+@keyframes float-up {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-20px); }
+}
+
+.float-up {
+  animation: float-up 800ms ease forwards;
+}
+
+/* Rat appear/disappear */
+@keyframes rat-appear {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}
+
+.rat-appear {
+  animation: rat-appear 150ms ease forwards;
+}
+
+/* Cell flash for rat catch */
+@keyframes cell-flash-green {
+  0% { background-color: rgba(74, 138, 58, 0.5); }
+  100% { background-color: transparent; }
+}
+
+@keyframes cell-flash-red {
+  0% { background-color: rgba(198, 40, 40, 0.4); }
+  100% { background-color: transparent; }
+}
+
+/* Win amount float */
+@keyframes win-float {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-30px); }
+}
+
+.win-float {
+  animation: win-float 1200ms ease forwards;
+}
+
+/* Bard's Corner — quill-scratch text reveal */
+@keyframes quill-appear {
+  0% { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.quill-appear {
+  animation: quill-appear 400ms ease forwards;
+}
+
+/* ============================================================
+   GREAT HALL STYLES
+   ============================================================ */
+
+/* Stone wall texture — repeating mortar lines over stone gradient */
+.hall-wall {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 48px,
+      #1a1714 48px,
+      #1a1714 52px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 96px,
+      #1a1714 96px,
+      #1a1714 100px
+    ),
+    linear-gradient(
+      180deg,
+      #2a2520 0%,
+      #3d3630 50%,
+      #2a2520 100%
+    );
+}
+
+/* Torch flame flicker */
+@keyframes torchFlicker {
+  0%, 100% { opacity: 0.85; filter: brightness(1); }
+  15% { opacity: 0.92; filter: brightness(1.1); }
+  30% { opacity: 0.78; filter: brightness(0.95); }
+  50% { opacity: 0.95; filter: brightness(1.15); }
+  70% { opacity: 0.82; filter: brightness(0.9); }
+  85% { opacity: 0.90; filter: brightness(1.05); }
+}
+
+.torch-glow {
+  animation: torchFlicker 3s ease-in-out infinite;
+}
+
+/* NPC portrait mood animations */
+@keyframes portrait-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-1px); }
+  75% { transform: translateX(1px); }
+}
+
+@keyframes portrait-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* ============================================================
+   MARKET SQUARE STYLES
+   ============================================================ */
+
+/* Market entry transition (from map) */
+@keyframes market-enter {
+  0% { opacity: 0; }
+  40% { opacity: 1; background-color: rgba(10, 8, 4, 1); }
+  100% { opacity: 1; background-color: transparent; }
+}
+
+.market-enter {
+  animation: market-enter 500ms ease forwards;
+}
+
+/* Deal completed flash */
+@keyframes deal-flash {
+  0% { box-shadow: inset 0 0 0 3px rgba(74, 138, 58, 0.6); }
+  100% { box-shadow: inset 0 0 0 3px rgba(74, 138, 58, 0); }
+}
+
+.deal-flash {
+  animation: deal-flash 600ms ease forwards;
+}
+
+/* Walk away dim */
+@keyframes walk-away-dim {
+  0% { opacity: 1; }
+  50% { opacity: 0.6; }
+  100% { opacity: 1; }
+}
+
+.walk-away-dim {
+  animation: walk-away-dim 500ms ease forwards;
+}
+
+/* Haggle slider thumb glow */
+@keyframes haggle-pulse {
+  0%, 100% { box-shadow: 0 0 4px rgba(232, 196, 74, 0.3); }
+  50% { box-shadow: 0 0 12px rgba(232, 196, 74, 0.6); }
+}
+
+/* Merchant card hover effect (reuses tavern pattern) */
+.merchant-card {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.merchant-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px rgba(196, 162, 74, 0.25);
+}
+
+/* Coin animation for completed deals */
+@keyframes coin-drop {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-20px) scale(0.5); }
+}
+
+.coin-drop {
+  animation: coin-drop 800ms ease forwards;
+}
+
+/* Foreign trader slide in */
+@keyframes trader-arrive {
+  0% { opacity: 0; transform: translateX(20px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+.trader-arrive {
+  animation: trader-arrive 300ms ease forwards;
+}
+
+/* Market event banner pulse */
+@keyframes market-banner-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(196, 162, 74, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(196, 162, 74, 0.4); }
+}
+
+.market-banner-pulse {
+  animation: market-banner-pulse 3s ease-in-out infinite;
+}
+
+/* Haggle slider custom styling */
+input[type="range"].haggle-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(to right, #c62828, #c4a24a, #4a8a3a);
+  border-radius: 3px;
+  outline: none;
+}
+
+input[type="range"].haggle-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e8c44a;
+  border: 2px solid #8a7a3a;
+  cursor: pointer;
+  animation: haggle-pulse 2s ease-in-out infinite;
+}
+
+input[type="range"].haggle-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #e8c44a;
+  border: 2px solid #8a7a3a;
+  cursor: pointer;
+}
+
+/* Typewriter text reveal for merchant dialogue */
+@keyframes typewriter-cursor {
+  0%, 100% { border-right-color: #c4a24a; }
+  50% { border-right-color: transparent; }
+}
+
+/* ============================================================
+   GREAT HALL DISPUTE STYLES
+   ============================================================ */
+
+/* Typewriter cursor blink */
+@keyframes dispute-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.dispute-cursor {
+  animation: dispute-cursor-blink 800ms step-end infinite;
+  color: #d4a44c;
+}
+
+/* Steward whisper slide-in */
+@keyframes steward-slide {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.steward-slide {
+  animation: steward-slide 500ms ease forwards;
+}
+
+/* Herald text fade */
+@keyframes herald-fade {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.herald-fade {
+  animation: herald-fade 800ms ease forwards;
+}
+
+/* Decree card appear */
+@keyframes decree-appear {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.decree-appear {
+  animation: decree-appear 500ms ease forwards;
+}
+
+/* Wax seal stamp */
+@keyframes seal-stamp {
+  0% { transform: scale(2) rotate(-15deg); opacity: 0; }
+  60% { transform: scale(1) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.seal-stamp {
+  animation: seal-stamp 600ms ease forwards;
+}
+
+/* Decree desk seal stamp — bounce from nothing */
+@keyframes decree-seal-stamp {
+  0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+  50% { transform: scale(1.15) rotate(5deg); opacity: 1; }
+  70% { transform: scale(0.95) rotate(-2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.decree-seal-stamp {
+  animation: decree-seal-stamp 400ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Evidence reveal */
+@keyframes evidence-reveal {
+  from { opacity: 0; max-height: 0; }
+  to { opacity: 1; max-height: 200px; }
+}
+
+.evidence-reveal {
+  animation: evidence-reveal 400ms ease forwards;
+  overflow: hidden;
+}
+
+/* Ruling card hover */
+.ruling-card {
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.ruling-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px rgba(212, 164, 76, 0.2);
+  border-color: #d4a44c !important;
+}
+
+/* ============================================================
+   GREAT HALL PHASE 3 STYLES — Audience, Decrees, Council, Feast
+   ============================================================ */
+
+/* Audience NPC card hover */
+.audience-card {
+  transition: transform 150ms ease, box-shadow 150ms ease, border-color 150ms ease;
+}
+
+.audience-card:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px rgba(212, 164, 76, 0.15);
+  border-color: #d4a44c !important;
+}
+
+/* Audience NPC fade-in */
+@keyframes npcFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.npc-fade-in {
+  animation: npcFadeIn 400ms ease forwards;
+}
+
+/* Decree parchment glow on active */
+.decree-active {
+  box-shadow: inset 0 0 12px rgba(212, 164, 76, 0.1), 0 0 8px rgba(160, 52, 43, 0.15);
+}
+
+/* Decree revoke — torn parchment effect */
+@keyframes decreeRevoke {
+  0% { opacity: 1; transform: scale(1); }
+  30% { transform: scale(1.02) rotate(1deg); }
+  100% { opacity: 0; transform: scale(0.9) rotate(-2deg); max-height: 0; padding: 0; margin: 0; }
+}
+
+.decree-revoking {
+  animation: decreeRevoke 500ms ease forwards;
+  overflow: hidden;
+}
+
+/* Wax seal stamp for decree sealing — bigger and more dramatic */
+@keyframes sealStampDecree {
+  0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+  50% { transform: scale(1.15) rotate(5deg); opacity: 1; }
+  75% { transform: scale(0.95) rotate(-2deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.seal-stamp-decree {
+  animation: sealStampDecree 600ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Council advisor speech bubble */
+@keyframes advisorSpeak {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.advisor-speak {
+  animation: advisorSpeak 300ms ease forwards;
+}
+
+/* Feast step transition */
+@keyframes feastStep {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.feast-step {
+  animation: feastStep 400ms ease forwards;
+}
+
+/* Feast event reveal */
+@keyframes feastEvent {
+  0% { opacity: 0; transform: scale(0.95); }
+  50% { opacity: 1; transform: scale(1.02); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.feast-event-reveal {
+  animation: feastEvent 600ms ease forwards;
+}
+
+/* Radio option selection */
+.feast-option {
+  transition: all 200ms ease;
+}
+
+.feast-option:hover {
+  border-color: #d4a44c !important;
+  background-color: rgba(42, 37, 32, 0.7) !important;
+}
+
+.feast-option.selected {
+  border-color: #d4a44c !important;
+  box-shadow: 0 0 10px rgba(212, 164, 76, 0.15);
+}
+
+/* Council position badge */
+.council-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-family: "Cinzel", serif;
+  font-size: 0.5rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ============================================================
+   BLACKSMITH FORGE STYLES
+   ============================================================ */
+
+/* Ember particle rise animation */
+@keyframes emberRise {
+  0% {
+    transform: translateY(0) translateX(0) scale(1);
+    opacity: 1;
+  }
+  30% {
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(-70px) translateX(12px) scale(0.7);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-150px) translateX(-8px) scale(0.15);
+    opacity: 0;
+  }
+}
+
+.forge-ember {
+  animation: emberRise 2.5s ease-out infinite;
+}
+
+/* Forge fire pulse (subtle breathing effect on the hearth glow) */
+@keyframes forgeFirePulse {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+.forge-fire-pulse {
+  animation: forgeFirePulse 2s ease-in-out infinite;
+}
+
+/* Bellows squeeze animation */
+@keyframes bellowsSqueeze {
+  0% { transform: scaleX(1); }
+  30% { transform: scaleX(0.7); }
+  100% { transform: scaleX(1); }
+}
+
+.forge-bellows-squeeze:active {
+  animation: bellowsSqueeze 300ms ease;
+}
+
+/* Weapon rack silhouette hover */
+.forge-weapon-silhouette:hover {
+  filter: brightness(0.55) !important;
+}
+
+/* Forge bellows reaction fade in/out */
+@keyframes forgeBellowsReaction {
+  0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  15% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  85% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-8px); }
+}
+
+.forge-bellows-reaction {
+  animation: forgeBellowsReaction 3s ease forwards;
+}
+
+/* Heat shimmer (above forge area) */
+@keyframes heatShimmer {
+  0%, 100% { transform: scaleY(1) translateY(0); }
+  25% { transform: scaleY(1.002) translateY(-0.5px); }
+  50% { transform: scaleY(0.998) translateY(0.5px); }
+  75% { transform: scaleY(1.001) translateY(-0.3px); }
+}
+
+/* Anvil strike flash (Phase 2 — forging mini-game) */
+@keyframes anvilStrike {
+  0% { background-color: transparent; }
+  5% { background-color: rgba(255, 248, 224, 0.3); }
+  15% { background-color: rgba(255, 215, 0, 0.15); }
+  100% { background-color: transparent; }
+}
+
+.strike-flash {
+  animation: anvilStrike 0.4s ease-out;
+}
+
+/* Perfect strike — full white flash + screen shake */
+@keyframes perfectStrikeFlash {
+  0% { box-shadow: inset 0 0 0 0 rgba(255,248,224,0); }
+  8% { box-shadow: inset 0 0 60px 20px rgba(255,248,224,0.3); }
+  20% { box-shadow: inset 0 0 30px 10px rgba(255,215,0,0.15); }
+  100% { box-shadow: inset 0 0 0 0 rgba(255,248,224,0); }
+}
+
+@keyframes forgeShake {
+  0%, 100% { transform: translate(0, 0); }
+  15% { transform: translate(2px, -2px); }
+  30% { transform: translate(-2px, 1px); }
+  50% { transform: translate(1px, -1px); }
+  70% { transform: translate(-1px, 1px); }
+}
+
+.forge-strike-perfect {
+  animation: perfectStrikeFlash 0.4s ease-out, forgeShake 0.15s ease;
+}
+
+/* Good strike — orange flash */
+@keyframes goodStrikeFlash {
+  0% { box-shadow: inset 0 0 0 0 rgba(255,107,26,0); }
+  10% { box-shadow: inset 0 0 30px 8px rgba(255,107,26,0.2); }
+  100% { box-shadow: inset 0 0 0 0 rgba(255,107,26,0); }
+}
+
+.forge-strike-good {
+  animation: goodStrikeFlash 0.3s ease-out;
+}
+
+/* Miss — vignette darkening + horizontal shake */
+@keyframes missVignette {
+  0% { box-shadow: inset 0 0 40px 10px rgba(0,0,0,0); }
+  15% { box-shadow: inset 0 0 40px 10px rgba(0,0,0,0.4); }
+  100% { box-shadow: inset 0 0 40px 10px rgba(0,0,0,0); }
+}
+
+@keyframes missShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-3px); }
+  40% { transform: translateX(3px); }
+  60% { transform: translateX(-2px); }
+  80% { transform: translateX(1px); }
+}
+
+.forge-strike-miss {
+  animation: missVignette 0.5s ease-out, missShake 0.2s ease;
+}
+
+/* Quality gauge overshoot on perfect */
+@keyframes qualityOvershoot {
+  0% { transform: scaleX(1); }
+  30% { transform: scaleX(1.06); }
+  100% { transform: scaleX(1); }
+}
+
+.forge-quality-overshoot {
+  animation: qualityOvershoot 0.3s ease-out;
+}
+
+/* Steam particles for quenching */
+@keyframes steamRise {
+  0% { transform: translateY(0) scale(1); opacity: 0.7; }
+  50% { transform: translateY(-20px) scale(1.3); opacity: 0.4; }
+  100% { transform: translateY(-50px) scale(0.5); opacity: 0; }
+}
+
+.forge-steam-particle {
+  animation: steamRise 1.2s ease-out forwards;
+}
+
+/* Result reveal */
+@keyframes forgeResultReveal {
+  0% { opacity: 0; transform: scale(0.8); }
+  60% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.forge-result-reveal {
+  animation: forgeResultReveal 0.6s ease-out;
+}
+
+/* ================================================================
+   ESTATE TAB STYLES
+   ================================================================ */
+
+/* Condition bar shimmer for buildings in poor condition */
+@keyframes conditionPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+.condition-poor {
+  animation: conditionPulse 2s ease-in-out infinite;
+}
+
+/* Plot bar segment hover */
+.plot-segment:hover {
+  filter: brightness(1.3);
+}
+
+/* --- Estate static glow classes (per-category color) --- */
+
+.estate-glow-green  { box-shadow: 0 0 12px rgba(141, 186, 110, 0.25), inset 0 0 8px rgba(141, 186, 110, 0.06); }
+.estate-glow-blue   { box-shadow: 0 0 12px rgba(126, 184, 212, 0.25), inset 0 0 8px rgba(126, 184, 212, 0.06); }
+.estate-glow-purple { box-shadow: 0 0 12px rgba(184, 160, 212, 0.25), inset 0 0 8px rgba(184, 160, 212, 0.06); }
+.estate-glow-gold   { box-shadow: 0 0 12px rgba(201, 168, 76, 0.25), inset 0 0 8px rgba(201, 168, 76, 0.06); }
+.estate-glow-amber  { box-shadow: 0 0 12px rgba(201, 122, 76, 0.25), inset 0 0 8px rgba(201, 122, 76, 0.06); }
+.estate-glow-red    { box-shadow: 0 0 12px rgba(212, 114, 106, 0.25), inset 0 0 8px rgba(212, 114, 106, 0.06); }
+
+/* Season badge glow — static, uses season color */
+.season-glow {
+  box-shadow: 0 0 16px var(--season-glow-color, rgba(196, 162, 74, 0.3)), inset 0 0 12px var(--season-glow-color-inner, rgba(196, 162, 74, 0.08));
+}
+
+/* Section container glow */
+.estate-section-glow {
+  box-shadow: 0 0 14px rgba(196, 162, 74, 0.12), inset 0 0 10px rgba(196, 162, 74, 0.03);
+}
+
+/* Plot bar glow */
+.plot-bar-glow {
+  box-shadow: 0 0 8px rgba(196, 162, 74, 0.18);
+}
+
+/* Inventory category group glow */
+.inv-category-glow {
+  transition: box-shadow 300ms ease, filter 300ms ease;
+}
+.inv-category-glow:hover {
+  filter: brightness(1.1);
+}
+
+/* Stat card number glow — static text shadow */
+.stat-value-glow {
+  text-shadow: 0 0 10px currentColor, 0 0 20px currentColor;
+}
+
+/* ================================================================
+   PEOPLE TAB STYLES
+   ================================================================ */
+
+/* Morale gauge fill animation */
+.morale-gauge-fill {
+  transition: height 600ms ease-out, background 400ms ease;
+}
+
+/* Morale critical pulse (revolt warning) */
+@keyframes morale-critical-pulse {
+  0%, 100% { box-shadow: 0 0 8px rgba(212, 114, 106, 0.2); }
+  50% { box-shadow: 0 0 20px rgba(212, 114, 106, 0.5); }
+}
+
+.morale-critical {
+  animation: morale-critical-pulse 2s ease-in-out infinite;
+}
+
+/* People card hover (family cards) */
+.people-card {
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.people-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px rgba(196, 162, 74, 0.2);
+}
+
+/* Labor slider custom styling */
+input[type="range"].labor-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: linear-gradient(to right, rgba(140, 110, 70, 0.3), rgba(140, 110, 70, 0.15));
+  border-radius: 3px;
+  outline: none;
+}
+
+input[type="range"].labor-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #c9a84c;
+  border: 2px solid #8a7a3a;
+  cursor: pointer;
+  transition: box-shadow 150ms ease;
+}
+
+input[type="range"].labor-slider::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 8px rgba(201, 168, 76, 0.5);
+}
+
+input[type="range"].labor-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #c9a84c;
+  border: 2px solid #8a7a3a;
+  cursor: pointer;
+}
+
+/* Feed entry stagger animation */
+@keyframes feed-enter {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.feed-entry {
+  animation: feed-enter 300ms ease forwards;
+}
+
+/* Tutorial popup entrance animation */
+@keyframes tutorial-enter {
+  from { opacity: 0; transform: translateY(20px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ================================================================
+   MOBILE / iOS PHONE OVERRIDES
+   Pure CSS layer — no component changes. Targets phones ≤ 480px.
+   ================================================================ */
+
+@media (max-width: 480px) {
+
+  /* --- DASHBOARD: make resource row scrollable instead of overflowing --- */
+  /* Row 1 resource stats container */
+  .sticky .flex.justify-center.gap-4,
+  .sticky .flex.justify-center.gap-6 {
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0 !important;
+    padding-left: 4px !important;
+    padding-right: 60px !important; /* room for save/load/music buttons */
+  }
+
+  .sticky .flex.justify-center.gap-4::-webkit-scrollbar,
+  .sticky .flex.justify-center.gap-6::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Shrink individual resource stat cells */
+  .sticky .flex.flex-col.items-center.gap-1 {
+    min-width: 62px !important;
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+  }
+
+  /* Smaller resource values on mobile */
+  .sticky .text-2xl {
+    font-size: 1.15rem !important;
+  }
+
+  /* Smaller resource labels */
+  .sticky .font-heading.font-semibold {
+    font-size: 0.55rem !important;
+    letter-spacing: 1px !important;
+  }
+
+  /* --- TABBAR: scrollable, icon-first on phones --- */
+  .sticky + div .flex.overflow-x-auto,
+  .flex.overflow-x-auto[style*="background"] {
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .flex.overflow-x-auto[style*="background"]::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Tab buttons: narrower on phone */
+  .flex.overflow-x-auto button.flex-1 {
+    min-width: 44px !important;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  /* Tab labels smaller */
+  .flex.overflow-x-auto button .text-xs {
+    font-size: 0.55rem !important;
+  }
+
+  /* --- SEASON INFO ROW: stack vertically on phone --- */
+  .sticky .flex.flex-wrap.justify-center.items-center {
+    flex-direction: column !important;
+    gap: 4px !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+  }
+
+  .sticky .font-heading.font-semibold[style*="Cinzel"] {
+    font-size: 0.75rem !important;
+  }
+
+  /* --- TAB CONTENT: tighter padding on phone --- */
+  .flex-1.px-4.py-4.pb-8 {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    padding-top: 8px !important;
+    padding-bottom: 80px !important;
+  }
+
+  /* --- SIMULATE BUTTON: full width on phone --- */
+  .sticky.bottom-0 button {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+    font-size: 0.9rem !important;
+    width: 100% !important;
+    max-width: 320px !important;
+  }
+
+  /* --- BUILDING GRID: 2-col on phone instead of 3 --- */
+  .grid.grid-cols-1.sm\:grid-cols-2.lg\:grid-cols-3,
+  .grid.sm\:grid-cols-2.lg\:grid-cols-3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 6px !important;
+  }
+
+  /* --- EVENT CARDS / MODALS: full-width on phone --- */
+  .max-w-lg,
+  .max-w-xl,
+  .max-w-2xl {
+    max-width: 100% !important;
+  }
+
+  .max-w-md {
+    max-width: 100% !important;
+  }
+
+  /* --- GENERAL: prevent horizontal page scroll --- */
+  body {
+    overflow-x: hidden !important;
+  }
+
+  /* iOS safe area: bottom padding for home indicator */
+  .sticky.bottom-0 {
+    padding-bottom: env(safe-area-inset-bottom, 8px) !important;
+  }
+
+  /* iOS safe area: top for notch */
+  .sticky.top-0 {
+    padding-top: env(safe-area-inset-top, 0px) !important;
+  }
+
+  /* --- TRADE TAB: stack buy/sell panels vertically --- */
+  .grid.grid-cols-1.lg\:grid-cols-2 {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* --- MILITARY TAB: stack soldier type cards --- */
+  .grid.grid-cols-3 {
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+  }
+
+  /* --- GREAT HALL: sub-chamber cards stack --- */
+  .grid.grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+  }
+
+  /* --- TAVERN: station cards stack on phone --- */
+  .grid.grid-cols-1.sm\:grid-cols-3 {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* --- CHRONICLE: tighter entry padding --- */
+  .space-y-3 > div {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+  }
+
+  /* --- FLIP STAT BAR: scrollable --- */
+  .flex.justify-center.gap-3,
+  .flex.justify-center.gap-5 {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    justify-content: flex-start !important;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* --- Touch targets: ensure minimum 44px for iOS --- */
+  button {
+    min-height: 44px;
+  }
+
+  /* Exception: small inline buttons (trade qty, etc.) */
+  button.text-xs,
+  button.text-sm {
+    min-height: 36px;
+  }
+}

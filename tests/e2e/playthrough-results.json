@@ -1,0 +1,4639 @@
+[
+  {
+    "runId": "Easy/Passive",
+    "difficulty": "easy",
+    "strategy": "passive",
+    "turnsPlayed": 40,
+    "finalOutcome": "victory",
+    "elapsedSeconds": 166.5,
+    "turnData": [
+      {
+        "turn": 1,
+        "season": "Spring",
+        "year": 1,
+        "resources": {
+          "denarii": 700,
+          "food": 480,
+          "families": 22,
+          "garrison": 5
+        },
+        "events": [],
+        "choices": []
+      },
+      {
+        "turn": 2,
+        "season": "Summer",
+        "year": 1,
+        "resources": {
+          "denarii": 666,
+          "food": 516,
+          "families": 22,
+          "garrison": 4
+        },
+        "events": [
+          "The Runaway Serf",
+          "The Flood in the Lower Village"
+        ],
+        "choices": [
+          "Choice[2/2]: Let Wat go — and tell the other serfs you are a fair lord.✧ ↑⚔ ↓⚜ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Offer timber for rebuilding and some grain — but no castle housing.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 3,
+        "season": "Autumn",
+        "year": 1,
+        "resources": {
+          "denarii": 663,
+          "food": 503,
+          "families": 22,
+          "garrison": 4
+        },
+        "events": [
+          "The Building Project",
+          "The Smugglers"
+        ],
+        "choices": [
+          "Choice[2/3]: Build the timber barn — cheaper, faster, good enough.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[1/3]: Turn them over to the royal sheriff — it is the law.⚜ ↑✧ ↓",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 4,
+        "season": "Winter",
+        "year": 1,
+        "resources": {
+          "denarii": 750,
+          "food": 521,
+          "families": 22,
+          "garrison": 7
+        },
+        "events": [
+          "The Grain Harvest",
+          "The Weapon Shortage"
+        ],
+        "choices": [
+          "Choice[2/2]: Pace the work steadily — rest your people properly.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Buy the best iron and do the repairs right.⚜ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 5,
+        "season": "Spring",
+        "year": 2,
+        "resources": {
+          "denarii": 754,
+          "food": 569,
+          "families": 22,
+          "garrison": 7
+        },
+        "events": [
+          "The Fuel Crisis",
+          "The Noble Marriage Offer",
+          "Choose Your Path: The Lord of Ashworth Manor",
+          "The King's Demand",
+          "The Compromise Letter"
+        ],
+        "choices": [
+          "Choice[2/3]: Buy coal from the merchant at the winter price.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Ask your niece first — her opinion matters.✧ ↑⚜ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 6,
+        "season": "Summer",
+        "year": 2,
+        "resources": {
+          "denarii": 703,
+          "food": 601,
+          "families": 23,
+          "garrison": 7
+        },
+        "events": [
+          "The Planting Decision",
+          "The Merchant Caravan"
+        ],
+        "choices": [
+          "Choice[1/2]: Plant wheat in every field — we need the grain.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Accept discounted goods instead of a fee — invest in trade goods.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 7,
+        "season": "Autumn",
+        "year": 2,
+        "resources": {
+          "denarii": 661,
+          "food": 581,
+          "families": 23,
+          "garrison": 9
+        },
+        "events": [
+          "The Summer Tournament",
+          "The Deserters"
+        ],
+        "choices": [
+          "Choice[3/3]: Go yourself and watch — show your face without the cost.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Hunt them down and discipline them publicly.⚜ ↓✧ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 8,
+        "season": "Winter",
+        "year": 2,
+        "resources": {
+          "denarii": 666,
+          "food": 602,
+          "families": 23,
+          "garrison": 9
+        },
+        "events": [
+          "Preparing the Winter Stores",
+          "The Water Mill Opportunity"
+        ],
+        "choices": [
+          "Choice[2/2]: Keep most of the pigs alive — invest in spring offspring.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/2]: Just replace the millstones — cheaper partial improvement.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 9,
+        "season": "Spring",
+        "year": 3,
+        "resources": {
+          "denarii": 564,
+          "food": 569,
+          "families": 21,
+          "garrison": 7
+        },
+        "events": [
+          "⚔ BORDER RAID ⚔",
+          "RAID SUCCESSFUL",
+          "The Border Negotiation",
+          "The Monastery Dispute"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[2/3]: Reject the meeting — the wood is yours and you will keep it.✧ ↓⚔ ↓",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 10,
+        "season": "Summer",
+        "year": 3,
+        "resources": {
+          "denarii": 567,
+          "food": 578,
+          "families": 22,
+          "garrison": 6
+        },
+        "events": [
+          "The Bridge Repair",
+          "The Holy Day Conflict",
+          "A Noblewoman’s Dilemma",
+          "Monday: The Steward’s Report",
+          "Wednesday: The Boundary Dispute"
+        ],
+        "choices": [
+          "Choice[1/3]: Build a proper stone bridge — it will last for decades.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Negotiate: deliver the day before, even at a slightly lower price.⚜ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 11,
+        "season": "Autumn",
+        "year": 3,
+        "resources": {
+          "denarii": 457,
+          "food": 600,
+          "families": 23,
+          "garrison": 8
+        },
+        "events": [
+          "The Road Peddler's Remedy",
+          "The Mercenary Offer"
+        ],
+        "choices": [
+          "Choice[1/3]: Buy the peddler's remedy and distribute it to the sick.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Hire them for just two months — help while you recruit your own.⚜ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 12,
+        "season": "Winter",
+        "year": 3,
+        "resources": {
+          "denarii": 533,
+          "food": 639,
+          "families": 23,
+          "garrison": 8
+        },
+        "events": [
+          "The Disputed Land",
+          "The Trade Dispute"
+        ],
+        "choices": [
+          "Choice[3/3]: Split the strip of land equally between both families.✧ ↑⚜ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Accept a slightly lower price — keep the trade relationship.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 13,
+        "season": "Spring",
+        "year": 4,
+        "resources": {
+          "denarii": 570,
+          "food": 645,
+          "families": 26,
+          "garrison": 10
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID REPELLED",
+          "The Accounting Books",
+          "The Tithe Demand",
+          "Choose Your Path: The Keeper of the Scriptorium"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[2/3]: Warn both men and demand repayment over time.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 14,
+        "season": "Summer",
+        "year": 4,
+        "resources": {
+          "denarii": 495,
+          "food": 655,
+          "families": 26,
+          "garrison": 12
+        },
+        "events": [
+          "The Monastery's Offer",
+          "The Border Raid"
+        ],
+        "choices": [
+          "Choice[2/2]: Decline politely — your own fields come first.✧ ↑⚜ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Send soldiers to pursue and recover the cattle.⚜ ↓✧ ↑⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 15,
+        "season": "Autumn",
+        "year": 4,
+        "resources": {
+          "denarii": 533,
+          "food": 661,
+          "families": 26,
+          "garrison": 14
+        },
+        "events": [
+          "The Hay Harvest Rush",
+          "The Fortification Request"
+        ],
+        "choices": [
+          "Choice[1/2]: Focus every worker on the hay — get it all in before rain.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Send five soldiers for a season — they gain combat experience.⚜ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 16,
+        "season": "Winter",
+        "year": 4,
+        "resources": {
+          "denarii": 560,
+          "food": 706,
+          "families": 27,
+          "garrison": 16
+        },
+        "events": [
+          "The Road Bandits",
+          "The Price Collapse",
+          "Choose Your Path: The Landless Knight",
+          "The Summons",
+          "The Cautious Column"
+        ],
+        "choices": [
+          "Choice[1/3]: Send soldiers to capture or drive away the bandits.⚜ ↓✧ ↑⚔ ↑",
+          "See What Happens Next",
+          "Choice[3/3]: Use the cheap grain to feed workers building the new barn.⚜ ↓✧ ↑",
+          "Continue",
+          "Begin"
+        ]
+      },
+      {
+        "turn": 17,
+        "season": "Spring",
+        "year": 5,
+        "resources": {
+          "denarii": 499,
+          "food": 678,
+          "families": 27,
+          "garrison": 16
+        },
+        "events": [
+          "The Court Dispute",
+          "The Relic Discovery"
+        ],
+        "choices": [
+          "Choice[2/3]: Rule in favor of the blacksmith — the water is sufficient.⚜ ↓⚔ ↑",
+          "See What Happens Next",
+          "Choice[3/3]: Say nothing about it — religious controversy helps no one.✧ ↓⚜ ↓",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 18,
+        "season": "Summer",
+        "year": 5,
+        "resources": {
+          "denarii": 403,
+          "food": 691,
+          "families": 28,
+          "garrison": 16
+        },
+        "events": [
+          "The Trade Road Opens",
+          "The Famous Traveler"
+        ],
+        "choices": [
+          "Choice[2/2]: Hire the mason to repair the granary wall.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[2/2]: Give him a simple meal and a place in the stable to sleep.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 19,
+        "season": "Autumn",
+        "year": 5,
+        "resources": {
+          "denarii": 283,
+          "food": 681,
+          "families": 29,
+          "garrison": 17
+        },
+        "events": [
+          "The Militia Drill",
+          "The Bandit Gang",
+          "A Knight’s Gamble",
+          "Departure: Equipping for War",
+          "The March: The Tournament"
+        ],
+        "choices": [
+          "Choice[1/3]: Order the full week of militia drills.⚜ ↓✧ ↓⚔ ↑",
+          "See What Happens Next",
+          "Choice[2/3]: Offer the bandits a pardon if they surrender and work on the estate.⚜ ↓✧ ↑⚔ ↑",
+          "Continue",
+          "Begin"
+        ]
+      },
+      {
+        "turn": 20,
+        "season": "Winter",
+        "year": 5,
+        "resources": {
+          "denarii": 623,
+          "food": 690,
+          "families": 29,
+          "garrison": 17
+        },
+        "events": [
+          "The Wool Surplus",
+          "The Debt Offer"
+        ],
+        "choices": [
+          "Choice[3/3]: Sell half now and keep half for spring.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Accept the loan — you need the coin and can pay it back.⚜ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 21,
+        "season": "Spring",
+        "year": 6,
+        "resources": {
+          "denarii": 491,
+          "food": 748,
+          "families": 32,
+          "garrison": 19
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID REPELLED",
+          "The Winter Feast",
+          "The Peasant Petition"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[1/3]: Host a proper feast — spare no expense at Christmas.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 22,
+        "season": "Summer",
+        "year": 6,
+        "resources": {
+          "denarii": 511,
+          "food": 747,
+          "families": 32,
+          "garrison": 19
+        },
+        "events": [
+          "The Traveling Seed Merchant",
+          "The Wandering Scholar"
+        ],
+        "choices": [
+          "Choice[2/3]: Send the merchant away and keep your usual seeds.⚜ ↑✧ ↓",
+          "See What Happens Next",
+          "Choice[1/2]: Take him in — education is worth more than his room and board.⚜ ↓✧ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 23,
+        "season": "Autumn",
+        "year": 6,
+        "resources": {
+          "denarii": 516,
+          "food": 757,
+          "families": 32,
+          "garrison": 18
+        },
+        "events": [
+          "The Castle Well",
+          "The Inheritance Dispute"
+        ],
+        "choices": [
+          "Choice[2/2]: Wait and see — it has not run dry yet.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Give each of the three children a fair share — all three worked.✧ ↑⚔ ↓⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 24,
+        "season": "Winter",
+        "year": 6,
+        "resources": {
+          "denarii": 671,
+          "food": 782,
+          "families": 33,
+          "garrison": 18
+        },
+        "events": [
+          "The Tax Collection",
+          "The Crusade Preacher"
+        ],
+        "choices": [
+          "Choice[2/3]: Reduce this year's tax by a third — your people come first.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Politely decline — you cannot spare men or money this year.✧ ↓⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 25,
+        "season": "Spring",
+        "year": 7,
+        "resources": {
+          "denarii": 666,
+          "food": 768,
+          "families": 37,
+          "garrison": 20
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID REPELLED",
+          "The Pilgrim's Request",
+          "The Bishop's Visit"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[1/3]: Take them in fully — give them warmth, beds, and meals.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 26,
+        "season": "Summer",
+        "year": 7,
+        "resources": {
+          "denarii": 585,
+          "food": 755,
+          "families": 37,
+          "garrison": 22
+        },
+        "events": [
+          "The Soldier Levy",
+          "The Pilgrim Arrivals"
+        ],
+        "choices": [
+          "Choice[1/3]: Recruit and arm ten new soldiers right away.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Provide free food and water as an act of Christian charity.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 27,
+        "season": "Autumn",
+        "year": 7,
+        "resources": {
+          "denarii": 522,
+          "food": 743,
+          "families": 38,
+          "garrison": 22
+        },
+        "events": [
+          "The Market Fair Charter",
+          "The Crop Blight"
+        ],
+        "choices": [
+          "Choice[3/3]: Send the messenger away — you cannot afford it this year.✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Destroy all the affected grain right away — stop the spread.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 28,
+        "season": "Winter",
+        "year": 7,
+        "resources": {
+          "denarii": 652,
+          "food": 766,
+          "families": 38,
+          "garrison": 22
+        },
+        "events": [
+          "The Traveling Bishop",
+          "The Monastery Dispute"
+        ],
+        "choices": [
+          "Choice[1/3]: Host a grand feast with all the ceremony due a bishop.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Give the monks the land — it is not worth a Church dispute.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 29,
+        "season": "Spring",
+        "year": 8,
+        "resources": {
+          "denarii": 655,
+          "food": 740,
+          "families": 42,
+          "garrison": 23
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID REPELLED",
+          "The Castle Repairs",
+          "The Weapon Shortage"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[2/3]: Patch both sections cheaply — keep costs down.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 30,
+        "season": "Summer",
+        "year": 8,
+        "resources": {
+          "denarii": 623,
+          "food": 733,
+          "families": 42,
+          "garrison": 22
+        },
+        "events": [
+          "The Soldier Levy",
+          "The Water Mill Opportunity"
+        ],
+        "choices": [
+          "Choice[3/3]: Skip recruiting — hold onto the treasury for now.⚜ ↑⚔ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Commission the full mill rebuild — it's a long-term investment.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 31,
+        "season": "Autumn",
+        "year": 8,
+        "resources": {
+          "denarii": 562,
+          "food": 717,
+          "families": 42,
+          "garrison": 23
+        },
+        "events": [
+          "The Militia Drill",
+          "The Pilgrim Arrivals"
+        ],
+        "choices": [
+          "Choice[2/3]: Drill only on Sundays — preserve the work week.⚜ ↓✧ ↑⚔ ↑",
+          "See What Happens Next",
+          "Choice[3/3]: Close your roads to pilgrims — you cannot absorb the traffic.✧ ↓⚜ ↓",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 32,
+        "season": "Winter",
+        "year": 8,
+        "resources": {
+          "denarii": 772,
+          "food": 750,
+          "families": 42,
+          "garrison": 23
+        },
+        "events": [
+          "The Grain Harvest",
+          "The Peasant Petition"
+        ],
+        "choices": [
+          "Choice[1/2]: All hands to the fields — work day and night to finish fast.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Grant all three requests — they are reasonable.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 33,
+        "season": "Spring",
+        "year": 9,
+        "resources": {
+          "denarii": 740,
+          "food": 733,
+          "families": 43,
+          "garrison": 25
+        },
+        "events": [
+          "The Accounting Books",
+          "The Mercenary Offer"
+        ],
+        "choices": [
+          "Choice[2/3]: Warn both men and demand repayment over time.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Hire them for just two months — help while you recruit your own.⚜ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 34,
+        "season": "Summer",
+        "year": 9,
+        "resources": {
+          "denarii": 735,
+          "food": 735,
+          "families": 43,
+          "garrison": 24
+        },
+        "events": [
+          "The Traveling Seed Merchant",
+          "The Border Raid"
+        ],
+        "choices": [
+          "Choice[1/3]: Buy the southern seeds and try them in a test field.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[3/3]: Demand the neighboring lord pay for the stolen cattle.⚜ ↑✧ ↑⚔ ↓",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 35,
+        "season": "Autumn",
+        "year": 9,
+        "resources": {
+          "denarii": 666,
+          "food": 767,
+          "families": 43,
+          "garrison": 23
+        },
+        "events": [
+          "The Market Fair Charter",
+          "The Inheritance Dispute"
+        ],
+        "choices": [
+          "Choice[2/3]: Ask for a smaller traveling fair permit — cheaper option.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Give each of the three children a fair share — all three worked.✧ ↑⚔ ↓⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 36,
+        "season": "Winter",
+        "year": 9,
+        "resources": {
+          "denarii": 934,
+          "food": 783,
+          "families": 43,
+          "garrison": 25
+        },
+        "events": [
+          "The Road Bandits",
+          "The Debt Offer"
+        ],
+        "choices": [
+          "Choice[2/3]: Offer the bandits honest work on the estate — hire them.⚜ ↓✧ ↑⚔ ↑",
+          "See What Happens Next",
+          "Choice[1/2]: Accept the loan — you need the coin and can pay it back.⚜ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 37,
+        "season": "Spring",
+        "year": 10,
+        "resources": {
+          "denarii": 989,
+          "food": 754,
+          "families": 47,
+          "garrison": 25
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID REPELLED",
+          "The Court Dispute",
+          "The Holy Day Conflict"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[2/3]: Rule in favor of the blacksmith — the water is sufficient.⚜ ↓⚔ ↑",
+          "See What Happens Next",
+          "Choice[3/3]: Negotiate: deliver the day before, even at a slightly lower price.⚜ ↑"
+        ]
+      },
+      {
+        "turn": 38,
+        "season": "Summer",
+        "year": 10,
+        "resources": {
+          "denarii": 970,
+          "food": 742,
+          "families": 48,
+          "garrison": 25
+        },
+        "events": [
+          "The Runaway Serf",
+          "The Deserters"
+        ],
+        "choices": [
+          "Choice[2/2]: Let Wat go — and tell the other serfs you are a fair lord.✧ ↑⚔ ↓⚜ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Hunt them down and discipline them publicly.⚜ ↓✧ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 39,
+        "season": "Autumn",
+        "year": 10,
+        "resources": {
+          "denarii": 857,
+          "food": 747,
+          "families": 48,
+          "garrison": 25
+        },
+        "events": [
+          "The Building Project",
+          "The Merchant Caravan"
+        ],
+        "choices": [
+          "Choice[1/3]: Commission the stone barn — it will last a generation.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[3/3]: Turn the caravan away — you don't want strangers on your land.⚜ ↓✧ ↓",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 40,
+        "season": "Winter",
+        "year": 10,
+        "resources": {
+          "denarii": 1119,
+          "food": 713,
+          "families": 49,
+          "garrison": 25
+        },
+        "events": [
+          "The Tax Collection",
+          "The Crop Blight"
+        ],
+        "choices": [
+          "Choice[1/3]: Collect the full tax — your estate needs the revenue.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/2]: Try to separate the clean grain and save the good portion.⚜ ↓✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 41,
+        "season": null,
+        "year": null,
+        "resources": null,
+        "events": [],
+        "choices": []
+      }
+    ],
+    "actionLog": [],
+    "errors": []
+  },
+  {
+    "runId": "Easy/Builder",
+    "difficulty": "easy",
+    "strategy": "builder",
+    "turnsPlayed": 40,
+    "finalOutcome": "victory",
+    "elapsedSeconds": 189.8,
+    "turnData": [
+      {
+        "turn": 1,
+        "season": "Spring",
+        "year": 1,
+        "resources": {
+          "denarii": 700,
+          "food": 480,
+          "families": 22,
+          "garrison": 5
+        },
+        "events": [],
+        "choices": []
+      },
+      {
+        "turn": 2,
+        "season": "Summer",
+        "year": 1,
+        "resources": {
+          "denarii": 506,
+          "food": 504,
+          "families": 23,
+          "garrison": 5
+        },
+        "events": [
+          "The Bridge Repair",
+          "The Peasant Petition"
+        ],
+        "choices": [
+          "Choice[1/3]: Build a proper stone bridge — it will last for decades.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Grant the drainage and the pig — refuse the labor change.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 3,
+        "season": "Autumn",
+        "year": 1,
+        "resources": {
+          "denarii": 306,
+          "food": 512,
+          "families": 24,
+          "garrison": 5
+        },
+        "events": [
+          "The Building Project",
+          "The Price Collapse"
+        ],
+        "choices": [
+          "Choice[1/3]: Commission the stone barn — it will last a generation.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[2/3]: Hold the grain in storage and wait for prices to rise.⚜ ↓✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 4,
+        "season": "Winter",
+        "year": 1,
+        "resources": {
+          "denarii": 270,
+          "food": 564,
+          "families": 24,
+          "garrison": 4
+        },
+        "events": [
+          "The Traveling Bishop",
+          "The Inheritance Dispute"
+        ],
+        "choices": [
+          "Choice[1/3]: Host a grand feast with all the ceremony due a bishop.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Give each of the three children a fair share — all three worked.✧ ↑⚔ ↓⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 5,
+        "season": "Spring",
+        "year": 2,
+        "resources": {
+          "denarii": 239,
+          "food": 584,
+          "families": 24,
+          "garrison": 4
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID SUCCESSFUL",
+          "The Accounting Books",
+          "The Famous Traveler",
+          "Choose Your Path: The Lord of Ashworth Manor"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[2/3]: Warn both men and demand repayment over time.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 6,
+        "season": "Summer",
+        "year": 2,
+        "resources": {
+          "denarii": 0,
+          "food": 580,
+          "families": 24,
+          "garrison": 7
+        },
+        "events": [
+          "The Soldier Levy",
+          "The Water Mill Opportunity"
+        ],
+        "choices": [
+          "Choice[1/3]: Recruit and arm ten new soldiers right away.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/2]: Just replace the millstones — cheaper partial improvement.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 7,
+        "season": "Autumn",
+        "year": 2,
+        "resources": {
+          "denarii": 166,
+          "food": 578,
+          "families": 24,
+          "garrison": 6
+        },
+        "events": [
+          "The Hay Harvest Rush",
+          "The Trade Dispute"
+        ],
+        "choices": [
+          "Choice[1/2]: Focus every worker on the hay — get it all in before rain.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Find a new buyer — send your wool to the city market directly.⚜ ↑✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 8,
+        "season": "Winter",
+        "year": 2,
+        "resources": {
+          "denarii": 7,
+          "food": 560,
+          "families": 24,
+          "garrison": 5
+        },
+        "events": [
+          "The Road Bandits",
+          "The Merchant Caravan"
+        ],
+        "choices": [
+          "Choice[3/3]: Ignore the problem — it is not your responsibility.⚜ ↓✧ ↓",
+          "See What Happens Next",
+          "Choice[3/3]: Turn the caravan away — you don't want strangers on your land.⚜ ↓✧ ↓",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 9,
+        "season": "Spring",
+        "year": 3,
+        "resources": {
+          "denarii": 0,
+          "food": 557,
+          "families": 24,
+          "garrison": 4
+        },
+        "events": [
+          "The Pilgrim's Request",
+          "The Pilgrim Arrivals"
+        ],
+        "choices": [
+          "Choice[2/3]: Let them sleep in the stable — warm enough and costs little.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Provide free food and water as an act of Christian charity.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 10,
+        "season": "Summer",
+        "year": 3,
+        "resources": {
+          "denarii": 40,
+          "food": 574,
+          "families": 24,
+          "garrison": 1
+        },
+        "events": [
+          "The Traveling Seed Merchant",
+          "The Crusade Preacher"
+        ],
+        "choices": [
+          "Choice[1/3]: Buy the southern seeds and try them in a test field.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[2/3]: Let three soldiers go who volunteered — honor their conviction.✧ ↑⚔ ↓⚜ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 11,
+        "season": "Autumn",
+        "year": 3,
+        "resources": {
+          "denarii": 83,
+          "food": 594,
+          "families": 24,
+          "garrison": 1
+        },
+        "events": [
+          "The Castle Well",
+          "The Border Raid",
+          "A Noblewoman’s Dilemma",
+          "Monday: The Steward’s Report",
+          "Wednesday: The Boundary Dispute"
+        ],
+        "choices": [
+          "Choice[2/2]: Wait and see — it has not run dry yet.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Demand the neighboring lord pay for the stolen cattle.⚜ ↑✧ ↑⚔ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 12,
+        "season": "Winter",
+        "year": 3,
+        "resources": {
+          "denarii": 228,
+          "food": 622,
+          "families": 25,
+          "garrison": 0
+        },
+        "events": [
+          "The Wool Surplus",
+          "The Relic Discovery"
+        ],
+        "choices": [
+          "Choice[3/3]: Sell half now and keep half for spring.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Keep the discovery quiet and build a small shrine on the spot.⚜ ↑✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 13,
+        "season": "Spring",
+        "year": 4,
+        "resources": {
+          "denarii": 0,
+          "food": 580,
+          "families": 22,
+          "garrison": 0
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID SUCCESSFUL",
+          "The Fuel Crisis",
+          "The Tithe Demand"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[3/3]: Ration carefully — everyone burns less until March.✧ ↓⚜ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 14,
+        "season": "Summer",
+        "year": 4,
+        "resources": {
+          "denarii": 25,
+          "food": 554,
+          "families": 23,
+          "garrison": 1
+        },
+        "events": [
+          "The Runaway Serf",
+          "The Monastery Dispute",
+          "Choose Your Path: The Keeper of the Scriptorium",
+          "The Abbot's Secret",
+          "The Secret Copy"
+        ],
+        "choices": [
+          "Choice[1/2]: Send men to bring Wat back to the estate.⚜ ↓✧ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Contest the document — demand it be verified by the bishop.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 15,
+        "season": "Autumn",
+        "year": 4,
+        "resources": {
+          "denarii": 0,
+          "food": 574,
+          "families": 24,
+          "garrison": 0
+        },
+        "events": [
+          "The Market Fair Charter",
+          "The Mercenary Offer"
+        ],
+        "choices": [
+          "Choice[2/3]: Ask for a smaller traveling fair permit — cheaper option.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Refuse — you will not trust hired strangers to defend your land.✧ ↑⚔ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 16,
+        "season": "Winter",
+        "year": 4,
+        "resources": {
+          "denarii": 225,
+          "food": 582,
+          "families": 24,
+          "garrison": 0
+        },
+        "events": [
+          "The Grain Harvest",
+          "The Holy Day Conflict"
+        ],
+        "choices": [
+          "Choice[2/2]: Pace the work steadily — rest your people properly.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Send the delivery anyway — the merchant deal is too important.⚜ ↑✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 17,
+        "season": "Spring",
+        "year": 5,
+        "resources": {
+          "denarii": 0,
+          "food": 562,
+          "families": 19,
+          "garrison": 2
+        },
+        "events": [
+          "⚔ BORDER RAID ⚔",
+          "RAID SUCCESSFUL",
+          "The Border Negotiation",
+          "The Bishop's Visit",
+          "Choose Your Path: The Landless Knight"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[1/3]: Meet with Lady Cecily and negotiate a fair agreement.⚜ ↓✧ ↑⚔ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 18,
+        "season": "Summer",
+        "year": 5,
+        "resources": {
+          "denarii": 0,
+          "food": 561,
+          "families": 20,
+          "garrison": 2
+        },
+        "events": [
+          "The Monastery's Offer",
+          "The Weapon Shortage"
+        ],
+        "choices": [
+          "Choice[2/2]: Decline politely — your own fields come first.✧ ↑⚜ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Use cheaper iron — you cannot afford the best right now.⚜ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 19,
+        "season": "Autumn",
+        "year": 5,
+        "resources": {
+          "denarii": 0,
+          "food": 513,
+          "families": 20,
+          "garrison": 2
+        },
+        "events": [
+          "The Road Peddler's Remedy",
+          "The Deserters"
+        ],
+        "choices": [
+          "Choice[3/3]: Do nothing — sickness comes and goes on its own.✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Hunt them down and discipline them publicly.⚜ ↓✧ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 20,
+        "season": "Winter",
+        "year": 5,
+        "resources": {
+          "denarii": 117,
+          "food": 561,
+          "families": 20,
+          "garrison": 1
+        },
+        "events": [
+          "The Disputed Land",
+          "The Noble Marriage Offer"
+        ],
+        "choices": [
+          "Choice[3/3]: Split the strip of land equally between both families.✧ ↑⚜ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Ask your niece first — her opinion matters.✧ ↑⚜ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 21,
+        "season": "Spring",
+        "year": 6,
+        "resources": {
+          "denarii": 0,
+          "food": 549,
+          "families": 17,
+          "garrison": 0
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID SUCCESSFUL",
+          "The Winter Feast",
+          "The Flood in the Lower Village"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[1/3]: Host a proper feast — spare no expense at Christmas.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 22,
+        "season": "Summer",
+        "year": 6,
+        "resources": {
+          "denarii": 0,
+          "food": 588,
+          "families": 18,
+          "garrison": 0
+        },
+        "events": [
+          "The Planting Decision",
+          "The Wandering Scholar"
+        ],
+        "choices": [
+          "Choice[1/2]: Plant wheat in every field — we need the grain.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Take him in — education is worth more than his room and board.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 23,
+        "season": "Autumn",
+        "year": 6,
+        "resources": {
+          "denarii": 0,
+          "food": 583,
+          "families": 18,
+          "garrison": 3
+        },
+        "events": [
+          "The Militia Drill",
+          "The Bandit Gang"
+        ],
+        "choices": [
+          "Choice[1/3]: Order the full week of militia drills.⚜ ↓✧ ↓⚔ ↑",
+          "See What Happens Next",
+          "Choice[2/3]: Offer the bandits a pardon if they surrender and work on the estate.⚜ ↓✧ ↑⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 24,
+        "season": "Winter",
+        "year": 6,
+        "resources": {
+          "denarii": 157,
+          "food": 609,
+          "families": 19,
+          "garrison": 2
+        },
+        "events": [
+          "Preparing the Winter Stores",
+          "The Debt Offer"
+        ],
+        "choices": [
+          "Choice[1/2]: Slaughter most of the pigs now and smoke the meat.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/2]: Refuse the loan — you will not deal with moneylenders.⚜ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 25,
+        "season": "Spring",
+        "year": 7,
+        "resources": {
+          "denarii": 20,
+          "food": 613,
+          "families": 16,
+          "garrison": 1
+        },
+        "events": [
+          "⚔ BORDER RAID ⚔",
+          "RAID SUCCESSFUL",
+          "The Castle Repairs",
+          "The Smugglers"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[1/3]: Repair the gate section — it is the most dangerous gap.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 26,
+        "season": "Summer",
+        "year": 7,
+        "resources": {
+          "denarii": 57,
+          "food": 593,
+          "families": 17,
+          "garrison": 1
+        },
+        "events": [
+          "The Trade Road Opens",
+          "The Fortification Request"
+        ],
+        "choices": [
+          "Choice[1/2]: Send the wool to market and collect the coin.⚜ ↑✧ ↓",
+          "See What Happens Next",
+          "Choice[1/3]: Pay your share in coin — keep your own forces at home.⚜ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 27,
+        "season": "Autumn",
+        "year": 7,
+        "resources": {
+          "denarii": 0,
+          "food": 574,
+          "families": 17,
+          "garrison": 3
+        },
+        "events": [
+          "The Summer Tournament",
+          "The Crop Blight"
+        ],
+        "choices": [
+          "Choice[1/3]: Send your knights to compete — glory and ransom await.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/2]: Try to separate the clean grain and save the good portion.⚜ ↓✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 28,
+        "season": "Winter",
+        "year": 7,
+        "resources": {
+          "denarii": 65,
+          "food": 613,
+          "families": 17,
+          "garrison": 2
+        },
+        "events": [
+          "The Tax Collection",
+          "The Water Mill Opportunity"
+        ],
+        "choices": [
+          "Choice[2/3]: Reduce this year's tax by a third — your people come first.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/2]: Just replace the millstones — cheaper partial improvement.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 29,
+        "season": "Spring",
+        "year": 8,
+        "resources": {
+          "denarii": 40,
+          "food": 630,
+          "families": 18,
+          "garrison": 2
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID SUCCESSFUL",
+          "The Court Dispute",
+          "The Smugglers"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[3/3]: Commission a water engineer to measure the flow precisely.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[3/3]: Keep half the salt as a fine and let them go.⚜ ↑✧ ↑"
+        ]
+      },
+      {
+        "turn": 30,
+        "season": "Summer",
+        "year": 8,
+        "resources": {
+          "denarii": 0,
+          "food": 581,
+          "families": 18,
+          "garrison": 3
+        },
+        "events": [
+          "The Runaway Serf",
+          "The Deserters"
+        ],
+        "choices": [
+          "Choice[1/2]: Send men to bring Wat back to the estate.⚜ ↓✧ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Hunt them down and discipline them publicly.⚜ ↓✧ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 31,
+        "season": "Autumn",
+        "year": 8,
+        "resources": {
+          "denarii": 17,
+          "food": 608,
+          "families": 18,
+          "garrison": 0
+        },
+        "events": [
+          "The Militia Drill",
+          "The Merchant Caravan"
+        ],
+        "choices": [
+          "Choice[3/3]: Skip the drills — the harvest matters more right now.⚜ ↑✧ ↑⚔ ↓",
+          "See What Happens Next",
+          "Choice[2/3]: Accept discounted goods instead of a fee — invest in trade goods.⚜ ↓✧ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 32,
+        "season": "Winter",
+        "year": 8,
+        "resources": {
+          "denarii": 20,
+          "food": 608,
+          "families": 18,
+          "garrison": 0
+        },
+        "events": [
+          "The Wool Surplus",
+          "The Bishop's Visit"
+        ],
+        "choices": [
+          "Choice[2/3]: Store the wool and sell in spring for a higher price.⚜ ↓✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/2]: Do nothing special — your faith stands on its own record.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 33,
+        "season": "Spring",
+        "year": 9,
+        "resources": {
+          "denarii": 0,
+          "food": 574,
+          "families": 18,
+          "garrison": 3
+        },
+        "events": [
+          "The Fuel Crisis",
+          "The Mercenary Offer"
+        ],
+        "choices": [
+          "Choice[3/3]: Ration carefully — everyone burns less until March.✧ ↓⚜ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Hire Gerhard and his company for the full year.⚜ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 34,
+        "season": "Summer",
+        "year": 9,
+        "resources": {
+          "denarii": 0,
+          "food": 528,
+          "families": 19,
+          "garrison": 2
+        },
+        "events": [
+          "The Soldier Levy",
+          "The Peasant Petition"
+        ],
+        "choices": [
+          "Choice[2/3]: Recruit five soldiers — affordable and still useful.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Refuse all three — you cannot appear weak to your tenants.✧ ↓⚔ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 35,
+        "season": "Autumn",
+        "year": 9,
+        "resources": {
+          "denarii": 40,
+          "food": 546,
+          "families": 19,
+          "garrison": 0
+        },
+        "events": [
+          "The Building Project",
+          "The Weapon Shortage"
+        ],
+        "choices": [
+          "Choice[1/3]: Commission the stone barn — it will last a generation.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[3/3]: Postpone repairs — the weapons will hold a little longer.⚜ ↑⚔ ↓",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 36,
+        "season": "Winter",
+        "year": 9,
+        "resources": {
+          "denarii": 63,
+          "food": 540,
+          "families": 20,
+          "garrison": 0
+        },
+        "events": [
+          "The Road Bandits",
+          "The Price Collapse"
+        ],
+        "choices": [
+          "Choice[3/3]: Ignore the problem — it is not your responsibility.⚜ ↓✧ ↓",
+          "See What Happens Next",
+          "Choice[1/3]: Sell the grain at the low price — take the loss now.⚜ ↑✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 37,
+        "season": "Spring",
+        "year": 10,
+        "resources": {
+          "denarii": 0,
+          "food": 555,
+          "families": 18,
+          "garrison": 1
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID SUCCESSFUL",
+          "The Accounting Books",
+          "The Wandering Scholar"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[3/3]: Dismiss the miller and keep the reeve on probation.⚜ ↓✧ ↑⚔ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 38,
+        "season": "Summer",
+        "year": 10,
+        "resources": {
+          "denarii": 0,
+          "food": 554,
+          "families": 18,
+          "garrison": 0
+        },
+        "events": [
+          "The Monastery's Offer",
+          "The Tithe Demand"
+        ],
+        "choices": [
+          "Choice[2/2]: Decline politely — your own fields come first.✧ ↑⚜ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Show him your own records and insist on your lower figure.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 39,
+        "season": "Autumn",
+        "year": 10,
+        "resources": {
+          "denarii": 7,
+          "food": 534,
+          "families": 18,
+          "garrison": 0
+        },
+        "events": [
+          "The Hay Harvest Rush",
+          "The Crusade Preacher"
+        ],
+        "choices": [
+          "Choice[2/2]: Split the workers — half on hay, half fixing the mill.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Politely decline — you cannot spare men or money this year.✧ ↓⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 40,
+        "season": "Winter",
+        "year": 10,
+        "resources": {
+          "denarii": 195,
+          "food": 522,
+          "families": 18,
+          "garrison": 0
+        },
+        "events": [
+          "The Tax Collection",
+          "The Inheritance Dispute"
+        ],
+        "choices": [
+          "Choice[1/3]: Collect the full tax — your estate needs the revenue.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Divide the farm equally between the two sons.⚜ ↑✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 41,
+        "season": null,
+        "year": null,
+        "resources": null,
+        "events": [],
+        "choices": []
+      }
+    ],
+    "actionLog": [
+      "Turn 1: Built — Build (80d)",
+      "Turn 2: Built — Build (80d)",
+      "Turn 3: Built — Build (80d)",
+      "Turn 4: Built — Build (80d)",
+      "Turn 5: Built — Build (200d)",
+      "Turn 7: Built — Build (150d)",
+      "Turn 11: Built — Build (80d)",
+      "Turn 12: Built — Build (200d)",
+      "Turn 16: Built — Build (150d)",
+      "Turn 20: Built — Build (100d)",
+      "Turn 24: Built — Build (100d)",
+      "Turn 40: Built — Build (140d)"
+    ],
+    "errors": []
+  },
+  {
+    "runId": "Normal/Balanced",
+    "difficulty": "normal",
+    "strategy": "balanced",
+    "turnsPlayed": 40,
+    "finalOutcome": "victory",
+    "elapsedSeconds": 198,
+    "turnData": [
+      {
+        "turn": 1,
+        "season": "Spring",
+        "year": 1,
+        "resources": {
+          "denarii": 500,
+          "food": 365,
+          "families": 20,
+          "garrison": 5
+        },
+        "events": [],
+        "choices": []
+      },
+      {
+        "turn": 2,
+        "season": "Summer",
+        "year": 1,
+        "resources": {
+          "denarii": 426,
+          "food": 350,
+          "families": 20,
+          "garrison": 5
+        },
+        "events": [
+          "The Bridge Repair",
+          "The Trade Dispute"
+        ],
+        "choices": [
+          "Choice[1/3]: Build a proper stone bridge — it will last for decades.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Find a new buyer — send your wool to the city market directly.⚜ ↑✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 3,
+        "season": "Autumn",
+        "year": 1,
+        "resources": {
+          "denarii": 336,
+          "food": 313,
+          "families": 20,
+          "garrison": 6
+        },
+        "events": [
+          "The Market Fair Charter",
+          "The Flood in the Lower Village"
+        ],
+        "choices": [
+          "Choice[2/3]: Ask for a smaller traveling fair permit — cheaper option.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Tell them it is God's will — you cannot help everyone.✧ ↓⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 4,
+        "season": "Winter",
+        "year": 1,
+        "resources": {
+          "denarii": 308,
+          "food": 271,
+          "families": 20,
+          "garrison": 7
+        },
+        "events": [
+          "The Road Bandits",
+          "The Inheritance Dispute"
+        ],
+        "choices": [
+          "Choice[3/3]: Ignore the problem — it is not your responsibility.⚜ ↓✧ ↓",
+          "See What Happens Next",
+          "Choice[1/3]: Rule in favor of the eldest — the traditional law is clear.✧ ↓⚔ ↑⚜ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 5,
+        "season": "Spring",
+        "year": 2,
+        "resources": {
+          "denarii": 281,
+          "food": 227,
+          "families": 23,
+          "garrison": 12
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID REPELLED",
+          "The Fuel Crisis",
+          "The Mercenary Offer",
+          "Choose Your Path: The Lord of Ashworth Manor"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[3/3]: Ration carefully — everyone burns less until March.✧ ↓⚜ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 6,
+        "season": "Summer",
+        "year": 2,
+        "resources": {
+          "denarii": 39,
+          "food": 230,
+          "families": 24,
+          "garrison": 12
+        },
+        "events": [
+          "The Trade Road Opens",
+          "The Crop Blight"
+        ],
+        "choices": [
+          "Choice[2/2]: Hire the mason to repair the granary wall.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[1/2]: Destroy all the affected grain right away — stop the spread.⚜ ↓✧ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 7,
+        "season": "Autumn",
+        "year": 2,
+        "resources": {
+          "denarii": 47,
+          "food": 194,
+          "families": 25,
+          "garrison": 14
+        },
+        "events": [
+          "The Militia Drill",
+          "The Smugglers"
+        ],
+        "choices": [
+          "Choice[2/3]: Drill only on Sundays — preserve the work week.⚜ ↓✧ ↑⚔ ↑",
+          "See What Happens Next",
+          "Choice[1/3]: Turn them over to the royal sheriff — it is the law.⚜ ↑✧ ↓",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 8,
+        "season": "Winter",
+        "year": 2,
+        "resources": {
+          "denarii": 74,
+          "food": 193,
+          "families": 25,
+          "garrison": 15
+        },
+        "events": [
+          "The Traveling Bishop",
+          "The Border Raid"
+        ],
+        "choices": [
+          "Choice[1/3]: Host a grand feast with all the ceremony due a bishop.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Reinforce the border but don't pursue — risk of escalation.⚜ ↓✧ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 9,
+        "season": "Spring",
+        "year": 3,
+        "resources": {
+          "denarii": 31,
+          "food": 175,
+          "families": 24,
+          "garrison": 14
+        },
+        "events": [
+          "⚔ BORDER RAID ⚔",
+          "RAID SUCCESSFUL",
+          "The Winter Feast",
+          "The Debt Offer"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[2/3]: Host a modest feast — enough food, but keep it simple.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 10,
+        "season": "Summer",
+        "year": 3,
+        "resources": {
+          "denarii": 122,
+          "food": 147,
+          "families": 25,
+          "garrison": 14
+        },
+        "events": [
+          "The Monastery's Offer",
+          "The Bishop's Visit",
+          "A Noblewoman’s Dilemma",
+          "Monday: The Steward’s Report",
+          "Wednesday: The Boundary Dispute"
+        ],
+        "choices": [
+          "Choice[1/2]: Accept the monks' offer and send ten workers for a week.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Prepare the chapel and make charitable donations before his visit.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 11,
+        "season": "Autumn",
+        "year": 3,
+        "resources": {
+          "denarii": 216,
+          "food": 130,
+          "families": 26,
+          "garrison": 15
+        },
+        "events": [
+          "The Building Project",
+          "The Merchant Caravan"
+        ],
+        "choices": [
+          "Choice[3/3]: Patch the old barn again — hold off spending for now.⚜ ↑✧ ↓",
+          "See What Happens Next",
+          "Choice[1/3]: Charge them a camping fee and let them stay.⚜ ↑✧ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 12,
+        "season": "Winter",
+        "year": 3,
+        "resources": {
+          "denarii": 112,
+          "food": 132,
+          "families": 26,
+          "garrison": 15
+        },
+        "events": [
+          "The Wool Surplus",
+          "The Water Mill Opportunity"
+        ],
+        "choices": [
+          "Choice[2/3]: Store the wool and sell in spring for a higher price.⚜ ↓✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Commission the full mill rebuild — it's a long-term investment.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 13,
+        "season": "Spring",
+        "year": 4,
+        "resources": {
+          "denarii": 67,
+          "food": 120,
+          "families": 30,
+          "garrison": 18
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID REPELLED",
+          "The Pilgrim's Request",
+          "The Famous Traveler",
+          "A Knight’s Gamble"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[1/3]: Take them in fully — give them warmth, beds, and meals.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 14,
+        "season": "Summer",
+        "year": 4,
+        "resources": {
+          "denarii": 0,
+          "food": 86,
+          "families": 30,
+          "garrison": 18
+        },
+        "events": [
+          "The Soldier Levy",
+          "The Monastery Dispute"
+        ],
+        "choices": [
+          "Choice[1/3]: Recruit and arm ten new soldiers right away.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Offer to lease the land from the monastery — keep using it.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 15,
+        "season": "Autumn",
+        "year": 4,
+        "resources": {
+          "denarii": 91,
+          "food": 82,
+          "families": 31,
+          "garrison": 14
+        },
+        "events": [
+          "The Hay Harvest Rush",
+          "The Pilgrim Arrivals"
+        ],
+        "choices": [
+          "Choice[1/2]: Focus every worker on the hay — get it all in before rain.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Provide free food and water as an act of Christian charity.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 16,
+        "season": "Winter",
+        "year": 4,
+        "resources": {
+          "denarii": 278,
+          "food": 95,
+          "families": 32,
+          "garrison": 11
+        },
+        "events": [
+          "Preparing the Winter Stores",
+          "The Holy Day Conflict",
+          "Choose Your Path: The Keeper of the Scriptorium",
+          "The Abbot's Secret",
+          "The Secret Copy"
+        ],
+        "choices": [
+          "Choice[1/2]: Slaughter most of the pigs now and smoke the meat.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Send the delivery anyway — the merchant deal is too important.⚜ ↑✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 17,
+        "season": "Spring",
+        "year": 5,
+        "resources": {
+          "denarii": 203,
+          "food": 61,
+          "families": 29,
+          "garrison": 10
+        },
+        "events": [
+          "⚔ BORDER RAID ⚔",
+          "RAID SUCCESSFUL",
+          "The Border Negotiation",
+          "The Price Collapse"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[2/3]: Reject the meeting — the wood is yours and you will keep it.✧ ↓⚔ ↓",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 18,
+        "season": "Summer",
+        "year": 5,
+        "resources": {
+          "denarii": 0,
+          "food": 67,
+          "families": 29,
+          "garrison": 10
+        },
+        "events": [
+          "The Planting Decision",
+          "The Fortification Request"
+        ],
+        "choices": [
+          "Choice[1/2]: Plant wheat in every field — we need the grain.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Send five soldiers for a season — they gain combat experience.⚜ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 19,
+        "season": "Autumn",
+        "year": 5,
+        "resources": {
+          "denarii": 0,
+          "food": 110,
+          "families": 30,
+          "garrison": 11
+        },
+        "events": [
+          "The Summer Tournament",
+          "The Peasant Petition",
+          "Choose Your Path: The Landless Knight",
+          "The Summons",
+          "The Cautious Column"
+        ],
+        "choices": [
+          "Choice[1/3]: Send your knights to compete — glory and ransom await.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Grant all three requests — they are reasonable.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 20,
+        "season": "Winter",
+        "year": 5,
+        "resources": {
+          "denarii": 173,
+          "food": 103,
+          "families": 30,
+          "garrison": 11
+        },
+        "events": [
+          "The Grain Harvest",
+          "The Weapon Shortage"
+        ],
+        "choices": [
+          "Choice[1/2]: All hands to the fields — work day and night to finish fast.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Buy the best iron and do the repairs right.⚜ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 21,
+        "season": "Spring",
+        "year": 6,
+        "resources": {
+          "denarii": 298,
+          "food": 75,
+          "families": 31,
+          "garrison": 12
+        },
+        "events": [
+          "The Accounting Books",
+          "The Noble Marriage Offer"
+        ],
+        "choices": [
+          "Choice[2/3]: Warn both men and demand repayment over time.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Accept the proposal — it is a good match for the estate.⚜ ↑✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 22,
+        "season": "Summer",
+        "year": 6,
+        "resources": {
+          "denarii": 9,
+          "food": 43,
+          "families": 32,
+          "garrison": 13
+        },
+        "events": [
+          "The Runaway Serf",
+          "The Relic Discovery"
+        ],
+        "choices": [
+          "Choice[1/2]: Send men to bring Wat back to the estate.⚜ ↓✧ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Say nothing about it — religious controversy helps no one.✧ ↓⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 23,
+        "season": "Autumn",
+        "year": 6,
+        "resources": {
+          "denarii": 0,
+          "food": 75,
+          "families": 33,
+          "garrison": 10
+        },
+        "events": [
+          "The Road Peddler's Remedy",
+          "The Deserters"
+        ],
+        "choices": [
+          "Choice[1/3]: Buy the peddler's remedy and distribute it to the sick.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Let them go and pay your remaining soldiers on time going forward.⚜ ↓✧ ↑⚔ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 24,
+        "season": "Winter",
+        "year": 6,
+        "resources": {
+          "denarii": 362,
+          "food": 73,
+          "families": 33,
+          "garrison": 6
+        },
+        "events": [
+          "The Tax Collection",
+          "The Crusade Preacher"
+        ],
+        "choices": [
+          "Choice[3/3]: Double the tax — your treasury is getting dangerously low.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Let three soldiers go who volunteered — honor their conviction.✧ ↑⚔ ↓⚜ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 25,
+        "season": "Spring",
+        "year": 7,
+        "resources": {
+          "denarii": 276,
+          "food": 43,
+          "families": 34,
+          "garrison": 8
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID SUCCESSFUL",
+          "The Castle Repairs",
+          "The Wandering Scholar"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[2/3]: Patch both sections cheaply — keep costs down.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 26,
+        "season": "Summer",
+        "year": 7,
+        "resources": {
+          "denarii": 0,
+          "food": 52,
+          "families": 34,
+          "garrison": 8
+        },
+        "events": [
+          "The Traveling Seed Merchant",
+          "The Tithe Demand"
+        ],
+        "choices": [
+          "Choice[1/3]: Buy the southern seeds and try them in a test field.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[2/3]: Show him your own records and insist on your lower figure.⚜ ↓",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 27,
+        "season": "Autumn",
+        "year": 7,
+        "resources": {
+          "denarii": 0,
+          "food": 100,
+          "families": 34,
+          "garrison": 7
+        },
+        "events": [
+          "The Castle Well",
+          "The Bandit Gang"
+        ],
+        "choices": [
+          "Choice[1/2]: Dig the well deeper now while conditions are good.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Offer the bandits a pardon if they surrender and work on the estate.⚜ ↓✧ ↑⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 28,
+        "season": "Winter",
+        "year": 7,
+        "resources": {
+          "denarii": 223,
+          "food": 111,
+          "families": 34,
+          "garrison": 5
+        },
+        "events": [
+          "The Disputed Land",
+          "The Relic Discovery"
+        ],
+        "choices": [
+          "Choice[1/3]: Rule in favor of the family with the document.✧ ↓⚜ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Send the bones to the bishop for verification — do it properly.✧ ↑⚜ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 29,
+        "season": "Spring",
+        "year": 8,
+        "resources": {
+          "denarii": 203,
+          "food": 94,
+          "families": 38,
+          "garrison": 8
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID REPELLED",
+          "The Court Dispute",
+          "The Trade Dispute"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[3/3]: Commission a water engineer to measure the flow precisely.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[1/3]: Insist on the agreed price — a deal is a deal.⚜ ↑✧ ↓"
+        ]
+      },
+      {
+        "turn": 30,
+        "season": "Summer",
+        "year": 8,
+        "resources": {
+          "denarii": 40,
+          "food": 101,
+          "families": 39,
+          "garrison": 6
+        },
+        "events": [
+          "The Trade Road Opens",
+          "The Weapon Shortage"
+        ],
+        "choices": [
+          "Choice[2/2]: Hire the mason to repair the granary wall.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[3/3]: Postpone repairs — the weapons will hold a little longer.⚜ ↑⚔ ↓",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 31,
+        "season": "Autumn",
+        "year": 8,
+        "resources": {
+          "denarii": 5,
+          "food": 92,
+          "families": 39,
+          "garrison": 5
+        },
+        "events": [
+          "The Market Fair Charter",
+          "The Noble Marriage Offer"
+        ],
+        "choices": [
+          "Choice[3/3]: Send the messenger away — you cannot afford it this year.✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Decline politely — your niece is not a bargaining piece.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 32,
+        "season": "Winter",
+        "year": 8,
+        "resources": {
+          "denarii": 185,
+          "food": 129,
+          "families": 39,
+          "garrison": 4
+        },
+        "events": [
+          "The Tax Collection",
+          "The Tithe Demand"
+        ],
+        "choices": [
+          "Choice[2/3]: Reduce this year's tax by a third — your people come first.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Pay the full amount he claims — avoid any conflict with the Church.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 33,
+        "season": "Spring",
+        "year": 9,
+        "resources": {
+          "denarii": 0,
+          "food": 56,
+          "families": 34,
+          "garrison": 5
+        },
+        "events": [
+          "⚔ BORDER RAID ⚔",
+          "RAID SUCCESSFUL",
+          "The Castle Repairs",
+          "The Border Raid"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[2/3]: Patch both sections cheaply — keep costs down.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 34,
+        "season": "Summer",
+        "year": 9,
+        "resources": {
+          "denarii": 85,
+          "food": 47,
+          "families": 35,
+          "garrison": 4
+        },
+        "events": [
+          "The Monastery's Offer",
+          "The Bishop's Visit"
+        ],
+        "choices": [
+          "Choice[1/2]: Accept the monks' offer and send ten workers for a week.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/2]: Do nothing special — your faith stands on its own record.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 35,
+        "season": "Autumn",
+        "year": 9,
+        "resources": {
+          "denarii": 123,
+          "food": 63,
+          "families": 36,
+          "garrison": 5
+        },
+        "events": [
+          "The Building Project",
+          "The Price Collapse"
+        ],
+        "choices": [
+          "Choice[3/3]: Patch the old barn again — hold off spending for now.⚜ ↑✧ ↓",
+          "See What Happens Next",
+          "Choice[1/3]: Sell the grain at the low price — take the loss now.⚜ ↑✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 36,
+        "season": "Winter",
+        "year": 9,
+        "resources": {
+          "denarii": 217,
+          "food": 96,
+          "families": 36,
+          "garrison": 4
+        },
+        "events": [
+          "The Road Bandits",
+          "The Pilgrim Arrivals"
+        ],
+        "choices": [
+          "Choice[3/3]: Ignore the problem — it is not your responsibility.⚜ ↓✧ ↓",
+          "See What Happens Next",
+          "Choice[1/3]: Set up a way station — sell food and lodging at fair prices.⚜ ↑✧ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 37,
+        "season": "Spring",
+        "year": 10,
+        "resources": {
+          "denarii": 136,
+          "food": 79,
+          "families": 36,
+          "garrison": 6
+        },
+        "events": [
+          "The Accounting Books",
+          "The Monastery Dispute"
+        ],
+        "choices": [
+          "Choice[3/3]: Dismiss the miller and keep the reeve on probation.⚜ ↓✧ ↑⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Give the monks the land — it is not worth a Church dispute.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 38,
+        "season": "Summer",
+        "year": 10,
+        "resources": {
+          "denarii": 75,
+          "food": 71,
+          "families": 37,
+          "garrison": 3
+        },
+        "events": [
+          "The Bridge Repair",
+          "The Peasant Petition"
+        ],
+        "choices": [
+          "Choice[3/3]: Charge a crossing toll to pay for the repairs over time.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Refuse all three — you cannot appear weak to your tenants.✧ ↓⚔ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 39,
+        "season": "Autumn",
+        "year": 10,
+        "resources": {
+          "denarii": 0,
+          "food": 80,
+          "families": 37,
+          "garrison": 8
+        },
+        "events": [
+          "The Summer Tournament",
+          "The Fortification Request"
+        ],
+        "choices": [
+          "Choice[1/3]: Send your knights to compete — glory and ransom await.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Send five soldiers for a season — they gain combat experience.⚜ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 40,
+        "season": "Winter",
+        "year": 10,
+        "resources": {
+          "denarii": 203,
+          "food": 137,
+          "families": 38,
+          "garrison": 6
+        },
+        "events": [
+          "Preparing the Winter Stores",
+          "The Wandering Scholar"
+        ],
+        "choices": [
+          "Choice[1/2]: Slaughter most of the pigs now and smoke the meat.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Take him in — education is worth more than his room and board.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 41,
+        "season": null,
+        "year": null,
+        "resources": null,
+        "events": [],
+        "choices": []
+      }
+    ],
+    "actionLog": [
+      "Turn 1: Built — Build (80d)",
+      "Recruited: Recruit +1",
+      "Turn 3: Built — Build (80d)",
+      "Recruited: Recruit +1",
+      "Turn 5: Built — Build (80d)",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Turn 11: Built — Build (80d)",
+      "Recruited: Recruit +1",
+      "Turn 15: Built — Build (80d)",
+      "Recruited: Recruit +1",
+      "Turn 17: Built — Build (200d)",
+      "Recruited: Recruit +1",
+      "Turn 21: Built — Build (200d)",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Turn 25: Built — Build (150d)",
+      "Recruited: Recruit +1",
+      "Turn 29: Built — Build (150d)",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Turn 35: Built — Build (100d)",
+      "Recruited: Recruit +1",
+      "Turn 37: Built — Build (100d)",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1"
+    ],
+    "errors": []
+  },
+  {
+    "runId": "Normal/Military",
+    "difficulty": "normal",
+    "strategy": "military",
+    "turnsPlayed": 22,
+    "finalOutcome": "possible_softlock",
+    "elapsedSeconds": 137.2,
+    "turnData": [
+      {
+        "turn": 1,
+        "season": "Spring",
+        "year": 1,
+        "resources": {
+          "denarii": 500,
+          "food": 365,
+          "families": 20,
+          "garrison": 5
+        },
+        "events": [],
+        "choices": []
+      },
+      {
+        "turn": 2,
+        "season": "Summer",
+        "year": 1,
+        "resources": {
+          "denarii": 555,
+          "food": 358,
+          "families": 20,
+          "garrison": 6
+        },
+        "events": [
+          "The Planting Decision",
+          "The Trade Dispute"
+        ],
+        "choices": [
+          "Choice[1/2]: Plant wheat in every field — we need the grain.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Find a new buyer — send your wool to the city market directly.⚜ ↑✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 3,
+        "season": "Autumn",
+        "year": 1,
+        "resources": {
+          "denarii": 499,
+          "food": 348,
+          "families": 21,
+          "garrison": 7
+        },
+        "events": [
+          "The Castle Well",
+          "The Water Mill Opportunity"
+        ],
+        "choices": [
+          "Choice[2/2]: Wait and see — it has not run dry yet.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Commission the full mill rebuild — it's a long-term investment.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 4,
+        "season": "Winter",
+        "year": 1,
+        "resources": {
+          "denarii": 622,
+          "food": 362,
+          "families": 21,
+          "garrison": 7
+        },
+        "events": [
+          "The Traveling Bishop",
+          "The Border Raid"
+        ],
+        "choices": [
+          "Choice[1/3]: Host a grand feast with all the ceremony due a bishop.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Demand the neighboring lord pay for the stolen cattle.⚜ ↑✧ ↑⚔ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 5,
+        "season": "Spring",
+        "year": 2,
+        "resources": {
+          "denarii": 634,
+          "food": 355,
+          "families": 24,
+          "garrison": 10
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID REPELLED",
+          "The Winter Feast",
+          "The Smugglers",
+          "Choose Your Path: The Lord of Ashworth Manor"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[1/3]: Host a proper feast — spare no expense at Christmas.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 6,
+        "season": "Summer",
+        "year": 2,
+        "resources": {
+          "denarii": 699,
+          "food": 304,
+          "families": 24,
+          "garrison": 11
+        },
+        "events": [
+          "The Monastery's Offer",
+          "The Relic Discovery"
+        ],
+        "choices": [
+          "Choice[1/2]: Accept the monks' offer and send ten workers for a week.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Say nothing about it — religious controversy helps no one.✧ ↓⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 7,
+        "season": "Autumn",
+        "year": 2,
+        "resources": {
+          "denarii": 738,
+          "food": 307,
+          "families": 24,
+          "garrison": 11
+        },
+        "events": [
+          "The Summer Tournament",
+          "The Wandering Scholar"
+        ],
+        "choices": [
+          "Choice[2/3]: Skip the tournament — your men are needed at home.⚜ ↑⚔ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Take him in — education is worth more than his room and board.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 8,
+        "season": "Winter",
+        "year": 2,
+        "resources": {
+          "denarii": 950,
+          "food": 289,
+          "families": 24,
+          "garrison": 11
+        },
+        "events": [
+          "The Grain Harvest",
+          "The Mercenary Offer"
+        ],
+        "choices": [
+          "Choice[1/2]: All hands to the fields — work day and night to finish fast.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Refuse — you will not trust hired strangers to defend your land.✧ ↑⚔ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 9,
+        "season": "Spring",
+        "year": 3,
+        "resources": {
+          "denarii": 866,
+          "food": 290,
+          "families": 20,
+          "garrison": 9
+        },
+        "events": [
+          "⚔ BORDER RAID ⚔",
+          "RAID SUCCESSFUL",
+          "The Castle Repairs",
+          "The Peasant Petition"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[3/3]: Leave the repairs until spring — winter is the wrong time.⚜ ↑⚔ ↓",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 10,
+        "season": "Summer",
+        "year": 3,
+        "resources": {
+          "denarii": 707,
+          "food": 322,
+          "families": 20,
+          "garrison": 12
+        },
+        "events": [
+          "The Trade Road Opens",
+          "The Bandit Gang",
+          "A Noblewoman’s Dilemma",
+          "Monday: The Steward’s Report",
+          "Wednesday: The Boundary Dispute"
+        ],
+        "choices": [
+          "Choice[2/2]: Hire the mason to repair the granary wall.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[1/3]: Send a full armed patrol to clear the forest.⚜ ↓✧ ↑⚔ ↑",
+          "Continue",
+          "Begin"
+        ]
+      },
+      {
+        "turn": 11,
+        "season": "Autumn",
+        "year": 3,
+        "resources": {
+          "denarii": 691,
+          "food": 284,
+          "families": 20,
+          "garrison": 12
+        },
+        "events": [
+          "The Hay Harvest Rush",
+          "The Pilgrim Arrivals"
+        ],
+        "choices": [
+          "Choice[2/2]: Split the workers — half on hay, half fixing the mill.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Close your roads to pilgrims — you cannot absorb the traffic.✧ ↓⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 12,
+        "season": "Winter",
+        "year": 3,
+        "resources": {
+          "denarii": 802,
+          "food": 277,
+          "families": 21,
+          "garrison": 12
+        },
+        "events": [
+          "The Wool Surplus",
+          "The Bishop's Visit"
+        ],
+        "choices": [
+          "Choice[3/3]: Sell half now and keep half for spring.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/2]: Do nothing special — your faith stands on its own record.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 13,
+        "season": "Spring",
+        "year": 4,
+        "resources": {
+          "denarii": 770,
+          "food": 293,
+          "families": 24,
+          "garrison": 14
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID REPELLED",
+          "The Pilgrim's Request",
+          "The Famous Traveler",
+          "Choose Your Path: The Keeper of the Scriptorium"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[1/3]: Take them in fully — give them warmth, beds, and meals.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 14,
+        "season": "Summer",
+        "year": 4,
+        "resources": {
+          "denarii": 612,
+          "food": 281,
+          "families": 24,
+          "garrison": 14
+        },
+        "events": [
+          "The Bridge Repair",
+          "The Weapon Shortage"
+        ],
+        "choices": [
+          "Choice[1/3]: Build a proper stone bridge — it will last for decades.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Buy the best iron and do the repairs right.⚜ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 15,
+        "season": "Autumn",
+        "year": 4,
+        "resources": {
+          "denarii": 499,
+          "food": 272,
+          "families": 24,
+          "garrison": 14
+        },
+        "events": [
+          "The Market Fair Charter",
+          "The Tithe Demand"
+        ],
+        "choices": [
+          "Choice[2/3]: Ask for a smaller traveling fair permit — cheaper option.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Show him your own records and insist on your lower figure.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 16,
+        "season": "Winter",
+        "year": 4,
+        "resources": {
+          "denarii": 689,
+          "food": 260,
+          "families": 24,
+          "garrison": 13
+        },
+        "events": [
+          "The Road Bandits",
+          "The Debt Offer",
+          "Choose Your Path: The Landless Knight",
+          "The Summons",
+          "The Cautious Column"
+        ],
+        "choices": [
+          "Choice[2/3]: Offer the bandits honest work on the estate — hire them.⚜ ↓✧ ↑⚔ ↑",
+          "See What Happens Next",
+          "Choice[1/2]: Accept the loan — you need the coin and can pay it back.⚜ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 17,
+        "season": "Spring",
+        "year": 5,
+        "resources": {
+          "denarii": 679,
+          "food": 245,
+          "families": 22,
+          "garrison": 13
+        },
+        "events": [
+          "⚔ BORDER RAID ⚔",
+          "RAID SUCCESSFUL",
+          "The Court Dispute",
+          "The Holy Day Conflict"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[3/3]: Commission a water engineer to measure the flow precisely.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[3/3]: Negotiate: deliver the day before, even at a slightly lower price.⚜ ↑"
+        ]
+      },
+      {
+        "turn": 18,
+        "season": "Summer",
+        "year": 5,
+        "resources": {
+          "denarii": 622,
+          "food": 253,
+          "families": 22,
+          "garrison": 13
+        },
+        "events": [
+          "The Traveling Seed Merchant",
+          "The Flood in the Lower Village"
+        ],
+        "choices": [
+          "Choice[2/3]: Send the merchant away and keep your usual seeds.⚜ ↑✧ ↓",
+          "See What Happens Next",
+          "Choice[1/3]: Provide emergency grain, timber, and housing in the castle.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 19,
+        "season": "Autumn",
+        "year": 5,
+        "resources": {
+          "denarii": 650,
+          "food": 225,
+          "families": 22,
+          "garrison": 13
+        },
+        "events": [
+          "The Building Project",
+          "The Monastery Dispute"
+        ],
+        "choices": [
+          "Choice[3/3]: Patch the old barn again — hold off spending for now.⚜ ↑✧ ↓",
+          "See What Happens Next",
+          "Choice[1/3]: Give the monks the land — it is not worth a Church dispute.⚜ ↓",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 20,
+        "season": "Winter",
+        "year": 5,
+        "resources": {
+          "denarii": 788,
+          "food": 238,
+          "families": 23,
+          "garrison": 13
+        },
+        "events": [
+          "The Disputed Land",
+          "The Price Collapse"
+        ],
+        "choices": [
+          "Choice[3/3]: Split the strip of land equally between both families.✧ ↑⚜ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Sell the grain at the low price — take the loss now.⚜ ↑✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 21,
+        "season": "Spring",
+        "year": 6,
+        "resources": {
+          "denarii": 740,
+          "food": 192,
+          "families": 23,
+          "garrison": 11
+        },
+        "events": [
+          "The Border Negotiation",
+          "The Deserters"
+        ],
+        "choices": [
+          "Choice[2/3]: Reject the meeting — the wood is yours and you will keep it.✧ ↓⚔ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Replace them immediately with new recruits from the village.⚜ ↓✧ ↓⚔ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 22,
+        "season": "Summer",
+        "year": 6,
+        "resources": {
+          "denarii": 703,
+          "food": 195,
+          "families": 23,
+          "garrison": 13
+        },
+        "events": [
+          "The Runaway Serf",
+          "The Fortification Request"
+        ],
+        "choices": [
+          "Choice[2/2]: Let Wat go — and tell the other serfs you are a fair lord.✧ ↑⚔ ↓⚜ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Send five soldiers for a season — they gain combat experience.⚜ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 23,
+        "season": null,
+        "year": null,
+        "resources": null,
+        "events": [
+          "How to Play"
+        ],
+        "choices": [],
+        "diagnostics": {
+          "visibleText": "♫\n♛\nThe Lord's Ledger\n\nA Medieval Economic Simulation\n\n◆\n\nThe old lord has passed, and the estate is now yours. Manage your treasury, keep your people fed, defend your borders, and honor the Church — for ten years, through spring planting and winter storms, through raids and feasts and the quiet decisions that shape a reign.\n\nEvery choice has consequences. There are no right answers — only trade-offs.\n\nHOW TO PLAY\nGoal: Survive 40 turns (10 years). Manage your resources wisely — if your population reaches 0 or you go bankrupt, you lose.\n⚜ Denarii: Earn money by building, trading, and collecting taxes. Pay for buildings, soldiers, and upgrades.\n✧ Food: Keep your families fed. Build farms and buy grain to sustain your growing population.\n⚔ Military: Recruit soldiers and upgrade your castle t",
+          "buttons": [
+            "♫",
+            "❁EasyMore resources, gentler penalties",
+            "⚖NormalThe standard experience",
+            "☠HardFewer resources, harsher realm"
+          ]
+        }
+      }
+    ],
+    "actionLog": [
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1",
+      "Recruited: Recruit +1"
+    ],
+    "errors": [],
+    "diagnostics": {
+      "visibleText": "♫\n♛\nThe Lord's Ledger\n\nA Medieval Economic Simulation\n\n◆\n\nThe old lord has passed, and the estate is now yours. Manage your treasury, keep your people fed, defend your borders, and honor the Church — for ten years, through spring planting and winter storms, through raids and feasts and the quiet decisions that shape a reign.\n\nEvery choice has consequences. There are no right answers — only trade-offs.\n\nHOW TO PLAY\nGoal: Survive 40 turns (10 years). Manage your resources wisely — if your population reaches 0 or you go bankrupt, you lose.\n⚜ Denarii: Earn money by building, trading, and collecting taxes. Pay for buildings, soldiers, and upgrades.\n✧ Food: Keep your families fed. Build farms and buy grain to sustain your growing population.\n⚔ Military: Recruit soldiers and upgrade your castle t",
+      "buttons": [
+        "♫",
+        "❁EasyMore resources, gentler penalties",
+        "⚖NormalThe standard experience",
+        "☠HardFewer resources, harsher realm"
+      ]
+    }
+  },
+  {
+    "runId": "Hard/Passive",
+    "difficulty": "hard",
+    "strategy": "passive",
+    "turnsPlayed": 16,
+    "finalOutcome": "game_over:famine",
+    "elapsedSeconds": 63.3,
+    "turnData": [
+      {
+        "turn": 1,
+        "season": "Spring",
+        "year": 1,
+        "resources": {
+          "denarii": 400,
+          "food": 255,
+          "families": 18,
+          "garrison": 3
+        },
+        "events": [],
+        "choices": []
+      },
+      {
+        "turn": 2,
+        "season": "Summer",
+        "year": 1,
+        "resources": {
+          "denarii": 378,
+          "food": 256,
+          "families": 19,
+          "garrison": 3
+        },
+        "events": [
+          "The Monastery's Offer",
+          "The Wandering Scholar"
+        ],
+        "choices": [
+          "Choice[2/2]: Decline politely — your own fields come first.✧ ↑⚜ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Take him in — education is worth more than his room and board.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 3,
+        "season": "Autumn",
+        "year": 1,
+        "resources": {
+          "denarii": 390,
+          "food": 277,
+          "families": 19,
+          "garrison": 3
+        },
+        "events": [
+          "The Hay Harvest Rush",
+          "The Flood in the Lower Village"
+        ],
+        "choices": [
+          "Choice[1/2]: Focus every worker on the hay — get it all in before rain.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Provide emergency grain, timber, and housing in the castle.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 4,
+        "season": "Winter",
+        "year": 1,
+        "resources": {
+          "denarii": 500,
+          "food": 273,
+          "families": 19,
+          "garrison": 3
+        },
+        "events": [
+          "The Disputed Land",
+          "The Smugglers"
+        ],
+        "choices": [
+          "Choice[2/3]: Rule in favor of the family who has farmed it longest.✧ ↑⚜ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Keep half the salt as a fine and let them go.⚜ ↑✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 5,
+        "season": "Spring",
+        "year": 2,
+        "resources": {
+          "denarii": 572,
+          "food": 249,
+          "families": 19,
+          "garrison": 2
+        },
+        "events": [
+          "The Pilgrim's Request",
+          "The Border Raid",
+          "Choose Your Path: The Lord of Ashworth Manor",
+          "The King's Demand",
+          "Full Compliance"
+        ],
+        "choices": [
+          "Choice[3/3]: Turn them away — your stores are needed for your own people.✧ ↓⚜ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Demand the neighboring lord pay for the stolen cattle.⚜ ↑✧ ↑⚔ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 6,
+        "season": "Summer",
+        "year": 2,
+        "resources": {
+          "denarii": 545,
+          "food": 245,
+          "families": 19,
+          "garrison": 1
+        },
+        "events": [
+          "The Planting Decision",
+          "The Deserters"
+        ],
+        "choices": [
+          "Choice[2/2]: Use the three-field system — wheat, beans, and fallow.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Let them go and pay your remaining soldiers on time going forward.⚜ ↓✧ ↑⚔ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 7,
+        "season": "Autumn",
+        "year": 2,
+        "resources": {
+          "denarii": 449,
+          "food": 224,
+          "families": 19,
+          "garrison": 2
+        },
+        "events": [
+          "The Market Fair Charter",
+          "The Fortification Request"
+        ],
+        "choices": [
+          "Choice[1/3]: Pay the fee and get the charter — build a market square.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Send ten laborers for a month — cheaper than coin.⚜ ↓✧ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 8,
+        "season": "Winter",
+        "year": 2,
+        "resources": {
+          "denarii": 480,
+          "food": 205,
+          "families": 20,
+          "garrison": 2
+        },
+        "events": [
+          "Preparing the Winter Stores",
+          "The Monastery Dispute"
+        ],
+        "choices": [
+          "Choice[2/2]: Keep most of the pigs alive — invest in spring offspring.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Offer to lease the land from the monastery — keep using it.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 9,
+        "season": "Spring",
+        "year": 3,
+        "resources": {
+          "denarii": 245,
+          "food": 139,
+          "families": 15,
+          "garrison": 2
+        },
+        "events": [
+          "⚔ BORDER RAID ⚔",
+          "RAID SUCCESSFUL",
+          "The Castle Repairs",
+          "The Water Mill Opportunity"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[1/3]: Repair the gate section — it is the most dangerous gap.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 10,
+        "season": "Summer",
+        "year": 3,
+        "resources": {
+          "denarii": 248,
+          "food": 130,
+          "families": 16,
+          "garrison": 7
+        },
+        "events": [
+          "The Soldier Levy",
+          "The Price Collapse",
+          "A Noblewoman’s Dilemma",
+          "Monday: The Steward’s Report",
+          "Wednesday: The Boundary Dispute"
+        ],
+        "choices": [
+          "Choice[1/3]: Recruit and arm ten new soldiers right away.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Sell the grain at the low price — take the loss now.⚜ ↑✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 11,
+        "season": "Autumn",
+        "year": 3,
+        "resources": {
+          "denarii": 312,
+          "food": 95,
+          "families": 16,
+          "garrison": 7
+        },
+        "events": [
+          "The Building Project",
+          "The Debt Offer"
+        ],
+        "choices": [
+          "Choice[3/3]: Patch the old barn again — hold off spending for now.⚜ ↑✧ ↓",
+          "See What Happens Next",
+          "Choice[2/2]: Refuse the loan — you will not deal with moneylenders.⚜ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 12,
+        "season": "Winter",
+        "year": 3,
+        "resources": {
+          "denarii": 477,
+          "food": 61,
+          "families": 16,
+          "garrison": 7
+        },
+        "events": [
+          "The Traveling Bishop",
+          "The Noble Marriage Offer"
+        ],
+        "choices": [
+          "Choice[2/3]: Offer a decent meal but nothing lavish.⚜ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Accept the proposal — it is a good match for the estate.⚜ ↑✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 13,
+        "season": "Spring",
+        "year": 4,
+        "resources": {
+          "denarii": 516,
+          "food": 66,
+          "families": 20,
+          "garrison": 9
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID REPELLED",
+          "The Court Dispute",
+          "The Famous Traveler",
+          "Choose Your Path: The Keeper of the Scriptorium"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[1/3]: Rule in favor of the miller — the mill came first.⚜ ↑✧ ↓",
+          "See What Happens Next",
+          "Choice[1/2]: Host him generously with food, wine, and a fine audience.⚜ ↓✧ ↑"
+        ]
+      },
+      {
+        "turn": 14,
+        "season": "Summer",
+        "year": 4,
+        "resources": {
+          "denarii": 548,
+          "food": 39,
+          "families": 20,
+          "garrison": 9
+        },
+        "events": [
+          "The Traveling Seed Merchant",
+          "The Inheritance Dispute"
+        ],
+        "choices": [
+          "Choice[2/3]: Send the merchant away and keep your usual seeds.⚜ ↑✧ ↓",
+          "See What Happens Next",
+          "Choice[2/3]: Divide the farm equally between the two sons.⚜ ↑✧ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 15,
+        "season": "Autumn",
+        "year": 4,
+        "resources": {
+          "denarii": 475,
+          "food": 16,
+          "families": 20,
+          "garrison": 11
+        },
+        "events": [
+          "The Militia Drill",
+          "The Pilgrim Arrivals"
+        ],
+        "choices": [
+          "Choice[1/3]: Order the full week of militia drills.⚜ ↓✧ ↓⚔ ↑",
+          "See What Happens Next",
+          "Choice[2/3]: Provide free food and water as an act of Christian charity.⚜ ↓✧ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 16,
+        "season": "Winter",
+        "year": 4,
+        "resources": {
+          "denarii": 566,
+          "food": 27,
+          "families": 15,
+          "garrison": 8
+        },
+        "events": [
+          "The Grain Harvest",
+          "The Bandit Gang",
+          "Choose Your Path: The Landless Knight",
+          "The Summons",
+          "The Cautious Column"
+        ],
+        "choices": [
+          "Choice[2/2]: Pace the work steadily — rest your people properly.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Offer the bandits a pardon if they surrender and work on the estate.⚜ ↓✧ ↑⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 17,
+        "season": null,
+        "year": null,
+        "resources": null,
+        "events": [],
+        "choices": []
+      }
+    ],
+    "actionLog": [],
+    "errors": []
+  },
+  {
+    "runId": "Hard/Builder",
+    "difficulty": "hard",
+    "strategy": "builder",
+    "turnsPlayed": 40,
+    "finalOutcome": "victory",
+    "elapsedSeconds": 190.5,
+    "turnData": [
+      {
+        "turn": 1,
+        "season": "Spring",
+        "year": 1,
+        "resources": {
+          "denarii": 400,
+          "food": 255,
+          "families": 18,
+          "garrison": 3
+        },
+        "events": [],
+        "choices": []
+      },
+      {
+        "turn": 2,
+        "season": "Summer",
+        "year": 1,
+        "resources": {
+          "denarii": 328,
+          "food": 238,
+          "families": 18,
+          "garrison": 3
+        },
+        "events": [
+          "The Bridge Repair",
+          "The Smugglers"
+        ],
+        "choices": [
+          "Choice[2/3]: Patch the wooden bridge quickly and cheaply.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Keep half the salt as a fine and let them go.⚜ ↑✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 3,
+        "season": "Autumn",
+        "year": 1,
+        "resources": {
+          "denarii": 356,
+          "food": 222,
+          "families": 18,
+          "garrison": 3
+        },
+        "events": [
+          "The Hay Harvest Rush",
+          "The Debt Offer"
+        ],
+        "choices": [
+          "Choice[1/2]: Focus every worker on the hay — get it all in before rain.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/2]: Refuse the loan — you will not deal with moneylenders.⚜ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 4,
+        "season": "Winter",
+        "year": 1,
+        "resources": {
+          "denarii": 373,
+          "food": 185,
+          "families": 18,
+          "garrison": 3
+        },
+        "events": [
+          "The Grain Harvest",
+          "The Flood in the Lower Village"
+        ],
+        "choices": [
+          "Choice[2/2]: Pace the work steadily — rest your people properly.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Tell them it is God's will — you cannot help everyone.✧ ↓⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 5,
+        "season": "Spring",
+        "year": 2,
+        "resources": {
+          "denarii": 195,
+          "food": 144,
+          "families": 16,
+          "garrison": 5
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID SUCCESSFUL",
+          "The Court Dispute",
+          "The Bandit Gang",
+          "Choose Your Path: The Lord of Ashworth Manor"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[1/3]: Rule in favor of the miller — the mill came first.⚜ ↑✧ ↓",
+          "See What Happens Next",
+          "Choice[1/3]: Send a full armed patrol to clear the forest.⚜ ↓✧ ↑⚔ ↑"
+        ]
+      },
+      {
+        "turn": 6,
+        "season": "Summer",
+        "year": 2,
+        "resources": {
+          "denarii": 0,
+          "food": 153,
+          "families": 17,
+          "garrison": 6
+        },
+        "events": [
+          "The Soldier Levy",
+          "The Peasant Petition"
+        ],
+        "choices": [
+          "Choice[2/3]: Recruit five soldiers — affordable and still useful.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Grant the drainage and the pig — refuse the labor change.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 7,
+        "season": "Autumn",
+        "year": 2,
+        "resources": {
+          "denarii": 0,
+          "food": 148,
+          "families": 18,
+          "garrison": 6
+        },
+        "events": [
+          "The Summer Tournament",
+          "The Tithe Demand"
+        ],
+        "choices": [
+          "Choice[1/3]: Send your knights to compete — glory and ransom await.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Show him your own records and insist on your lower figure.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 8,
+        "season": "Winter",
+        "year": 2,
+        "resources": {
+          "denarii": 50,
+          "food": 176,
+          "families": 19,
+          "garrison": 6
+        },
+        "events": [
+          "The Road Bandits",
+          "The Relic Discovery"
+        ],
+        "choices": [
+          "Choice[2/3]: Offer the bandits honest work on the estate — hire them.⚜ ↓✧ ↑⚔ ↑",
+          "See What Happens Next",
+          "Choice[1/3]: Send the bones to the bishop for verification — do it properly.✧ ↑⚜ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 9,
+        "season": "Spring",
+        "year": 3,
+        "resources": {
+          "denarii": 0,
+          "food": 140,
+          "families": 14,
+          "garrison": 5
+        },
+        "events": [
+          "⚔ BORDER RAID ⚔",
+          "RAID SUCCESSFUL",
+          "The Winter Feast",
+          "The Crusade Preacher"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[1/3]: Host a proper feast — spare no expense at Christmas.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 10,
+        "season": "Summer",
+        "year": 3,
+        "resources": {
+          "denarii": 0,
+          "food": 208,
+          "families": 15,
+          "garrison": 3
+        },
+        "events": [
+          "The Runaway Serf",
+          "The Merchant Caravan",
+          "A Noblewoman’s Dilemma",
+          "Monday: The Steward’s Report",
+          "Wednesday: The Boundary Dispute"
+        ],
+        "choices": [
+          "Choice[2/2]: Let Wat go — and tell the other serfs you are a fair lord.✧ ↑⚔ ↓⚜ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Accept discounted goods instead of a fee — invest in trade goods.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 11,
+        "season": "Autumn",
+        "year": 3,
+        "resources": {
+          "denarii": 0,
+          "food": 181,
+          "families": 16,
+          "garrison": 2
+        },
+        "events": [
+          "The Market Fair Charter",
+          "The Crop Blight"
+        ],
+        "choices": [
+          "Choice[2/3]: Ask for a smaller traveling fair permit — cheaper option.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/2]: Try to separate the clean grain and save the good portion.⚜ ↓✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 12,
+        "season": "Winter",
+        "year": 3,
+        "resources": {
+          "denarii": 45,
+          "food": 166,
+          "families": 17,
+          "garrison": 1
+        },
+        "events": [
+          "The Wool Surplus",
+          "The Inheritance Dispute"
+        ],
+        "choices": [
+          "Choice[2/3]: Store the wool and sell in spring for a higher price.⚜ ↓✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Divide the farm equally between the two sons.⚜ ↑✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 13,
+        "season": "Spring",
+        "year": 4,
+        "resources": {
+          "denarii": 127,
+          "food": 129,
+          "families": 14,
+          "garrison": 0
+        },
+        "events": [
+          "† RAID WARNING †",
+          "RAID SUCCESSFUL",
+          "The Castle Repairs",
+          "The Holy Day Conflict",
+          "Choose Your Path: The Keeper of the Scriptorium"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[3/3]: Leave the repairs until spring — winter is the wrong time.⚜ ↑⚔ ↓",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 14,
+        "season": "Summer",
+        "year": 4,
+        "resources": {
+          "denarii": 0,
+          "food": 136,
+          "families": 14,
+          "garrison": 0
+        },
+        "events": [
+          "The Monastery's Offer",
+          "The Monastery Dispute"
+        ],
+        "choices": [
+          "Choice[2/2]: Decline politely — your own fields come first.✧ ↑⚜ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Contest the document — demand it be verified by the bishop.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 15,
+        "season": "Autumn",
+        "year": 4,
+        "resources": {
+          "denarii": 96,
+          "food": 132,
+          "families": 15,
+          "garrison": 0
+        },
+        "events": [
+          "The Building Project",
+          "The Border Raid"
+        ],
+        "choices": [
+          "Choice[3/3]: Patch the old barn again — hold off spending for now.⚜ ↑✧ ↓",
+          "See What Happens Next",
+          "Choice[3/3]: Demand the neighboring lord pay for the stolen cattle.⚜ ↑✧ ↑⚔ ↓",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 16,
+        "season": "Winter",
+        "year": 4,
+        "resources": {
+          "denarii": 41,
+          "food": 136,
+          "families": 16,
+          "garrison": 1
+        },
+        "events": [
+          "The Traveling Bishop",
+          "The Wandering Scholar",
+          "Choose Your Path: The Landless Knight",
+          "The Summons",
+          "The Cautious Column"
+        ],
+        "choices": [
+          "Choice[1/3]: Host a grand feast with all the ceremony due a bishop.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/2]: Turn him away — you cannot afford to feed extra mouths.✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 17,
+        "season": "Spring",
+        "year": 5,
+        "resources": {
+          "denarii": 0,
+          "food": 98,
+          "families": 12,
+          "garrison": 0
+        },
+        "events": [
+          "⚔ BORDER RAID ⚔",
+          "RAID SUCCESSFUL",
+          "The Accounting Books",
+          "The Mercenary Offer"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[3/3]: Dismiss the miller and keep the reeve on probation.⚜ ↓✧ ↑⚔ ↑",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 18,
+        "season": "Summer",
+        "year": 5,
+        "resources": {
+          "denarii": 148,
+          "food": 110,
+          "families": 13,
+          "garrison": 0
+        },
+        "events": [
+          "The Trade Road Opens",
+          "The Noble Marriage Offer"
+        ],
+        "choices": [
+          "Choice[1/2]: Send the wool to market and collect the coin.⚜ ↑✧ ↓",
+          "See What Happens Next",
+          "Choice[2/3]: Ask your niece first — her opinion matters.✧ ↑⚜ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 19,
+        "season": "Autumn",
+        "year": 5,
+        "resources": {
+          "denarii": 10,
+          "food": 150,
+          "families": 14,
+          "garrison": 0
+        },
+        "events": [
+          "The Castle Well",
+          "The Deserters",
+          "Choose Your Path: A Serf's Choice",
+          "The Broken Plow",
+          "The Home Repair"
+        ],
+        "choices": [
+          "Choice[1/2]: Dig the well deeper now while conditions are good.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Let them go and pay your remaining soldiers on time going forward.⚜ ↓✧ ↑⚔ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 20,
+        "season": "Winter",
+        "year": 5,
+        "resources": {
+          "denarii": 95,
+          "food": 102,
+          "families": 14,
+          "garrison": 3
+        },
+        "events": [
+          "The Tax Collection",
+          "The Weapon Shortage"
+        ],
+        "choices": [
+          "Choice[1/3]: Collect the full tax — your estate needs the revenue.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Buy the best iron and do the repairs right.⚜ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 21,
+        "season": "Spring",
+        "year": 6,
+        "resources": {
+          "denarii": 33,
+          "food": 125,
+          "families": 14,
+          "garrison": 3
+        },
+        "events": [
+          "The Border Negotiation",
+          "The Famous Traveler"
+        ],
+        "choices": [
+          "Choice[3/3]: Propose giving up the wood in exchange for a trade agreement.⚜ ↑✧ ↑⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Host him generously with food, wine, and a fine audience.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 22,
+        "season": "Summer",
+        "year": 6,
+        "resources": {
+          "denarii": 0,
+          "food": 118,
+          "families": 15,
+          "garrison": 3
+        },
+        "events": [
+          "The Traveling Seed Merchant",
+          "The Pilgrim Arrivals"
+        ],
+        "choices": [
+          "Choice[3/3]: Haggle the price down to five silver coins.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[2/3]: Provide free food and water as an act of Christian charity.⚜ ↓✧ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 23,
+        "season": "Autumn",
+        "year": 6,
+        "resources": {
+          "denarii": 53,
+          "food": 89,
+          "families": 16,
+          "garrison": 2
+        },
+        "events": [
+          "The Road Peddler's Remedy",
+          "The Trade Dispute"
+        ],
+        "choices": [
+          "Choice[3/3]: Do nothing — sickness comes and goes on its own.✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Insist on the agreed price — a deal is a deal.⚜ ↑✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 24,
+        "season": "Winter",
+        "year": 6,
+        "resources": {
+          "denarii": 66,
+          "food": 136,
+          "families": 16,
+          "garrison": 2
+        },
+        "events": [
+          "Preparing the Winter Stores",
+          "The Water Mill Opportunity"
+        ],
+        "choices": [
+          "Choice[1/2]: Slaughter most of the pigs now and smoke the meat.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Commission the full mill rebuild — it's a long-term investment.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 25,
+        "season": "Spring",
+        "year": 7,
+        "resources": {
+          "denarii": 0,
+          "food": 90,
+          "families": 12,
+          "garrison": 1
+        },
+        "events": [
+          "⚔ BORDER RAID ⚔",
+          "RAID SUCCESSFUL",
+          "The Pilgrim's Request",
+          "The Fortification Request"
+        ],
+        "choices": [
+          "Defend the Estate",
+          "Continue",
+          "Choice[3/3]: Turn them away — your stores are needed for your own people.✧ ↓⚜ ↓",
+          "Continue",
+          "See What Happens Next"
+        ]
+      },
+      {
+        "turn": 26,
+        "season": "Summer",
+        "year": 7,
+        "resources": {
+          "denarii": 0,
+          "food": 112,
+          "families": 13,
+          "garrison": 0
+        },
+        "events": [
+          "The Planting Decision",
+          "The Bishop's Visit"
+        ],
+        "choices": [
+          "Choice[1/2]: Plant wheat in every field — we need the grain.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Prepare the chapel and make charitable donations before his visit.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 27,
+        "season": "Autumn",
+        "year": 7,
+        "resources": {
+          "denarii": 0,
+          "food": 125,
+          "families": 13,
+          "garrison": 1
+        },
+        "events": [
+          "The Militia Drill",
+          "The Price Collapse"
+        ],
+        "choices": [
+          "Choice[2/3]: Drill only on Sundays — preserve the work week.⚜ ↓✧ ↑⚔ ↑",
+          "See What Happens Next",
+          "Choice[3/3]: Use the cheap grain to feed workers building the new barn.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 28,
+        "season": "Winter",
+        "year": 7,
+        "resources": {
+          "denarii": 148,
+          "food": 134,
+          "families": 13,
+          "garrison": 0
+        },
+        "events": [
+          "The Disputed Land",
+          "The Pilgrim Arrivals"
+        ],
+        "choices": [
+          "Choice[2/3]: Rule in favor of the family who has farmed it longest.✧ ↑⚜ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Set up a way station — sell food and lodging at fair prices.⚜ ↑✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 29,
+        "season": "Spring",
+        "year": 8,
+        "resources": {
+          "denarii": 0,
+          "food": 117,
+          "families": 13,
+          "garrison": 1
+        },
+        "events": [
+          "The Fuel Crisis",
+          "The Deserters"
+        ],
+        "choices": [
+          "Choice[2/3]: Buy coal from the merchant at the winter price.⚜ ↓✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Hunt them down and discipline them publicly.⚜ ↓✧ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 30,
+        "season": "Summer",
+        "year": 8,
+        "resources": {
+          "denarii": 98,
+          "food": 108,
+          "families": 13,
+          "garrison": 0
+        },
+        "events": [
+          "The Planting Decision",
+          "The Holy Day Conflict"
+        ],
+        "choices": [
+          "Choice[2/2]: Use the three-field system — wheat, beans, and fallow.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Negotiate: deliver the day before, even at a slightly lower price.⚜ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 31,
+        "season": "Autumn",
+        "year": 8,
+        "resources": {
+          "denarii": 0,
+          "food": 118,
+          "families": 14,
+          "garrison": 1
+        },
+        "events": [
+          "The Militia Drill",
+          "The Inheritance Dispute"
+        ],
+        "choices": [
+          "Choice[1/3]: Order the full week of militia drills.⚜ ↓✧ ↓⚔ ↑",
+          "See What Happens Next",
+          "Choice[3/3]: Give each of the three children a fair share — all three worked.✧ ↑⚔ ↓⚜ ↓",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 32,
+        "season": "Winter",
+        "year": 8,
+        "resources": {
+          "denarii": 79,
+          "food": 105,
+          "families": 14,
+          "garrison": 1
+        },
+        "events": [
+          "Preparing the Winter Stores",
+          "The Fortification Request"
+        ],
+        "choices": [
+          "Choice[1/2]: Slaughter most of the pigs now and smoke the meat.⚜ ↑✧ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/3]: Send ten laborers for a month — cheaper than coin.⚜ ↓✧ ↓⚔ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 33,
+        "season": "Spring",
+        "year": 9,
+        "resources": {
+          "denarii": 76,
+          "food": 85,
+          "families": 15,
+          "garrison": 1
+        },
+        "events": [
+          "The Winter Feast",
+          "The Monastery Dispute"
+        ],
+        "choices": [
+          "Choice[3/3]: Skip the feast this year — the treasury cannot spare it.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Give the monks the land — it is not worth a Church dispute.⚜ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 34,
+        "season": "Summer",
+        "year": 9,
+        "resources": {
+          "denarii": 0,
+          "food": 81,
+          "families": 15,
+          "garrison": 2
+        },
+        "events": [
+          "The Traveling Seed Merchant",
+          "The Border Raid"
+        ],
+        "choices": [
+          "Choice[1/3]: Buy the southern seeds and try them in a test field.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[2/3]: Reinforce the border but don't pursue — risk of escalation.⚜ ↓✧ ↓⚔ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 35,
+        "season": "Autumn",
+        "year": 9,
+        "resources": {
+          "denarii": 48,
+          "food": 79,
+          "families": 16,
+          "garrison": 1
+        },
+        "events": [
+          "The Road Peddler's Remedy",
+          "The Smugglers"
+        ],
+        "choices": [
+          "Choice[3/3]: Do nothing — sickness comes and goes on its own.✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Turn them over to the royal sheriff — it is the law.⚜ ↑✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 36,
+        "season": "Winter",
+        "year": 9,
+        "resources": {
+          "denarii": 142,
+          "food": 112,
+          "families": 17,
+          "garrison": 1
+        },
+        "events": [
+          "The Grain Harvest",
+          "The Famous Traveler"
+        ],
+        "choices": [
+          "Choice[1/2]: All hands to the fields — work day and night to finish fast.⚜ ↑✧ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/2]: Host him generously with food, wine, and a fine audience.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 37,
+        "season": "Spring",
+        "year": 10,
+        "resources": {
+          "denarii": 0,
+          "food": 86,
+          "families": 17,
+          "garrison": 0
+        },
+        "events": [
+          "The Pilgrim's Request",
+          "The Water Mill Opportunity"
+        ],
+        "choices": [
+          "Choice[3/3]: Turn them away — your stores are needed for your own people.✧ ↓⚜ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[2/2]: Just replace the millstones — cheaper partial improvement.⚜ ↓✧ ↑",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 38,
+        "season": "Summer",
+        "year": 10,
+        "resources": {
+          "denarii": 0,
+          "food": 92,
+          "families": 17,
+          "garrison": 3
+        },
+        "events": [
+          "The Trade Road Opens",
+          "The Weapon Shortage"
+        ],
+        "choices": [
+          "Choice[2/2]: Hire the mason to repair the granary wall.⚜ ↓✧ ↑",
+          "See What Happens Next",
+          "Choice[1/3]: Buy the best iron and do the repairs right.⚜ ↓⚔ ↑",
+          "Continue",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 39,
+        "season": "Autumn",
+        "year": 10,
+        "resources": {
+          "denarii": 115,
+          "food": 71,
+          "families": 17,
+          "garrison": 4
+        },
+        "events": [
+          "The Summer Tournament",
+          "The Noble Marriage Offer"
+        ],
+        "choices": [
+          "Choice[1/3]: Send your knights to compete — glory and ransom await.⚜ ↓⚔ ↑",
+          "Continue",
+          "See What Happens Next",
+          "Choice[1/3]: Accept the proposal — it is a good match for the estate.⚜ ↑✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 40,
+        "season": "Winter",
+        "year": 10,
+        "resources": {
+          "denarii": 122,
+          "food": 79,
+          "families": 18,
+          "garrison": 2
+        },
+        "events": [
+          "The Disputed Land",
+          "The Trade Dispute"
+        ],
+        "choices": [
+          "Choice[2/3]: Rule in favor of the family who has farmed it longest.✧ ↑⚜ ↓",
+          "Continue",
+          "See What Happens Next",
+          "Choice[3/3]: Find a new buyer — send your wool to the city market directly.⚜ ↑✧ ↓",
+          "Continue"
+        ]
+      },
+      {
+        "turn": 41,
+        "season": null,
+        "year": null,
+        "resources": null,
+        "events": [],
+        "choices": []
+      }
+    ],
+    "actionLog": [
+      "Turn 1: Built — Build (80d)",
+      "Turn 2: Built — Build (80d)",
+      "Turn 3: Built — Build (80d)",
+      "Turn 4: Built — Build (80d)",
+      "Turn 5: Built — Build (150d)",
+      "Turn 13: Built — Build (100d)",
+      "Turn 15: Built — Build (80d)",
+      "Turn 18: Built — Build (100d)",
+      "Turn 20: Built — Build (80d)",
+      "Turn 28: Built — Build (140d)",
+      "Turn 30: Built — Build (90d)",
+      "Turn 36: Built — Build (140d)",
+      "Turn 39: Built — Build (110d)",
+      "Turn 40: Built — Build (110d)"
+    ],
+    "errors": []
+  }
+]
