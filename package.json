@@ -9,6 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "npx playwright test",
+    "test:e2e": "npx playwright test",
+    "test:unit": "node --test tests/unit",
+    "test:economy": "node --test tests/unit/economyBaseline.test.js",
+    "test:economy:baseline:update": "node tests/baselines/generateEconomyBaseline.js",
     "test:visual": "npx playwright test tests/e2e/visual/",
     "test:update-snapshots": "npx playwright test --update-snapshots",
     "test:report": "npx playwright show-report"
