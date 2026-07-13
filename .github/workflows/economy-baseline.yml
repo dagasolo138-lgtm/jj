@@ -1,0 +1,40 @@
+name: Economy baseline
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/economy-baseline.yml
+      - src/engine/economyEngine.js
+      - src/engine/synergyEngine.js
+      - src/data/economy.js
+      - src/data/buildings.js
+      - tests/baselines/**
+      - tests/unit/economyBaseline.test.js
+      - package.json
+      - package-lock.json
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/economy-baseline.yml
+      - src/engine/economyEngine.js
+      - src/engine/synergyEngine.js
+      - src/data/economy.js
+      - src/data/buildings.js
+      - tests/baselines/**
+      - tests/unit/economyBaseline.test.js
+      - package.json
+      - package-lock.json
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run test:economy
+      - run: npm run lint
+      - run: npm run build
