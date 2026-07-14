@@ -10,12 +10,12 @@ import {
   ensureLiveStateAdapter,
   finalizeCanaryCampaignTransaction,
   getCanaryCampaignBlockers,
-  getEconomyMonitorViewModel,
   isCanaryCampaignRunning,
   recordEngineComparison,
   startCanaryCampaign,
   stopCanaryCampaign,
 } from "../../src/engine/agentEconomy/index.js";
+import { getEconomyMonitorViewModel } from "../../src/engine/agentEconomy/economyMonitorSelectors.js";
 import {
   gameReducer,
   initialState,
