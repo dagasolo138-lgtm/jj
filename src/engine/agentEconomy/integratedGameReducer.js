@@ -10,11 +10,6 @@ function normalizePopulation(value) {
   return Math.max(0, Math.floor(value));
 }
 
-/**
- * Adds or repairs household proxy state without changing the live economy.
- * The legacy reducer remains authoritative for production, consumption,
- * population, events, and victory conditions during the migration.
- */
 export function ensureAgentEconomyState(state, origin = "state-reconciliation") {
   const source = state && typeof state === "object" ? state : legacyInitialState;
   const population = normalizePopulation(source.population);
@@ -69,6 +64,8 @@ export function gameReducer(state, action) {
       turn: preparedState.turn,
       season: preparedState.season,
       taxRate: preparedState.taxRate,
+      buildings: preparedState.buildings,
+      laborAllocation: preparedState.laborAllocation,
     },
   );
 
