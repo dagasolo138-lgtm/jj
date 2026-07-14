@@ -1,0 +1,23 @@
+{
+  "validatedCommit": "a772ecf6efdd78b9a92e6d0032568e45da72a145",
+  "workflowRunId": 29310169492,
+  "nodeVersion": "24",
+  "agentEconomyTests": "success",
+  "legacyEconomyBaseline": "success",
+  "lint": "success",
+  "build": "success",
+  "buildingDrivenProduction": true,
+  "occupationWorkforceMatching": true,
+  "buildingConditionApplied": true,
+  "seasonalFarmOutputApplied": true,
+  "buildingSynergiesApplied": true,
+  "productionInputsConsumed": true,
+  "sawmillConsumesTimber": true,
+  "tanneryConsumesLivestock": true,
+  "missingInputsCreateBuyOrders": true,
+  "constructionAllocationReducesWorkers": true,
+  "stressTestQuarters": 40,
+  "stressTestDays": 1200,
+  "liveEconomyChanged": false,
+  "shadowMode": true
+}
