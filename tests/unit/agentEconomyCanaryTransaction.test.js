@@ -15,7 +15,6 @@ import {
   createInitialEngineControl,
   ensureLiveStateAdapter,
   isCanaryCampaignRunning,
-  projectAgentEconomyToLegacyState,
   recordEngineComparison,
   startCanaryCampaign,
 } from "../../src/engine/agentEconomy/index.js";
