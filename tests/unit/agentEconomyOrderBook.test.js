@@ -112,7 +112,7 @@ test("uncrossed orders do not trade and remain as failed orders", () => {
   assert.deepEqual(totals(result.households, "grain"), before);
 });
 
-test("cash and inventory constraints cap partial fills", () => {
+test("cash and inventory constraints cap fractional partial fills", () => {
   const buyer = makeHousehold("buyer", { cash: 6, inventory: { grain: 0 } });
   const seller = makeHousehold("seller", { cash: 1, inventory: { grain: 10 } });
 
@@ -123,8 +123,9 @@ test("cash and inventory constraints cap partial fills", () => {
 
   const afterBuyer = result.households.find((household) => household.id === "buyer");
   assert.equal(result.trades.length, 1);
-  assert.equal(result.trades[0].quantity, 1);
-  assert.equal(afterBuyer.cash, 2);
-  assert.equal(afterBuyer.inventory.grain, 1);
-  assert.ok(result.failedOrders.some((order) => order.id === "bid" && order.remainingQuantity === 9));
+  assert.equal(result.trades[0].quantity, 1.5);
+  assert.equal(afterBuyer.cash, 0);
+  assert.equal(afterBuyer.inventory.grain, 1.5);
+  assert.ok(result.failedOrders.some((order) =>
+    order.id === "bid" && order.remainingQuantity === 8.5));
 });
