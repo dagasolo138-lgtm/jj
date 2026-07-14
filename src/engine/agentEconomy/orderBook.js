@@ -1,16 +1,21 @@
+import {
+  MIN_TRADE_QUANTITY,
+  calibratedQuantity,
+} from "./economyCalibration.js";
+
 function money(value) {
   if (!Number.isFinite(value)) return 0;
   return Number(Math.max(0, value).toFixed(2));
 }
 
 function quantity(value) {
-  if (!Number.isFinite(value)) return 0;
-  return Math.max(0, Math.floor(value));
+  return calibratedQuantity(value);
 }
 
 function normalizeOrder(order, index = 0) {
   const side = order?.side === "sell" ? "sell" : "buy";
   const price = money(order?.price);
+  const normalizedQuantity = quantity(order?.quantity);
   return {
     id: typeof order?.id === "string" && order.id.length > 0
       ? order.id
@@ -18,10 +23,10 @@ function normalizeOrder(order, index = 0) {
     householdId: typeof order?.householdId === "string" ? order.householdId : "",
     side,
     commodity: typeof order?.commodity === "string" ? order.commodity : "unknown",
-    quantity: quantity(order?.quantity),
+    quantity: normalizedQuantity,
     price,
     reason: typeof order?.reason === "string" ? order.reason : "unknown",
-    remainingQuantity: quantity(order?.quantity),
+    remainingQuantity: normalizedQuantity,
   };
 }
 
@@ -30,7 +35,9 @@ export function buildOrderBooks(orders) {
 
   (orders ?? []).forEach((order, index) => {
     const normalized = normalizeOrder(order, index);
-    if (!normalized.householdId || normalized.quantity <= 0 || normalized.price <= 0) return;
+    if (!normalized.householdId
+      || normalized.quantity < MIN_TRADE_QUANTITY
+      || normalized.price <= 0) return;
     const book = books[normalized.commodity] ?? { bids: [], asks: [], trades: [] };
     if (normalized.side === "buy") book.bids.push(normalized);
     else book.asks.push(normalized);
@@ -57,10 +64,10 @@ export function summarizeOrders(orders) {
     };
     if (order.side === "buy") {
       bucket.bids += 1;
-      bucket.bidVolume += quantity(order.quantity);
+      bucket.bidVolume = quantity(bucket.bidVolume + quantity(order.quantity));
     } else if (order.side === "sell") {
       bucket.asks += 1;
-      bucket.askVolume += quantity(order.quantity);
+      bucket.askVolume = quantity(bucket.askVolume + quantity(order.quantity));
     }
     summary[commodity] = bucket;
   }
