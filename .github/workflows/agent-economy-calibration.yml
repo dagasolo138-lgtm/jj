@@ -1,0 +1,53 @@
+name: Agent economy calibration
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - src/engine/agentEconomy/**
+      - tests/calibration/**
+      - tests/stress/**
+      - tests/unit/agentEconomyCalibration.test.js
+      - docs/agent-economy-calibration.md
+      - package.json
+      - package-lock.json
+      - eslint.config.js
+      - .github/workflows/agent-economy-calibration.yml
+  push:
+    branches: [main]
+    paths:
+      - src/engine/agentEconomy/**
+      - tests/calibration/**
+      - tests/stress/**
+      - tests/unit/agentEconomyCalibration.test.js
+      - docs/agent-economy-calibration.md
+      - package.json
+      - package-lock.json
+      - eslint.config.js
+      - .github/workflows/agent-economy-calibration.yml
+
+jobs:
+  calibration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run test:agent-economy
+      - run: npm run test:economy
+      - name: Run 7-scenario calibration matrix
+        run: npm run test:agent-economy:calibration
+      - run: npm run lint
+      - run: npm run build
+      - name: Upload calibration report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-economy-calibration-report
+          path: artifacts/agent-economy-calibration-report.json
+          if-no-files-found: warn
+          retention-days: 30
