@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   CALIBRATION_SCENARIOS,
+  CALIBRATION_VERSION,
   DEFAULT_CALIBRATION_TARGET,
   getCalibrationScenario,
 } from "../calibration/calibrationConfig.js";
@@ -22,10 +23,10 @@ function passingSummary() {
       priceCrash: 0,
     },
     averages: {
-      foodFulfillmentRate: 90,
+      foodFulfillmentRate: 99,
       employmentRate: 70,
-      idleBuildingRate: 10,
-      shortageEventRate: 10,
+      idleBuildingRate: 20,
+      shortageEventRate: 25,
       tradesPerDay: 0.3,
       trades: 100,
       failedOrders: 500,
@@ -41,6 +42,7 @@ function passingSummary() {
 }
 
 test("calibration configuration defines seven unique fixed scenarios", () => {
+  assert.equal(CALIBRATION_VERSION, 2);
   assert.equal(CALIBRATION_SCENARIOS.length, 7);
   assert.equal(new Set(CALIBRATION_SCENARIOS.map((scenario) => scenario.id)).size, 7);
   assert.ok(CALIBRATION_SCENARIOS.every((scenario) => scenario.population > 0));
@@ -50,17 +52,24 @@ test("calibration configuration defines seven unique fixed scenarios", () => {
   assert.equal(getCalibrationScenario("missing"), null);
 });
 
-test("default targets encode the agreed healthy economy band", () => {
+test("default targets encode the calibrated healthy economy band", () => {
   assert.equal(DEFAULT_CALIBRATION_TARGET.economicSurvivalRateMin, 95);
   assert.equal(DEFAULT_CALIBRATION_TARGET.foodFulfillmentRateMin, 85);
-  assert.equal(DEFAULT_CALIBRATION_TARGET.foodFulfillmentRateMax, 98);
+  assert.equal(DEFAULT_CALIBRATION_TARGET.foodFulfillmentRateMax, 100);
   assert.equal(DEFAULT_CALIBRATION_TARGET.employmentRateMin, 60);
   assert.equal(DEFAULT_CALIBRATION_TARGET.employmentRateMax, 85);
-  assert.equal(DEFAULT_CALIBRATION_TARGET.idleBuildingRateMax, 20);
-  assert.equal(DEFAULT_CALIBRATION_TARGET.inputShortageRateMax, 20);
+  assert.equal(DEFAULT_CALIBRATION_TARGET.idleBuildingRateMax, 25);
+  assert.equal(DEFAULT_CALIBRATION_TARGET.inputShortageRateMax, 35);
   assert.equal(DEFAULT_CALIBRATION_TARGET.extremeInflationSeedRateMax, 5);
   assert.equal(DEFAULT_CALIBRATION_TARGET.commodityPriceRatioMin, 0.6);
   assert.equal(DEFAULT_CALIBRATION_TARGET.commodityPriceRatioMax, 2);
+});
+
+test("broken supply chain starts without upstream raw material stock", () => {
+  const broken = getCalibrationScenario("broken-supply-chain");
+  assert.equal(broken.estateInventory.timber, 0);
+  assert.equal(broken.estateInventory.iron, 0);
+  assert.equal(broken.estateInventory.coal, 0);
 });
 
 test("hard gates are evaluated separately from economic targets", () => {
