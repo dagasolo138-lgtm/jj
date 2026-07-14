@@ -21,7 +21,10 @@ function makeHousehold(id, overrides = {}) {
 function totals(households, commodity) {
   return {
     cash: Number(households.reduce((total, household) => total + household.cash, 0).toFixed(2)),
-    commodity: households.reduce((total, household) => total + (household.inventory[commodity] ?? 0), 0),
+    commodity: Number(households.reduce(
+      (total, household) => total + (household.inventory[commodity] ?? 0),
+      0,
+    ).toFixed(4)),
   };
 }
 
@@ -69,6 +72,29 @@ test("matching orders transfer inventory and cash at midpoint price", () => {
   assert.equal(afterBuyer.priceBeliefs.grain.lastPrice, 4);
   assert.equal(afterSeller.priceBeliefs.grain.lastPrice, 4);
   assert.equal(afterBuyer.priceHistory.grain.at(-1), 4);
+});
+
+test("trade settlement preserves fractional inventory remainders", () => {
+  const buyer = makeHousehold("buyer", {
+    cash: 20,
+    inventory: { grain: 0.375 },
+  });
+  const seller = makeHousehold("seller", {
+    cash: 1,
+    inventory: { grain: 4.625 },
+  });
+  const before = totals([buyer, seller], "grain");
+
+  const result = settleOrderBooks([buyer, seller], [
+    { id: "bid", householdId: "buyer", side: "buy", commodity: "grain", quantity: 2, price: 5 },
+    { id: "ask", householdId: "seller", side: "sell", commodity: "grain", quantity: 2, price: 3 },
+  ]);
+
+  const afterBuyer = result.households.find((household) => household.id === "buyer");
+  const afterSeller = result.households.find((household) => household.id === "seller");
+  assert.equal(afterBuyer.inventory.grain, 2.375);
+  assert.equal(afterSeller.inventory.grain, 2.625);
+  assert.deepEqual(totals(result.households, "grain"), before);
 });
 
 test("uncrossed orders do not trade and remain as failed orders", () => {
