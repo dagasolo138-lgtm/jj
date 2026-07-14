@@ -1,0 +1,33 @@
+name: Release guardrails cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/release-guardrails-cleanup.yml
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove temporary integration files
+        run: |
+          rm -f \
+            scripts/apply_release_guardrails_patch.py \
+            .github/workflows/release-guardrails-patch.yml \
+            .github/workflows/release-guardrails-test-diagnostics.yml \
+            .github/workflows/release-guardrails-lint-diagnostics.yml \
+            tests/baselines/release-guardrails-test-output.txt \
+            tests/baselines/release-guardrails-lint-output.txt \
+            .github/workflows/release-guardrails-cleanup.yml
+      - name: Commit cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore(agent-economy): remove release guardrail tooling"
+          git push
