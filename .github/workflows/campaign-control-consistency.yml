@@ -1,0 +1,34 @@
+name: Campaign control consistency
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/fix_campaign_control_consistency.py
+      - .github/workflows/campaign-control-consistency.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/fix_campaign_control_consistency.py
+      - name: Commit fix
+        run: |
+          if git diff --quiet; then
+            echo "No changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/engine/agentEconomy/integratedGameReducer.js \
+            tests/unit/agentEconomyCanaryCampaign.test.js
+          git commit -m "fix(agent-economy): abort campaign on control demotion"
+          git push
