@@ -1,5 +1,9 @@
 import { SEASON_CONSUMPTION_MULTIPLIERS } from "../../data/economy.js";
-import { DAILY_FOOD_TARGET_PER_PERSON, calibratedQuantity } from "./economyCalibration.js";
+import {
+  DAILY_FOOD_TARGET_PER_PERSON,
+  FOOD_STOCK_TARGET_PER_PERSON,
+  calibratedQuantity,
+} from "./economyCalibration.js";
 import { clampNeed, normalizeNeeds } from "./needsSystem.js";
 import { stochasticRound } from "./seededRng.js";
 
@@ -9,18 +13,34 @@ function inventoryQuantity(value) {
   return calibratedQuantity(value);
 }
 
+function storedFood(inventory = {}) {
+  return FOOD_PRIORITY.reduce(
+    (total, commodity) => total + inventoryQuantity(inventory[commodity]),
+    0,
+  );
+}
+
 export function updateHouseholdNeeds(household, context = {}) {
   const day = Math.max(1, Math.floor(context.day ?? 1));
   const occupation = household.occupation ?? "laborer";
+  const weight = Math.max(1, Math.floor(household.weight ?? 1));
   const needs = normalizeNeeds(household.needs);
+  const foodReserveRatio = storedFood(household.inventory) / Math.max(
+    1,
+    weight * FOOD_STOCK_TARGET_PER_PERSON,
+  );
+  const foodDelta = foodReserveRatio >= 1
+    ? -3
+    : foodReserveRatio >= 0.5 ? 1 : 4;
+  const nextFoodNeed = clampNeed(needs.food + foodDelta);
 
   return {
     ...household,
     needs: {
       ...needs,
-      food: clampNeed(needs.food + 4),
+      food: nextFoodNeed,
       housing: clampNeed(needs.housing + (household.homeId ? -1 : day % 4 === 0 ? 1 : 0)),
-      health: clampNeed(needs.health + (needs.food >= 70 ? 2 : day % 6 === 0 ? 1 : 0)),
+      health: clampNeed(needs.health + (nextFoodNeed >= 80 ? 1 : needs.health > 10 ? -1 : 0)),
       clothing: clampNeed(needs.clothing + (day % 5 === 0 ? 1 : 0)),
       tools: clampNeed(needs.tools + (["farmer", "herder", "fisherman", "woodsman", "miner", "artisan"].includes(occupation) && day % 4 === 0 ? 1 : 0)),
       faith: clampNeed(needs.faith + (day % 7 === 0 ? 1 : 0)),
@@ -65,13 +85,7 @@ export function consumeHousehold(household, rng, context = {}) {
   let needs = normalizeNeeds(household.needs);
   if (targetFood > 0) {
     const foodRatio = consumedFood / targetFood;
-    needs.food = clampNeed(needs.food - Math.round(16 * foodRatio) + (remainingFood > 0 ? 3 : 0));
-  } else {
-    const storedFood = FOOD_PRIORITY.reduce(
-      (total, commodity) => total + inventoryQuantity(inventory[commodity]),
-      0,
-    );
-    needs.food = clampNeed(needs.food + (storedFood >= weight ? -1 : 0));
+    needs.food = clampNeed(needs.food - Math.round(18 * foodRatio) + (remainingFood > 0 ? 4 : 0));
   }
 
   if (needs.clothing >= 60) {
