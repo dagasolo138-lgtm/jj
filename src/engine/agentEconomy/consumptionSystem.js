@@ -3,6 +3,11 @@ import { stochasticRound } from "./seededRng.js";
 
 const FOOD_PRIORITY = ["flour", "fish", "grain", "livestock"];
 
+function inventoryQuantity(value) {
+  if (!Number.isFinite(Number(value))) return 0;
+  return Number(Math.max(0, Number(value)).toFixed(4));
+}
+
 export function updateHouseholdNeeds(household, context = {}) {
   const day = Math.max(1, Math.floor(context.day ?? 1));
   const occupation = household.occupation ?? "laborer";
@@ -23,11 +28,15 @@ export function updateHouseholdNeeds(household, context = {}) {
   };
 }
 
-function consumeFromInventory(inventory, commodity, quantity) {
-  const available = Math.max(0, Math.floor(Number(inventory[commodity]) || 0));
-  const consumed = Math.min(available, Math.max(0, Math.floor(quantity)));
+function consumeFromInventory(inventory, commodity, requestedQuantity) {
+  const available = inventoryQuantity(inventory[commodity]);
+  const requested = Math.max(0, Math.floor(Number(requestedQuantity) || 0));
+  const consumed = Math.min(Math.floor(available), requested);
   return {
-    inventory: { ...inventory, [commodity]: available - consumed },
+    inventory: {
+      ...inventory,
+      [commodity]: inventoryQuantity(available - consumed),
+    },
     consumed,
   };
 }
@@ -53,7 +62,7 @@ export function consumeHousehold(household, rng, context = {}) {
   needs.food = clampNeed(needs.food - Math.round(16 * foodRatio) + (remainingFood > 0 ? 3 : 0));
 
   if (needs.clothing >= 60) {
-    const source = (inventory.cloth ?? 0) > 0 ? "cloth" : "wool";
+    const source = Math.floor(inventoryQuantity(inventory.cloth)) >= 1 ? "cloth" : "wool";
     const result = consumeFromInventory(inventory, source, 1);
     inventory = result.inventory;
     if (result.consumed > 0) {
