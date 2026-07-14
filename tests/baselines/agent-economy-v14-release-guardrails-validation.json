@@ -1,0 +1,131 @@
+{
+  "validatedCommit": "a05c68be7f3ba95dbd9067ed32d2b28b376db744",
+  "nodeVersion": "24",
+  "schemaVersion": 12,
+  "engineControlVersion": 3,
+  "canaryCampaignVersion": 2,
+  "canaryObservationVersion": 1,
+  "defaultPlayerState": {
+    "authoritativeEngine": "legacy",
+    "candidateEnabled": false,
+    "shadowMode": true,
+    "writeBackEnabled": false,
+    "operatorControlsVisible": false,
+    "automaticCampaignStart": false,
+    "extendedCampaignUnlocked": false
+  },
+  "observationLedger": {
+    "transactionHistoryLimit": 20,
+    "observationHistoryLimit": 48,
+    "campaignHistoryLimit": 12,
+    "recordsLegacyDeltas": true,
+    "recordsAgentDeltas": true,
+    "recordsOfficialResourceShift": true,
+    "recordsModelDrift": true,
+    "recordsNormalizedDriftRatios": true,
+    "recordsRollbackIssues": true,
+    "archivesCompletedCampaigns": true,
+    "archivesAbortedCampaigns": true,
+    "jsonPersistence": "success"
+  },
+  "extendedCampaignReleaseGate": {
+    "standardCampaignQuarterLimit": 3,
+    "extendedCampaignQuarterLimit": 4,
+    "minimumCompletedStandardTrials": 3,
+    "recentCampaignWindow": 3,
+    "recentCampaignsMustAllComplete": true,
+    "recentTransactionRollbacksAllowed": 0,
+    "maximumDenariiDriftRatio": 0.35,
+    "maximumFoodDriftRatio": 0.5,
+    "maximumInventoryDriftRatio": 0.5,
+    "maximumPopulationDrift": 0,
+    "standardTrialsRemainAvailableWhileExtensionBlocked": true,
+    "oldSavesCannotUnlockExtension": true
+  },
+  "releaseGuardrailValidation": {
+    "extensionBlockedWithoutEvidence": "success",
+    "threeCleanTrialsUnlockExtension": "success",
+    "recentAbortBlocksExtension": "success",
+    "recentRollbackBlocksExtension": "success",
+    "denariiDriftLimitBlocksExtension": "success",
+    "populationDriftLimitEnforced": "success",
+    "observationsRecordedBeforeCampaignArchive": "success",
+    "transactionDriftVisibleInOperatorMonitor": "success",
+    "releaseReadinessVisibleInOperatorMonitor": "success",
+    "standardTrialRegressionGuard": "success",
+    "oldSaveRegressionGuard": "success"
+  },
+  "workflows": {
+    "agentEconomy": {
+      "runId": 29361264012,
+      "status": "success"
+    },
+    "calibration": {
+      "runId": 29361264119,
+      "artifactId": 8322243914,
+      "status": "success"
+    },
+    "stress": {
+      "runId": 29361263970,
+      "artifactId": 8322270347,
+      "status": "success"
+    }
+  },
+  "hardValidation": {
+    "agentEconomyTests": "success",
+    "legacyEconomyBaseline": "success",
+    "lint": "success",
+    "build": "success",
+    "calibrationMatrix": "meets-target",
+    "stressStatus": "pass",
+    "stressBalanceStatus": "stable"
+  },
+  "calibration": {
+    "scenarioCount": 7,
+    "seedsPerScenario": 12,
+    "quartersPerSeed": 12,
+    "totalQuarterSimulations": 1008,
+    "totalDaySimulations": 30240,
+    "targetMissCount": 0,
+    "directionalChecksPassed": 6,
+    "directionalChecksTotal": 6,
+    "defaultEstate": {
+      "economicSurvivalRate": 100,
+      "foodFulfillmentRate": 99.2,
+      "employmentRate": 80,
+      "povertyRate": 5.42,
+      "averageHealth": 99.99,
+      "averageSatisfaction": 57.57,
+      "idleBuildingRate": 22.41,
+      "inputShortageRate": 31.18,
+      "tradesPerDay": 2.2553,
+      "failedOrdersPerTrade": 9.65,
+      "minimumCommodityPriceRatio": 0.8225,
+      "maximumCommodityPriceRatio": 1.009
+    }
+  },
+  "stress": {
+    "seedCount": 100,
+    "quartersPerSeed": 40,
+    "daysPerSeed": 1200,
+    "totalQuarterSimulations": 4000,
+    "totalDaySimulations": 120000,
+    "completionRate": 100,
+    "economicSurvivalRate": 100,
+    "invariantFailureRate": 0,
+    "foodFulfillmentRate": 99.35,
+    "employmentRate": 80,
+    "povertyRate": 3,
+    "marketFreezeSeedRate": 0,
+    "extremeInflationSeedRate": 0,
+    "priceCrashSeedRate": 0,
+    "chronicInputShortageSeedRate": 0,
+    "meanQuarterMs": 18.1343,
+    "p95QuarterMs": 19.8758,
+    "maxQuarterMs": 26.5689,
+    "runtimeGateMsPerQuarter": 250
+  },
+  "promotionDecision": "controlled-observation-ready-extension-gated",
+  "currentReleaseGateState": "blocked-until-three-real-standard-campaigns",
+  "nextGate": "collect-three-real-three-quarter-campaigns-and-review-observed-drift"
+}
