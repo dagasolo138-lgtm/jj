@@ -151,7 +151,7 @@ export function runBuildingProduction(households, buildings, context = {}) {
       continue;
     }
 
-    const laborRatio = Math.max(0, Math.min(1, workplace.laborRatio));
+    const laborRatio = Math.max(0, Number(workplace.laborRatio) || 0);
     const workerQuality = getWorkerQuality(householdsById, workplace.assignments);
     const seasonMultiplier = definition.isFarm
       ? SEASON_FARM_MULTIPLIERS[context.season] ?? 1
