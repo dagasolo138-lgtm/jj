@@ -1,5 +1,5 @@
 import { distributeEstateInventory, getDistributedInventoryTotals } from "./estateInventoryAdapter.js";
-import { createHousehold } from "./householdFactory.js";
+import { createHousehold, createInitialAgentEconomy } from "./householdFactory.js";
 import { reconcileAgentEconomyPopulation } from "./householdUtils.js";
 import { setEngineAdapterCapabilities } from "./engineControlSystem.js";
 
@@ -325,7 +325,21 @@ export function reconcileLiveStateTransition(agentEconomy, beforeLegacy, afterLe
 
   if (RESET_ACTIONS.has(actionType)) {
     adapter = createInitialLiveStateAdapter(afterLegacy);
-    return attachAdapter(working, adapter);
+    if (actionType === "LOAD_SAVE" && Array.isArray(agentEconomy?.households)) {
+      const loaded = reconcileAgentEconomyPopulation(agentEconomy, after.population, {
+        createdTurn: after.turn,
+        origin: "live-adapter:load-save",
+        estateInventory: after.inventory,
+      });
+      return attachAdapter({ ...loaded, liveStateAdapter: adapter }, adapter);
+    }
+    const reset = createInitialAgentEconomy(after.population, {
+      createdTurn: after.turn,
+      origin: "live-adapter:" + actionType.toLowerCase(),
+      estateInventory: after.inventory,
+      seed: agentEconomy?.rngSeed,
+    });
+    return attachAdapter(reset, adapter);
   }
 
   const populationResult = conservePopulationAssets(working, after.population, {

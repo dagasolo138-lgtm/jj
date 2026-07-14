@@ -121,8 +121,11 @@ export function gameReducer(state, action) {
   if (controlledState) return controlledState;
 
   const nextState = legacyGameReducer(preparedState, action);
+  const transitionSource = action?.type === "LOAD_SAVE" && nextState.agentEconomy
+    ? nextState.agentEconomy
+    : preparedState.agentEconomy;
   const transitionedAgentEconomy = reconcileLiveStateTransition(
-    preparedState.agentEconomy,
+    transitionSource,
     preparedState,
     nextState,
     action,
