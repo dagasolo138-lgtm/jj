@@ -1,0 +1,221 @@
+✔ monitor selector exposes campaign progress and recent transactions (16.125966ms)
+✔ switching away from canary aborts a running campaign (19.249307ms)
+✔ disabling write-back aborts the campaign instead of leaving a ghost run (14.244104ms)
+✔ old saves without campaign data normalize to an idle closed campaign (2.537172ms)
+✔ a running campaign survives JSON save and resumes its exact quarter count (1.609621ms)
+✔ a restored campaign still closes exactly at its configured limit (1.443209ms)
+✔ four-quarter campaigns remain blocked until three standard trials are complete (3.402796ms)
+✔ three clean standard trials unlock the four-quarter extension (2.502126ms)
+✔ a recent aborted campaign blocks extension even after enough completed trials (0.683322ms)
+✔ resource drift beyond a release limit blocks extension (0.529073ms)
+✔ transaction observations record model drift and are archived with the campaign (2.192265ms)
+✔ observation and campaign history survive JSON save normalization (0.527761ms)
+✔ monitor exposes release readiness and transaction drift (1.970067ms)
+✖ safe canary transaction atomically commits candidate resources (5.225477ms)
+✖ invalid candidate projection restores the complete legacy result and disables write-back (1.323354ms)
+✖ object game-over reasons compare by value rather than object identity (2.798462ms)
+✖ canary transaction history is capped (0.983355ms)
+✖ integrated reducer writes only candidate resource fields during an active canary quarter (23.432528ms)
+✖ disabling write-back immediately demotes an active canary (10.30999ms)
+✔ food consumption keeps fractional inventory below one unit (2.997496ms)
+✔ food consumption removes whole units without erasing the remainder (0.45783ms)
+✔ same seed and input produce an identical 30-day quarter (176.127961ms)
+✔ saved RNG state resumes the same deterministic trajectory (104.077515ms)
+✔ 40 quarters stay finite, serializable, and population-safe (6167.174435ms)
+✔ simulateAgentDay rejects uncontrolled randomness (0.961155ms)
+✔ integrated reducer runs 30 shadow days without changing live settlement (75.112438ms)
+✔ new games start in shadow mode with live adapters ready and write-back blocked (27.181925ms)
+✔ season simulation records a safe engine comparison without changing legacy authority (150.835152ms)
+✔ legacy-only mode skips the candidate engine (24.699286ms)
+✔ canary requests remain blocked while game-state adapters are incomplete (15.369566ms)
+✔ eight safe comparisons and complete adapters make canary eligible (0.770286ms)
+✔ unsafe comparison automatically rolls canary back to shadow (0.302718ms)
+✔ comparison detects corrupt household output (40.483079ms)
+✔ comparison history is capped at forty quarters (2.238682ms)
+✔ creates deterministic household proxies with exact population weight (17.842618ms)
+✔ households contain serializable inventory, needs, and price memory (5.64806ms)
+✔ population reconciliation preserves household memory while growing and shrinking (9.285527ms)
+✔ legacy and malformed saves are hydrated into the current schema (1.407242ms)
+✔ new games and loaded saves always contain population-synchronized household state (36.398284ms)
+✔ direct population gains reconcile household weights (21.806407ms)
+✔ live adapters expose all four capabilities while write-back stays disabled (2.700999ms)
+✔ external treasury and estate inventory changes are mirrored into the shadow projection (10.031147ms)
+✔ population loss preserves removed household cash and inventory (2.735695ms)
+✔ victory and game-over fields are mirrored without taking authority (4.851857ms)
+✔ quarter finalization applies agent fiscal flow and ignores legacy seasonal treasury delta (3.897244ms)
+✔ projecting agent state is pure and includes household assets (2.611601ms)
+✔ loading a save preserves household history and reconciles population (3.333316ms)
+✔ starting a new game resets the shadow economy and adapter ledger (27.596685ms)
+✔ integrated season keeps every official legacy field authoritative (106.01935ms)
+✔ economy tab is present exactly once (1.01378ms)
+✔ commodity labels are readable (0.192461ms)
+✔ monitor aggregates household employment poverty and market pressure (20.399007ms)
+✔ monitor reflects a real building-driven daily simulation (19.238126ms)
+✔ monitor reports dual-engine safety issues without throwing (2.192705ms)
+✔ order books sort bids high-to-low and asks low-to-high (2.321767ms)
+✔ matching orders transfer inventory and cash at midpoint price (3.458ms)
+✔ trade settlement preserves fractional inventory remainders (1.283439ms)
+✔ uncrossed orders do not trade and remain as failed orders (0.957046ms)
+✔ cash and inventory constraints cap fractional partial fills (1.1138ms)
+✔ failed urgent buy orders raise the household price band (2.930409ms)
+✔ unsold surplus lowers the seller price band (0.422353ms)
+✔ completed trade moves buyer and seller beliefs in opposite directions (1.614239ms)
+✔ repeated failures stay inside the calibrated learning band (9.881215ms)
+✔ market index records volume-weighted price and trend (0.843904ms)
+✔ 40-quarter price learning remains bounded and serializable (5540.115706ms)
+✔ matching households are assigned to building workplaces (4.190245ms)
+✔ a building without the required occupation stays idle (1.331188ms)
+✔ staffed farms produce and ruined farms do not (1.051584ms)
+✔ converter buildings consume inputs and produce outputs (0.981422ms)
+✔ missing converter inputs create production needs and market buy orders (2.001256ms)
+✔ shadow sawmills and tanneries form real input chains (0.994938ms)
+✔ understaffing reduces output without inventing workers (1.115383ms)
+✔ construction allocation reduces workers available to the estate (0.421482ms)
+✔ an estate without buildings produces only low-output subsistence goods (11.073442ms)
+✔ 40 building-driven quarters remain finite and population-safe (2135.780231ms)
+✔ stress seed generation is deterministic and unique (2.588298ms)
+✔ the same stress seed produces the same economic result (401.109122ms)
+✔ calibrated default estate remains below the chronic shortage threshold (1706.353409ms)
+✔ small multi-seed scan reports hard invariants separately from balance (212.738813ms)
+✔ summary fails hard when a seed violates invariants (0.354956ms)
+ℹ tests 102
+ℹ suites 0
+ℹ pass 96
+ℹ fail 6
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7445.162963
+
+✖ failing tests:
+
+test at tests/unit/agentEconomyCanaryTransaction.test.js:108:1
+✖ safe canary transaction atomically commits candidate resources (5.225477ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'shadow' !== 'canary'
+  
+      at readyCanaryControl (file:///home/runner/work/jj/jj/tests/unit/agentEconomyCanaryTransaction.test.js:57:10)
+      at TestContext.<anonymous> (file:///home/runner/work/jj/jj/tests/unit/agentEconomyCanaryTransaction.test.js:125:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.start (node:internal/test_runner/test:1191:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:385:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'shadow',
+    expected: 'canary',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/agentEconomyCanaryTransaction.test.js:158:1
+✖ invalid candidate projection restores the complete legacy result and disables write-back (1.323354ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'shadow' !== 'canary'
+  
+      at readyCanaryControl (file:///home/runner/work/jj/jj/tests/unit/agentEconomyCanaryTransaction.test.js:57:10)
+      at TestContext.<anonymous> (file:///home/runner/work/jj/jj/tests/unit/agentEconomyCanaryTransaction.test.js:173:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'shadow',
+    expected: 'canary',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/agentEconomyCanaryTransaction.test.js:201:1
+✖ object game-over reasons compare by value rather than object identity (2.798462ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'shadow' !== 'canary'
+  
+      at readyCanaryControl (file:///home/runner/work/jj/jj/tests/unit/agentEconomyCanaryTransaction.test.js:57:10)
+      at TestContext.<anonymous> (file:///home/runner/work/jj/jj/tests/unit/agentEconomyCanaryTransaction.test.js:225:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'shadow',
+    expected: 'canary',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/agentEconomyCanaryTransaction.test.js:234:1
+✖ canary transaction history is capped (0.983355ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'shadow' !== 'canary'
+  
+      at readyCanaryControl (file:///home/runner/work/jj/jj/tests/unit/agentEconomyCanaryTransaction.test.js:57:10)
+      at TestContext.<anonymous> (file:///home/runner/work/jj/jj/tests/unit/agentEconomyCanaryTransaction.test.js:238:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'shadow',
+    expected: 'canary',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/agentEconomyCanaryTransaction.test.js:261:1
+✖ integrated reducer writes only candidate resource fields during an active canary quarter (23.432528ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'shadow' !== 'canary'
+  
+      at readyCanaryControl (file:///home/runner/work/jj/jj/tests/unit/agentEconomyCanaryTransaction.test.js:57:10)
+      at TestContext.<anonymous> (file:///home/runner/work/jj/jj/tests/unit/agentEconomyCanaryTransaction.test.js:275:22)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'shadow',
+    expected: 'canary',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/agentEconomyCanaryTransaction.test.js:297:1
+✖ disabling write-back immediately demotes an active canary (10.30999ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'shadow' !== 'canary'
+  
+      at readyCanaryControl (file:///home/runner/work/jj/jj/tests/unit/agentEconomyCanaryTransaction.test.js:57:10)
+      at TestContext.<anonymous> (file:///home/runner/work/jj/jj/tests/unit/agentEconomyCanaryTransaction.test.js:314:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'shadow',
+    expected: 'canary',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+TEST_EXIT_STATUS=1
