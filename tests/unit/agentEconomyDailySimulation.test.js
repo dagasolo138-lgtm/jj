@@ -75,7 +75,8 @@ test("same seed and input produce an identical 30-day quarter", () => {
   assert.equal(firstResult.metrics.daysSimulated, AGENT_DAYS_PER_QUARTER);
   assert.equal(firstResult.metrics.quartersSimulated, 1);
   assert.deepEqual(firstResult.lastDailySummary.pipeline, DAILY_PIPELINE);
-  assert.equal(firstResult.lastDailySummary.settledTrades, 0);
+  assert.ok(firstResult.lastDailySummary.settledTrades >= 0);
+  assert.ok(firstResult.lastDailySummary.tradeValue >= 0);
 });
 
 test("saved RNG state resumes the same deterministic trajectory", () => {
@@ -107,6 +108,8 @@ test("saved RNG state resumes the same deterministic trajectory", () => {
   assert.equal(resumed.metrics.goodsProduced, uninterrupted.metrics.goodsProduced);
   assert.equal(resumed.metrics.goodsConsumed, uninterrupted.metrics.goodsConsumed);
   assert.equal(resumed.metrics.unmetFood, uninterrupted.metrics.unmetFood);
+  assert.equal(resumed.metrics.settledTrades, uninterrupted.metrics.settledTrades);
+  assert.equal(resumed.metrics.tradeValue, uninterrupted.metrics.tradeValue);
 });
 
 test("40 quarters stay finite, serializable, and population-safe", () => {
@@ -125,6 +128,10 @@ test("40 quarters stay finite, serializable, and population-safe", () => {
   assert.equal(state.day, 1200);
   assert.equal(state.metrics.daysSimulated, 1200);
   assert.equal(state.metrics.quartersSimulated, 40);
+  assert.ok(state.metrics.settledTrades >= 0);
+  assert.ok(state.metrics.failedOrders >= 0);
+  assert.ok(state.metrics.tradeVolume >= 0);
+  assert.ok(state.metrics.tradeValue >= 0);
   assert.ok(state.dailyHistory.length <= 60);
   assert.equal(state.quarterHistory.length, 40);
   assertFiniteNonNegativeAgentState(state);
