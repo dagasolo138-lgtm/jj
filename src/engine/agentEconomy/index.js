@@ -58,6 +58,15 @@ export {
 } from "./orderIntentSystem.js";
 
 export {
+  buildOrderBooks,
+  summarizeOrders,
+} from "./orderBook.js";
+
+export {
+  settleOrderBooks,
+} from "./tradeSettlement.js";
+
+export {
   DAILY_INCOME_BY_OCCUPATION,
   applyHouseholdTaxAndWelfare,
   payHouseholdIncome,
