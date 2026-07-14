@@ -1,0 +1,138 @@
+{
+  "validatedCommit": "713b21eee8355b378561795b0d18a9fd43bb2181",
+  "nodeVersion": "24",
+  "schemaVersion": 8,
+  "calibrationVersion": 2,
+  "workflows": {
+    "agentEconomy": {
+      "runId": 29350622530,
+      "status": "success"
+    },
+    "calibration": {
+      "runId": 29350270117,
+      "artifactId": 8317841691,
+      "status": "success"
+    },
+    "stress": {
+      "runId": 29350622430,
+      "artifactId": 8318019007,
+      "status": "success"
+    }
+  },
+  "hardValidation": {
+    "status": "pass",
+    "completedSeeds": 100,
+    "failedSeeds": 0,
+    "invariantFailureRate": 0,
+    "populationConservation": "success",
+    "cashAccounting": "success",
+    "inventoryAccounting": "success",
+    "priceBounds": "success",
+    "serialization": "success",
+    "legacyEconomyBaseline": "success",
+    "lint": "success",
+    "build": "success"
+  },
+  "calibrationMatrix": {
+    "status": "meets-target",
+    "scenarioCount": 7,
+    "seedsPerScenario": 12,
+    "quartersPerSeed": 12,
+    "totalQuarterSimulations": 1008,
+    "totalDaySimulations": 30240,
+    "targetMissCount": 0,
+    "directionalChecksPassed": 6,
+    "directionalChecksTotal": 6,
+    "defaultEstate": {
+      "economicSurvivalRate": 100,
+      "foodFulfillmentRate": 99.2,
+      "employmentRate": 80,
+      "idleBuildingRate": 22.41,
+      "inputShortageRate": 31.18,
+      "tradesPerDay": 2.2553,
+      "failedOrdersPerTrade": 9.65,
+      "povertyRate": 5.42,
+      "averageHealth": 99.99,
+      "averageSatisfaction": 57.57,
+      "minimumCommodityPriceRatio": 0.8225,
+      "maximumCommodityPriceRatio": 1.009
+    },
+    "shockResults": {
+      "agriculturalShortageSurvivalRate": 100,
+      "agriculturalShortageFoodFulfillmentRate": 53.08,
+      "agriculturalShortageAverageHealth": 82.79,
+      "laborShortageSurvivalRate": 100,
+      "laborShortageFoodFulfillmentRate": 51.58,
+      "laborShortageEmploymentRate": 30,
+      "laborShortageAverageHealth": 82.77,
+      "brokenSupplyChainIdleBuildingRate": 50.27,
+      "expandedEstateEmploymentRate": 90,
+      "expandedEstateInputShortageRate": 14.18
+    }
+  },
+  "finalStress": {
+    "status": "pass",
+    "balanceStatus": "stable",
+    "seedCount": 100,
+    "quartersPerSeed": 40,
+    "daysPerSeed": 1200,
+    "totalQuarterSimulations": 4000,
+    "totalDaySimulations": 120000,
+    "completionRate": 100,
+    "economicSurvivalRate": 100,
+    "economicCollapseSeedRate": 0,
+    "foodFulfillmentRate": 99.35,
+    "employmentRate": 80,
+    "povertyRate": 3,
+    "averageHealth": 100,
+    "averageSatisfaction": 48.49,
+    "wealthGini": 0.3957,
+    "idleBuildingRate": 23.37,
+    "inputShortageRate": 32.46,
+    "tradesPerDay": 2.2017,
+    "extremeInflationSeedRate": 0,
+    "priceCrashSeedRate": 0,
+    "marketFreezeSeedRate": 0,
+    "chronicInputShortageSeedRate": 0,
+    "underemploymentSeedRate": 0,
+    "meanQuarterMs": 18.1854,
+    "p95QuarterMs": 19.5745,
+    "maxQuarterMs": 27.3952,
+    "runtimeGateMsPerQuarter": 250
+  },
+  "comparisonWithStep9": {
+    "economicSurvivalRate": {
+      "before": 0,
+      "after": 100
+    },
+    "foodFulfillmentRate": {
+      "before": 6.6,
+      "after": 99.35
+    },
+    "employmentRate": {
+      "before": 30,
+      "after": 80
+    },
+    "settledTradesPerSeed": {
+      "before": 10.07,
+      "after": 2641.99
+    },
+    "extremeLivestockInflationSeedRate": {
+      "before": 89,
+      "after": 0
+    }
+  },
+  "mechanicsAdded": [
+    "Estate inventory is distributed to household inventories by occupation.",
+    "Food demand and household reserves use a calibrated quarterly scale.",
+    "Markets support 0.05-unit orders and preserve fractional inventory.",
+    "Buildings can use additional same-occupation workers beyond minimum crew.",
+    "Service employment and low-output subsistence work absorb idle labor.",
+    "Production inputs use seven-day buffers and priority price clearing.",
+    "Adaptive prices remain inside calibrated learning bands.",
+    "Health responds to actual fulfilled and missed meal events."
+  ],
+  "promotionDecision": "economic-gates-passed-live-adapters-blocked",
+  "authoritativeEngine": "legacy",
+  "candidateMode": "shadow"
+}
