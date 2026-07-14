@@ -1,5 +1,7 @@
 import {
+  FOOD_STOCK_TARGET_PER_PERSON,
   MIN_TRADE_QUANTITY,
+  PRODUCTION_INPUT_BUFFER_DAYS,
   calibratedQuantity,
 } from "./economyCalibration.js";
 
@@ -13,9 +15,12 @@ function safePrice(belief, side) {
 
 function reserveFor(household, commodity, weight) {
   let reserve = 0;
-  if (FOOD_COMMODITIES.includes(commodity)) reserve = Math.max(1, weight * 2);
+  if (FOOD_COMMODITIES.includes(commodity)) {
+    reserve = Math.max(1, weight * FOOD_STOCK_TARGET_PER_PERSON);
+  }
   if (commodity === "tools" || commodity === "cloth") reserve = Math.max(reserve, weight);
-  reserve += Math.max(0, Number(household.productionNeeds?.[commodity]) || 0);
+  reserve += Math.max(0, Number(household.productionNeeds?.[commodity]) || 0)
+    * PRODUCTION_INPUT_BUFFER_DAYS;
   return calibratedQuantity(reserve);
 }
 
@@ -51,7 +56,7 @@ export function generateHouseholdOrderIntents(households, context = {}) {
     const weight = Math.max(1, Math.floor(household.weight ?? 1));
     const inventory = household.inventory ?? {};
     const currentFood = foodStock(inventory);
-    const targetFood = Math.max(1, weight * 2);
+    const targetFood = Math.max(1, weight * FOOD_STOCK_TARGET_PER_PERSON);
     const buyRequests = new Map();
 
     if (currentFood < targetFood) {
@@ -74,14 +79,15 @@ export function generateHouseholdOrderIntents(households, context = {}) {
 
     for (const [commodity, amount] of Object.entries(household.productionNeeds ?? {})) {
       const currentStock = Math.max(0, Number(inventory[commodity]) || 0);
-      const shortage = Math.max(0, Number(amount) || 0);
-      const missing = calibratedQuantity(shortage - currentStock);
+      const dailyShortage = Math.max(0, Number(amount) || 0);
+      const targetStock = calibratedQuantity(dailyShortage * PRODUCTION_INPUT_BUFFER_DAYS);
+      const missing = calibratedQuantity(targetStock - currentStock);
       if (missing <= 0) continue;
       addBuyRequest(
         buyRequests,
         commodity,
         missing,
-        "production-input",
+        "production-input-buffer",
         true,
       );
     }
