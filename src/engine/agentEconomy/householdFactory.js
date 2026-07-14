@@ -9,7 +9,7 @@ import {
 } from "./priceBeliefSystem.js";
 import { DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
 
-export const AGENT_ECONOMY_SCHEMA_VERSION = 8;
+export const AGENT_ECONOMY_SCHEMA_VERSION = 9;
 export const DEFAULT_MAX_HOUSEHOLDS = 120;
 
 export const HOUSEHOLD_COMMODITIES = [
@@ -254,6 +254,7 @@ export function createInitialAgentEconomy(population, options = {}) {
     enabled: false,
     shadowMode: true,
     engineControl: createInitialEngineControl(),
+    liveStateAdapter: null,
     maxHouseholds,
     nextHouseholdId: households.length + 1,
     lastReconciledPopulation: toNonNegativeInteger(population),

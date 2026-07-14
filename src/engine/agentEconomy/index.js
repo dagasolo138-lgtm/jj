@@ -49,8 +49,22 @@ export {
   normalizeEngineControl,
   recordEngineComparison,
   requestEngineMode,
+  setEngineAdapterCapabilities,
+  setEngineWriteBackEnabled,
   shouldRunAgentEngine,
 } from "./engineControlSystem.js";
+
+export {
+  LIVE_STATE_ADAPTER_CAPABILITIES,
+  LIVE_STATE_ADAPTER_VERSION,
+  createInitialLiveStateAdapter,
+  createLegacyLiveSnapshot,
+  ensureLiveStateAdapter,
+  finalizeAgentQuarterLiveState,
+  normalizeLiveStateAdapter,
+  projectAgentEconomyToLegacyState,
+  reconcileLiveStateTransition,
+} from "./liveStateAdapter.js";
 
 export {
   OCCUPATIONS,

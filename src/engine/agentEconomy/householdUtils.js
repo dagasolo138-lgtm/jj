@@ -192,6 +192,9 @@ function sanitizeAgentEconomy(savedAgentEconomy) {
     enabled: source.enabled === true,
     shadowMode: source.shadowMode !== false,
     engineControl: normalizeEngineControl(source.engineControl),
+    liveStateAdapter: source.liveStateAdapter && typeof source.liveStateAdapter === "object"
+      ? JSON.parse(JSON.stringify(source.liveStateAdapter))
+      : null,
     maxHouseholds,
     nextHouseholdId: nextIdNumber(source, households),
     lastReconciledPopulation: toPopulation(source.lastReconciledPopulation),
@@ -260,6 +263,7 @@ export function reconcileAgentEconomyPopulation(agentEconomy, population, option
       enabled: sanitized.enabled,
       shadowMode: sanitized.shadowMode,
       engineControl: sanitized.engineControl,
+      liveStateAdapter: sanitized.liveStateAdapter,
       rngSeed: sanitized.rngSeed,
       rngState: sanitized.rngState,
       day: sanitized.day,

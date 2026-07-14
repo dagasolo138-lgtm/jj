@@ -133,7 +133,9 @@ export function normalizeLiveStateAdapter(adapter, legacyState = {}) {
   const capabilities = Object.fromEntries(
     Object.keys(LIVE_STATE_ADAPTER_CAPABILITIES).map((key) => [
       key,
-      source.capabilities?.[key] === true,
+      source.capabilities && Object.hasOwn(source.capabilities, key)
+        ? source.capabilities[key] === true
+        : fallback.capabilities[key],
     ]),
   );
 

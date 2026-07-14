@@ -13,7 +13,12 @@ import {
   requestEngineMode,
   shouldRunAgentEngine,
 } from "./engineControlSystem.js";
-import { hydrateAgentEconomy, reconcileAgentEconomyPopulation } from "./householdUtils.js";
+import { hydrateAgentEconomy } from "./householdUtils.js";
+import {
+  ensureLiveStateAdapter,
+  finalizeAgentQuarterLiveState,
+  reconcileLiveStateTransition,
+} from "./liveStateAdapter.js";
 
 function normalizePopulation(value) {
   if (!Number.isFinite(value)) return 0;
@@ -23,7 +28,7 @@ function normalizePopulation(value) {
 export function ensureAgentEconomyState(state, origin = "state-reconciliation") {
   const source = state && typeof state === "object" ? state : legacyInitialState;
   const population = normalizePopulation(source.population);
-  const agentEconomy = hydrateAgentEconomy(
+  const hydratedAgentEconomy = hydrateAgentEconomy(
     source.agentEconomy,
     population,
     {
@@ -33,6 +38,7 @@ export function ensureAgentEconomyState(state, origin = "state-reconciliation") 
       estateInventory: source.inventory,
     },
   );
+  const agentEconomy = ensureLiveStateAdapter(hydratedAgentEconomy, source);
 
   return {
     ...source,
@@ -115,6 +121,12 @@ export function gameReducer(state, action) {
   if (controlledState) return controlledState;
 
   const nextState = legacyGameReducer(preparedState, action);
+  const transitionedAgentEconomy = reconcileLiveStateTransition(
+    preparedState.agentEconomy,
+    preparedState,
+    nextState,
+    action,
+  );
 
   let origin = "state-reconciliation";
   if (action?.type === "START_GAME" || action?.type === "PLAY_AGAIN") {
@@ -123,7 +135,10 @@ export function gameReducer(state, action) {
     origin = "save-migration";
   }
 
-  const reconciledState = ensureAgentEconomyState(nextState, origin);
+  const reconciledState = ensureAgentEconomyState({
+    ...nextState,
+    agentEconomy: transitionedAgentEconomy,
+  }, origin);
   if (!isValidSeasonSimulation(preparedState, action)) return reconciledState;
 
   const control = normalizeEngineControl(preparedState.agentEconomy.engineControl);
@@ -164,21 +179,18 @@ export function gameReducer(state, action) {
       expectedDays: AGENT_DAYS_PER_QUARTER,
     });
     const nextControl = recordEngineComparison(control, comparison, checkpoint);
-    const nextAgentEconomy = reconcileAgentEconomyPopulation(
+    const nextAgentEconomy = finalizeAgentQuarterLiveState(
+      preparedState.agentEconomy,
       simulatedAgentEconomy,
-      reconciledState.population,
-      {
-        createdTurn: preparedState.turn,
-        origin: "dual-engine-quarter-resolution",
-      },
+      reconciledState,
     );
 
     return {
       ...reconciledState,
       agentEconomy: {
         ...nextAgentEconomy,
-        enabled: nextControl.activeMode === ENGINE_MODES.CANARY,
-        shadowMode: nextControl.activeMode !== ENGINE_MODES.CANARY,
+        enabled: false,
+        shadowMode: true,
         engineControl: nextControl,
       },
     };

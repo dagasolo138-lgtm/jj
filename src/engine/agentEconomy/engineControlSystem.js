@@ -90,6 +90,7 @@ function getAdapterBlockers(capabilities) {
 
 export function createInitialEngineControl(options = {}) {
   const adapterCapabilities = normalizeCapabilities(options.adapterCapabilities);
+  const writeBackEnabled = options.writeBackEnabled === true;
   const requestedMode = Object.values(ENGINE_MODES).includes(options.requestedMode)
     ? options.requestedMode
     : ENGINE_MODES.SHADOW;
@@ -109,7 +110,11 @@ export function createInitialEngineControl(options = {}) {
     unsafeComparisons: 0,
     canaryEligible: false,
     adapterCapabilities,
-    promotionBlockers: getAdapterBlockers(adapterCapabilities),
+    writeBackEnabled,
+    promotionBlockers: [
+      ...getAdapterBlockers(adapterCapabilities),
+      ...(writeBackEnabled ? [] : ["candidate-write-disabled"]),
+    ],
     rollbackCount: 0,
     lastRollbackReason: null,
     lastModeChangeTurn: 0,
@@ -145,6 +150,7 @@ export function normalizeEngineControl(control) {
     unsafeComparisons: integer(source.unsafeComparisons),
     canaryEligible: source.canaryEligible === true,
     adapterCapabilities,
+    writeBackEnabled: source.writeBackEnabled === true,
     promotionBlockers: Array.isArray(source.promotionBlockers)
       ? source.promotionBlockers.filter((item) => typeof item === "string").slice(-20)
       : getAdapterBlockers(adapterCapabilities),
@@ -350,12 +356,46 @@ export function buildEngineComparison({
 function calculateEligibility(control, safeStreak) {
   const adapterBlockers = getAdapterBlockers(control.adapterCapabilities);
   const blockers = [...adapterBlockers];
+  if (!control.writeBackEnabled) blockers.push("candidate-write-disabled");
   if (safeStreak < control.requiredSafeQuarters) {
     blockers.push(`safe-quarter-streak:${safeStreak}/${control.requiredSafeQuarters}`);
   }
   return {
     eligible: blockers.length === 0,
     blockers,
+  };
+}
+
+export function setEngineAdapterCapabilities(control, capabilities = {}) {
+  const normalized = normalizeEngineControl(control);
+  const adapterCapabilities = normalizeCapabilities({
+    ...normalized.adapterCapabilities,
+    ...capabilities,
+  });
+  const eligibility = calculateEligibility(
+    { ...normalized, adapterCapabilities },
+    normalized.consecutiveSafeQuarters,
+  );
+  return {
+    ...normalized,
+    adapterCapabilities,
+    canaryEligible: eligibility.eligible,
+    promotionBlockers: eligibility.blockers,
+  };
+}
+
+export function setEngineWriteBackEnabled(control, enabled) {
+  const normalized = normalizeEngineControl(control);
+  const writeBackEnabled = enabled === true;
+  const eligibility = calculateEligibility(
+    { ...normalized, writeBackEnabled },
+    normalized.consecutiveSafeQuarters,
+  );
+  return {
+    ...normalized,
+    writeBackEnabled,
+    canaryEligible: eligibility.eligible,
+    promotionBlockers: eligibility.blockers,
   };
 }
 

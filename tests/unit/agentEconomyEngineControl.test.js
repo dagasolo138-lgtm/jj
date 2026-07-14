@@ -51,7 +51,7 @@ function safeComparison(index = 1) {
   };
 }
 
-test("new games start in shadow mode with legacy authority", () => {
+test("new games start in shadow mode with live adapters ready and write-back blocked", () => {
   const state = startGame();
   const control = state.agentEconomy.engineControl;
 
@@ -59,7 +59,9 @@ test("new games start in shadow mode with legacy authority", () => {
   assert.equal(control.activeMode, ENGINE_MODES.SHADOW);
   assert.equal(control.authority, ENGINE_MODES.LEGACY);
   assert.equal(control.canaryEligible, false);
-  assert.ok(control.promotionBlockers.some((item) => item.startsWith("adapter-not-ready:")));
+  assert.ok(Object.values(control.adapterCapabilities).every(Boolean));
+  assert.ok(!control.promotionBlockers.some((item) => item.startsWith("adapter-not-ready:")));
+  assert.ok(control.promotionBlockers.includes("candidate-write-disabled"));
 });
 
 test("season simulation records a safe engine comparison without changing legacy authority", () => {
@@ -113,6 +115,7 @@ test("canary requests remain blocked while game-state adapters are incomplete", 
 
 test("eight safe comparisons and complete adapters make canary eligible", () => {
   let control = createInitialEngineControl({
+    writeBackEnabled: true,
     adapterCapabilities: {
       treasury: true,
       estateInventory: true,
@@ -137,6 +140,7 @@ test("eight safe comparisons and complete adapters make canary eligible", () => 
 test("unsafe comparison automatically rolls canary back to shadow", () => {
   let control = createInitialEngineControl({
     requestedMode: ENGINE_MODES.CANARY,
+    writeBackEnabled: true,
     adapterCapabilities: {
       treasury: true,
       estateInventory: true,
