@@ -9,6 +9,24 @@ export {
 } from "./householdFactory.js";
 
 export {
+  AGENT_ECONOMY_CALIBRATION_VERSION,
+  BUILDING_WORKER_CAPACITY,
+  DAILY_FOOD_TARGET_PER_PERSON,
+  DAYS_PER_QUARTER,
+  FOOD_PER_PERSON_PER_QUARTER,
+  MIN_TRADE_QUANTITY,
+  QUANTITY_PRECISION,
+  SERVICE_WORKPLACES,
+  calibratedQuantity,
+  getBuildingWorkerCapacity,
+} from "./economyCalibration.js";
+
+export {
+  distributeEstateInventory,
+  getDistributedInventoryTotals,
+} from "./estateInventoryAdapter.js";
+
+export {
   cloneAgentEconomy,
   getHouseholdPopulation,
   hydrateAgentEconomy,
