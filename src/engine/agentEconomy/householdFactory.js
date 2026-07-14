@@ -1,8 +1,9 @@
 import { BASE_BUY_PRICES } from "../../data/economy.js";
 import { createInitialNeeds, normalizeNeeds } from "./needsSystem.js";
 import { getDefaultOccupation, normalizeOccupation } from "./occupationSystem.js";
+import { DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
 
-export const AGENT_ECONOMY_SCHEMA_VERSION = 1;
+export const AGENT_ECONOMY_SCHEMA_VERSION = 2;
 export const DEFAULT_MAX_HOUSEHOLDS = 120;
 
 export const HOUSEHOLD_COMMODITIES = [
@@ -12,8 +13,14 @@ export const HOUSEHOLD_COMMODITIES = [
   "flour",
   "timber",
   "wood",
+  "coal",
+  "iron",
+  "stone",
+  "clay",
   "wool",
   "cloth",
+  "leather",
+  "steel",
   "herbs",
   "ale",
   "salt",
@@ -64,13 +71,15 @@ export function createHousehold({
   const normalizedIndex = toNonNegativeInteger(index);
   const normalizedOccupation = normalizeOccupation(occupation ?? getDefaultOccupation(normalizedIndex));
   const priceBeliefs = createPriceBeliefs(normalizedIndex);
+  const inventory = createEmptyHouseholdInventory();
+  inventory.grain = normalizedWeight * 2;
 
   return {
     id: id || `hh-${String(normalizedIndex + 1).padStart(6, "0")}`,
     weight: normalizedWeight,
     occupation: normalizedOccupation,
     cash: (12 + (normalizedIndex % 5) * 3) * normalizedWeight,
-    inventory: createEmptyHouseholdInventory(),
+    inventory,
     needs: createInitialNeeds(normalizedIndex),
     priceBeliefs,
     priceHistory: createPriceHistory(priceBeliefs),
@@ -108,7 +117,10 @@ export function normalizeHousehold(household, index = 0) {
     : {};
   const normalizedInventory = {};
   for (const commodity of HOUSEHOLD_COMMODITIES) {
-    normalizedInventory[commodity] = toNonNegativeInteger(inventorySource[commodity]);
+    normalizedInventory[commodity] = toNonNegativeInteger(
+      inventorySource[commodity],
+      fallback.inventory[commodity],
+    );
   }
 
   const historySource = source.priceHistory && typeof source.priceHistory === "object"
@@ -177,6 +189,7 @@ export function createInitialAgentEconomy(population, options = {}) {
     createdTurn: options.createdTurn ?? 0,
     origin: options.origin ?? "generated",
   });
+  const rngSeed = normalizeSeed(options.seed ?? DEFAULT_AGENT_ECONOMY_SEED);
 
   return {
     schemaVersion: AGENT_ECONOMY_SCHEMA_VERSION,
@@ -186,10 +199,28 @@ export function createInitialAgentEconomy(population, options = {}) {
     nextHouseholdId: households.length + 1,
     lastReconciledPopulation: toNonNegativeInteger(population),
     households,
+    rngSeed,
+    rngState: rngSeed,
+    day: 0,
+    pendingOrders: [],
+    lastDailySummary: null,
+    lastQuarterSummary: null,
+    dailyHistory: [],
+    quarterHistory: [],
     metrics: {
       totalTrades: 0,
       failedTrades: 0,
       daysSimulated: 0,
+      quartersSimulated: 0,
+      goodsProduced: 0,
+      goodsConsumed: 0,
+      unmetFood: 0,
+      ordersGenerated: 0,
+      potentialMatches: 0,
+      potentialMatchVolume: 0,
+      grossIncome: 0,
+      taxCollected: 0,
+      welfarePaid: 0,
     },
   };
 }
