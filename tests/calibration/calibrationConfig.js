@@ -34,6 +34,10 @@ function cloneBuildings(buildings = legacyInitialState.buildings) {
   return buildings.map((building) => typeof building === "string" ? building : { ...building });
 }
 
+function cloneInventory(inventory = legacyInitialState.inventory) {
+  return Object.fromEntries(Object.entries(inventory).map(([commodity, amount]) => [commodity, amount]));
+}
+
 function createBuilding(type, index, condition = 100) {
   return {
     instanceId: `${type}-${index}-calibration`,
@@ -49,14 +53,16 @@ function mergeTarget(overrides = {}) {
 }
 
 const defaultBuildings = cloneBuildings();
+const defaultInventory = cloneInventory();
 
 export const CALIBRATION_SCENARIOS = Object.freeze([
   Object.freeze({
     id: "default-estate",
     name: "Default estate",
-    purpose: "Primary balance target using the current new-game estate.",
+    purpose: "Primary balance target using the frozen new-game estate.",
     expectedPressure: "normal",
     population: legacyInitialState.population,
+    estateInventory: cloneInventory(defaultInventory),
     buildings: cloneBuildings(defaultBuildings),
     laborAllocation: { ...legacyInitialState.laborAllocation },
     taxRate: legacyInitialState.taxRate,
@@ -68,6 +74,7 @@ export const CALIBRATION_SCENARIOS = Object.freeze([
     purpose: "Measures whether the economy degrades without instantly dying after losing its strip farm.",
     expectedPressure: "food-shock",
     population: legacyInitialState.population,
+    estateInventory: cloneInventory(defaultInventory),
     buildings: cloneBuildings(defaultBuildings.filter((building) => building.type !== "strip_farm")),
     laborAllocation: { ...legacyInitialState.laborAllocation },
     taxRate: legacyInitialState.taxRate,
@@ -93,6 +100,7 @@ export const CALIBRATION_SCENARIOS = Object.freeze([
     purpose: "Reserves seventy percent of the population for construction and tests graceful production degradation.",
     expectedPressure: "labor-shock",
     population: legacyInitialState.population,
+    estateInventory: cloneInventory(defaultInventory),
     buildings: cloneBuildings(defaultBuildings),
     laborAllocation: { demesne: 15, peasant: 15, construction: 70 },
     taxRate: legacyInitialState.taxRate,
@@ -119,6 +127,7 @@ export const CALIBRATION_SCENARIOS = Object.freeze([
     purpose: "Keeps processors while removing timber, iron, and coal upstream buildings to expose input propagation.",
     expectedPressure: "input-shock",
     population: legacyInitialState.population,
+    estateInventory: cloneInventory(defaultInventory),
     buildings: [
       createBuilding("strip_farm", 0),
       createBuilding("pasture", 0),
@@ -151,6 +160,7 @@ export const CALIBRATION_SCENARIOS = Object.freeze([
     purpose: "Runs the default estate under the crushing tax rate to expose cash starvation and welfare dependence.",
     expectedPressure: "fiscal-shock",
     population: legacyInitialState.population,
+    estateInventory: cloneInventory(defaultInventory),
     buildings: cloneBuildings(defaultBuildings),
     laborAllocation: { ...legacyInitialState.laborAllocation },
     taxRate: "crushing",
@@ -168,6 +178,7 @@ export const CALIBRATION_SCENARIOS = Object.freeze([
     purpose: "Runs the default estate with low taxation as the household-liquidity comparison case.",
     expectedPressure: "fiscal-relief",
     population: legacyInitialState.population,
+    estateInventory: cloneInventory(defaultInventory),
     buildings: cloneBuildings(defaultBuildings),
     laborAllocation: { ...legacyInitialState.laborAllocation },
     taxRate: "low",
@@ -185,6 +196,7 @@ export const CALIBRATION_SCENARIOS = Object.freeze([
     purpose: "Adds food, raw-material, mining, and milling capacity to test whether expansion improves the economy.",
     expectedPressure: "growth",
     population: legacyInitialState.population,
+    estateInventory: cloneInventory(defaultInventory),
     buildings: [
       ...cloneBuildings(defaultBuildings),
       createBuilding("demesne_field", 0),
