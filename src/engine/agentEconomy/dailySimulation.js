@@ -1,5 +1,9 @@
 import { consumeHousehold, updateHouseholdNeeds } from "./consumptionSystem.js";
 import { generateHouseholdOrderIntents, previewOrderMatches } from "./orderIntentSystem.js";
+import {
+  applyPriceLearning,
+  updateMarketPriceIndex,
+} from "./priceBeliefSystem.js";
 import { produceHousehold } from "./productionSystem.js";
 import { createSeededRng, DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
 import { settleOrderBooks } from "./tradeSettlement.js";
@@ -15,6 +19,7 @@ export const DAILY_PIPELINE = [
   "needs",
   "order-generation",
   "market-settlement",
+  "price-learning",
   "consumption",
   "income",
   "tax-and-welfare",
@@ -46,6 +51,9 @@ function createMetrics(metrics = {}) {
     failedOrders: safeMetric(metrics.failedOrders),
     tradeVolume: safeMetric(metrics.tradeVolume),
     tradeValue: safeMetric(metrics.tradeValue),
+    beliefAdjustments: safeMetric(metrics.beliefAdjustments),
+    priceIncreases: safeMetric(metrics.priceIncreases),
+    priceDecreases: safeMetric(metrics.priceDecreases),
     grossIncome: safeMetric(metrics.grossIncome),
     taxCollected: safeMetric(metrics.taxCollected),
     welfarePaid: safeMetric(metrics.welfarePaid),
@@ -104,7 +112,13 @@ export function simulateAgentDay(state, rng, context = {}) {
   const day = currentDay + 1;
   const dayContext = { ...context, day };
   let households = Array.isArray(state?.households)
-    ? state.households.map((household) => ({ ...household, inventory: { ...household.inventory }, needs: { ...household.needs } }))
+    ? state.households.map((household) => ({
+      ...household,
+      inventory: { ...household.inventory },
+      needs: { ...household.needs },
+      priceBeliefs: { ...household.priceBeliefs },
+      priceHistory: { ...household.priceHistory },
+    }))
     : [];
 
   const production = aggregateProduction(households, rng, dayContext);
@@ -115,7 +129,18 @@ export function simulateAgentDay(state, rng, context = {}) {
   const orders = generateHouseholdOrderIntents(households, dayContext);
   const marketPreview = previewOrderMatches(orders);
   const market = settleOrderBooks(households, orders);
-  households = market.households;
+  const learning = applyPriceLearning(market.households, {
+    ...market,
+    orders,
+  });
+  households = learning.households;
+  const priceIndex = updateMarketPriceIndex(
+    state?.marketPrices,
+    orders,
+    market.trades,
+    market.failedOrders,
+    day,
+  );
 
   const consumption = aggregateConsumption(households, rng, dayContext);
   households = consumption.households;
@@ -160,6 +185,9 @@ export function simulateAgentDay(state, rng, context = {}) {
   metrics = addMetric(metrics, "failedTrades", market.summary.failedOrders);
   metrics = addMetric(metrics, "tradeVolume", market.summary.tradeVolume);
   metrics = addMetric(metrics, "tradeValue", market.summary.tradeValue);
+  metrics = addMetric(metrics, "beliefAdjustments", learning.summary.adjustments);
+  metrics = addMetric(metrics, "priceIncreases", learning.summary.increases);
+  metrics = addMetric(metrics, "priceDecreases", learning.summary.decreases);
   metrics = addMetric(metrics, "grossIncome", grossIncome);
   metrics = addMetric(metrics, "taxCollected", taxCollected);
   metrics = addMetric(metrics, "welfarePaid", welfarePaid);
@@ -183,6 +211,10 @@ export function simulateAgentDay(state, rng, context = {}) {
     tradeVolume: market.summary.tradeVolume,
     tradeValue: market.summary.tradeValue,
     tradedCommodities: market.summary.tradedCommodities,
+    beliefAdjustments: learning.summary.adjustments,
+    priceIncreases: learning.summary.increases,
+    priceDecreases: learning.summary.decreases,
+    marketPrices: priceIndex.snapshot,
     grossIncome: Number(grossIncome.toFixed(2)),
     taxCollected: Number(taxCollected.toFixed(2)),
     welfarePaid: Number(welfarePaid.toFixed(2)),
@@ -194,6 +226,17 @@ export function simulateAgentDay(state, rng, context = {}) {
     households,
     pendingOrders: market.failedOrders.slice(-500),
     lastTrades: market.trades.slice(-100),
+    marketPrices: priceIndex.marketPrices,
+    lastBeliefUpdates: learning.events.slice(-200),
+    beliefUpdateHistory: [
+      ...(state?.beliefUpdateHistory ?? []),
+      {
+        day,
+        adjustments: learning.summary.adjustments,
+        increases: learning.summary.increases,
+        decreases: learning.summary.decreases,
+      },
+    ].slice(-60),
     lastDailySummary: summary,
     dailyHistory: [...(state?.dailyHistory ?? []), summary].slice(-60),
     metrics,
@@ -234,6 +277,9 @@ export function simulateAgentQuarter(agentEconomy, context = {}) {
     failedOrders: Number((endMetrics.failedOrders - startMetrics.failedOrders).toFixed(2)),
     tradeVolume: Number((endMetrics.tradeVolume - startMetrics.tradeVolume).toFixed(2)),
     tradeValue: Number((endMetrics.tradeValue - startMetrics.tradeValue).toFixed(2)),
+    beliefAdjustments: Number((endMetrics.beliefAdjustments - startMetrics.beliefAdjustments).toFixed(2)),
+    priceIncreases: Number((endMetrics.priceIncreases - startMetrics.priceIncreases).toFixed(2)),
+    priceDecreases: Number((endMetrics.priceDecreases - startMetrics.priceDecreases).toFixed(2)),
     grossIncome: Number((endMetrics.grossIncome - startMetrics.grossIncome).toFixed(2)),
     taxCollected: Number((endMetrics.taxCollected - startMetrics.taxCollected).toFixed(2)),
     welfarePaid: Number((endMetrics.welfarePaid - startMetrics.welfarePaid).toFixed(2)),
