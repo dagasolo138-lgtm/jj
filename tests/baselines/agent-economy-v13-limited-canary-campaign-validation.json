@@ -1,0 +1,147 @@
+{
+  "validatedCommit": "627f8565daa3a1198c1e27575eb25615ced9afb7",
+  "nodeVersion": "24",
+  "schemaVersion": 11,
+  "engineControlVersion": 2,
+  "canaryTransactionVersion": 1,
+  "canaryCampaignVersion": 1,
+  "defaultPlayerState": {
+    "authoritativeEngine": "legacy",
+    "candidateEnabled": false,
+    "shadowMode": true,
+    "writeBackEnabled": false,
+    "campaignStatus": "idle",
+    "operatorControlsVisible": false,
+    "automaticCampaignStart": false
+  },
+  "operatorAccess": {
+    "enableQuery": "?operator=1",
+    "disableQuery": "?operator=0",
+    "persistenceKey": "lords-ledger-operator-mode",
+    "readOnlyEconomyMonitorRemainsVisible": true
+  },
+  "campaignLimits": {
+    "defaultQuarterLimit": 3,
+    "maximumQuarterLimit": 4,
+    "requiredSafeQuarterStreak": 8,
+    "allLiveStateAdaptersRequired": true,
+    "runningCampaignRequiredForOfficialWrite": true,
+    "automaticCompletionAtLimit": true,
+    "writeBackDisabledAfterCompletion": true,
+    "authorityReturnedToLegacyAfterCompletion": true
+  },
+  "automaticAbortRules": {
+    "unsafeComparison": true,
+    "invalidProjection": true,
+    "projectionException": true,
+    "transactionRollback": true,
+    "operatorEmergencyStop": true,
+    "modeChangedAwayFromCanary": true,
+    "writeBackDisabled": true,
+    "candidateWriteDisabledBlockerRestored": true
+  },
+  "operatorPanel": {
+    "campaignStatus": true,
+    "quarterProgress": true,
+    "writeBackStatus": true,
+    "currentAuthority": true,
+    "promotionBlockers": true,
+    "lastStopReason": true,
+    "recentTransactionStatus": true,
+    "startThreeQuarterTrial": true,
+    "stopAndRollback": true,
+    "emergencyStop": true
+  },
+  "persistenceValidation": {
+    "oldSaveWithoutCampaignDefaultsToIdle": "success",
+    "runningCampaignSurvivesJsonSave": "success",
+    "attemptedQuarterCountPreserved": "success",
+    "committedQuarterCountPreserved": "success",
+    "restoredCampaignClosesAtOriginalLimit": "success",
+    "oldSaveCannotAccidentallyEnableWriteBack": "success"
+  },
+  "campaignValidation": {
+    "blockedBeforeSafeStreak": "success",
+    "startIsExplicitAndAtomic": "success",
+    "quarterLimitClampedToFour": "success",
+    "finalQuarterAutomaticallyClosesCampaign": "success",
+    "rollbackAbortsCampaign": "success",
+    "operatorStopAbortsCampaign": "success",
+    "writeWithoutRunningCampaignRejected": "success",
+    "modeDemotionAbortsCampaign": "success",
+    "writeBackDisableAbortsCampaign": "success",
+    "recentTransactionsExposedToMonitor": "success"
+  },
+  "workflows": {
+    "agentEconomy": {
+      "runId": 29359860094,
+      "status": "success"
+    },
+    "calibration": {
+      "runId": 29359860116,
+      "artifactId": 8321692129,
+      "status": "success"
+    },
+    "stress": {
+      "runId": 29359860041,
+      "artifactId": 8321719225,
+      "status": "success"
+    }
+  },
+  "hardValidation": {
+    "agentEconomyTests": "success",
+    "legacyEconomyBaseline": "success",
+    "lint": "success",
+    "build": "success",
+    "calibrationMatrix": "meets-target",
+    "stressStatus": "pass",
+    "stressBalanceStatus": "stable"
+  },
+  "calibration": {
+    "scenarioCount": 7,
+    "seedsPerScenario": 12,
+    "quartersPerSeed": 12,
+    "totalQuarterSimulations": 1008,
+    "totalDaySimulations": 30240,
+    "targetMissCount": 0,
+    "directionalChecksPassed": 6,
+    "directionalChecksTotal": 6,
+    "defaultEstate": {
+      "economicSurvivalRate": 100,
+      "foodFulfillmentRate": 99.2,
+      "employmentRate": 80,
+      "povertyRate": 5.42,
+      "averageHealth": 99.99,
+      "averageSatisfaction": 57.57,
+      "idleBuildingRate": 22.41,
+      "inputShortageRate": 31.18,
+      "tradesPerDay": 2.2553,
+      "failedOrdersPerTrade": 9.65,
+      "minimumCommodityPriceRatio": 0.8225,
+      "maximumCommodityPriceRatio": 1.009
+    }
+  },
+  "stress": {
+    "seedCount": 100,
+    "quartersPerSeed": 40,
+    "daysPerSeed": 1200,
+    "totalQuarterSimulations": 4000,
+    "totalDaySimulations": 120000,
+    "completionRate": 100,
+    "economicSurvivalRate": 100,
+    "invariantFailureRate": 0,
+    "foodFulfillmentRate": 99.35,
+    "employmentRate": 80,
+    "povertyRate": 3,
+    "marketFreezeSeedRate": 0,
+    "extremeInflationSeedRate": 0,
+    "priceCrashSeedRate": 0,
+    "chronicInputShortageSeedRate": 0,
+    "meanQuarterMs": 17.9587,
+    "p95QuarterMs": 18.8535,
+    "maxQuarterMs": 27.9047,
+    "runtimeGateMsPerQuarter": 250
+  },
+  "promotionDecision": "limited-canary-campaign-ready-hidden-by-default",
+  "nextGate": "controlled-canary-observation-and-release-guardrails"
+}
