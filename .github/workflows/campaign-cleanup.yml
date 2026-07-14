@@ -1,0 +1,35 @@
+name: Campaign integration cleanup
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/campaign-cleanup.yml
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove temporary integration files
+        run: |
+          rm -f \
+            scripts/apply_canary_campaign.py \
+            scripts/fix_campaign_lint.py \
+            scripts/fix_campaign_control_consistency.py \
+            campaign-lint-error.txt \
+            .github/workflows/canary-campaign-patch.yml \
+            .github/workflows/campaign-lint-diagnostics.yml \
+            .github/workflows/campaign-lint-fix.yml \
+            .github/workflows/campaign-control-consistency.yml \
+            .github/workflows/campaign-cleanup.yml
+      - name: Commit cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore(agent-economy): remove campaign integration tooling"
+          git push
