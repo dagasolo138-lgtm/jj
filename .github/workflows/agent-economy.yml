@@ -5,8 +5,8 @@ on:
     paths:
       - src/engine/agentEconomy/**
       - src/App.jsx
-      - tests/unit/agentEconomyHouseholds.test.js
-      - tests/baselines/agent-economy-step2-validation.json
+      - tests/unit/agentEconomy*.test.js
+      - tests/baselines/agent-economy-step*.json
       - package.json
       - package-lock.json
       - .github/workflows/agent-economy.yml
@@ -15,8 +15,8 @@ on:
     paths:
       - src/engine/agentEconomy/**
       - src/App.jsx
-      - tests/unit/agentEconomyHouseholds.test.js
-      - tests/baselines/agent-economy-step2-validation.json
+      - tests/unit/agentEconomy*.test.js
+      - tests/baselines/agent-economy-step*.json
       - package.json
       - package-lock.json
       - .github/workflows/agent-economy.yml
