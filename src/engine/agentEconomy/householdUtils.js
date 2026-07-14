@@ -195,6 +195,8 @@ function sanitizeAgentEconomy(savedAgentEconomy) {
     maxHouseholds,
     nextHouseholdId: nextIdNumber(source, households),
     lastReconciledPopulation: toPopulation(source.lastReconciledPopulation),
+    inventoryAdapterVersion: toPopulation(source.inventoryAdapterVersion),
+    inventorySeededFromEstate: source.inventorySeededFromEstate === true,
     households,
     rngSeed,
     rngState,
@@ -251,6 +253,7 @@ export function reconcileAgentEconomyPopulation(agentEconomy, population, option
       createdTurn: options.createdTurn ?? 0,
       origin: options.origin ?? "migration",
       seed: sanitized.rngSeed,
+      estateInventory: options.estateInventory,
     });
     return {
       ...created,
@@ -344,6 +347,7 @@ export function hydrateAgentEconomy(savedAgentEconomy, population, options = {})
       createdTurn: options.createdTurn ?? 0,
       origin: "legacy-save-migration",
       seed: options.seed,
+      estateInventory: options.estateInventory,
     });
   }
   return reconcileAgentEconomyPopulation(savedAgentEconomy, population, options);
