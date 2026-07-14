@@ -2,6 +2,7 @@ import { consumeHousehold, updateHouseholdNeeds } from "./consumptionSystem.js";
 import { generateHouseholdOrderIntents, previewOrderMatches } from "./orderIntentSystem.js";
 import { produceHousehold } from "./productionSystem.js";
 import { createSeededRng, DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
+import { settleOrderBooks } from "./tradeSettlement.js";
 import {
   applyHouseholdTaxAndWelfare,
   payHouseholdIncome,
@@ -13,7 +14,7 @@ export const DAILY_PIPELINE = [
   "production",
   "needs",
   "order-generation",
-  "market-preview",
+  "market-settlement",
   "consumption",
   "income",
   "tax-and-welfare",
@@ -41,6 +42,10 @@ function createMetrics(metrics = {}) {
     ordersGenerated: safeMetric(metrics.ordersGenerated),
     potentialMatches: safeMetric(metrics.potentialMatches),
     potentialMatchVolume: safeMetric(metrics.potentialMatchVolume),
+    settledTrades: safeMetric(metrics.settledTrades),
+    failedOrders: safeMetric(metrics.failedOrders),
+    tradeVolume: safeMetric(metrics.tradeVolume),
+    tradeValue: safeMetric(metrics.tradeValue),
     grossIncome: safeMetric(metrics.grossIncome),
     taxCollected: safeMetric(metrics.taxCollected),
     welfarePaid: safeMetric(metrics.welfarePaid),
@@ -109,6 +114,8 @@ export function simulateAgentDay(state, rng, context = {}) {
 
   const orders = generateHouseholdOrderIntents(households, dayContext);
   const marketPreview = previewOrderMatches(orders);
+  const market = settleOrderBooks(households, orders);
+  households = market.households;
 
   const consumption = aggregateConsumption(households, rng, dayContext);
   households = consumption.households;
@@ -147,6 +154,12 @@ export function simulateAgentDay(state, rng, context = {}) {
   metrics = addMetric(metrics, "ordersGenerated", orders.length);
   metrics = addMetric(metrics, "potentialMatches", marketPreview.potentialMatches);
   metrics = addMetric(metrics, "potentialMatchVolume", marketPreview.potentialVolume);
+  metrics = addMetric(metrics, "settledTrades", market.summary.settledTrades);
+  metrics = addMetric(metrics, "failedOrders", market.summary.failedOrders);
+  metrics = addMetric(metrics, "totalTrades", market.summary.settledTrades);
+  metrics = addMetric(metrics, "failedTrades", market.summary.failedOrders);
+  metrics = addMetric(metrics, "tradeVolume", market.summary.tradeVolume);
+  metrics = addMetric(metrics, "tradeValue", market.summary.tradeValue);
   metrics = addMetric(metrics, "grossIncome", grossIncome);
   metrics = addMetric(metrics, "taxCollected", taxCollected);
   metrics = addMetric(metrics, "welfarePaid", welfarePaid);
@@ -162,9 +175,14 @@ export function simulateAgentDay(state, rng, context = {}) {
     totalConsumed: consumption.totalConsumed,
     unmetFood: consumption.unmetFood,
     ordersGenerated: orders.length,
+    orderSummary: market.summary.orderSummary,
     potentialMatches: marketPreview.potentialMatches,
     potentialMatchVolume: marketPreview.potentialVolume,
-    settledTrades: marketPreview.settledTrades,
+    settledTrades: market.summary.settledTrades,
+    failedOrders: market.summary.failedOrders,
+    tradeVolume: market.summary.tradeVolume,
+    tradeValue: market.summary.tradeValue,
+    tradedCommodities: market.summary.tradedCommodities,
     grossIncome: Number(grossIncome.toFixed(2)),
     taxCollected: Number(taxCollected.toFixed(2)),
     welfarePaid: Number(welfarePaid.toFixed(2)),
@@ -174,7 +192,8 @@ export function simulateAgentDay(state, rng, context = {}) {
     ...state,
     day,
     households,
-    pendingOrders: orders,
+    pendingOrders: market.failedOrders.slice(-500),
+    lastTrades: market.trades.slice(-100),
     lastDailySummary: summary,
     dailyHistory: [...(state?.dailyHistory ?? []), summary].slice(-60),
     metrics,
@@ -211,6 +230,10 @@ export function simulateAgentQuarter(agentEconomy, context = {}) {
     unmetFood: Number((endMetrics.unmetFood - startMetrics.unmetFood).toFixed(2)),
     ordersGenerated: Number((endMetrics.ordersGenerated - startMetrics.ordersGenerated).toFixed(2)),
     potentialMatches: Number((endMetrics.potentialMatches - startMetrics.potentialMatches).toFixed(2)),
+    settledTrades: Number((endMetrics.settledTrades - startMetrics.settledTrades).toFixed(2)),
+    failedOrders: Number((endMetrics.failedOrders - startMetrics.failedOrders).toFixed(2)),
+    tradeVolume: Number((endMetrics.tradeVolume - startMetrics.tradeVolume).toFixed(2)),
+    tradeValue: Number((endMetrics.tradeValue - startMetrics.tradeValue).toFixed(2)),
     grossIncome: Number((endMetrics.grossIncome - startMetrics.grossIncome).toFixed(2)),
     taxCollected: Number((endMetrics.taxCollected - startMetrics.taxCollected).toFixed(2)),
     welfarePaid: Number((endMetrics.welfarePaid - startMetrics.welfarePaid).toFixed(2)),
