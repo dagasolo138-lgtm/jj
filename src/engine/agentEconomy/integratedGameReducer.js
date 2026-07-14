@@ -30,6 +30,7 @@ export function ensureAgentEconomyState(state, origin = "state-reconciliation") 
       createdTurn: source.turn ?? 0,
       maxHouseholds: source.agentEconomy?.maxHouseholds,
       origin,
+      estateInventory: source.inventory,
     },
   );
 
