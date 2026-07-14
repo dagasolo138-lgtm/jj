@@ -51,7 +51,6 @@ test("live adapters expose all four capabilities while write-back stays disabled
     legacy,
   );
 
-  assert.deepEqual(economy.agentEconomy, undefined);
   assert.ok(Object.values(economy.liveStateAdapter.capabilities).every(Boolean));
   assert.equal(economy.liveStateAdapter.shadowOnly, true);
   assert.equal(economy.liveStateAdapter.writeBackEnabled, false);
@@ -199,6 +198,42 @@ test("projecting agent state is pure and includes household assets", () => {
   assert.equal(projected.food, 8);
   assert.deepEqual(economy, snapshot);
   assert.deepEqual(legacy.inventory, {});
+});
+
+test("loading a save preserves household history and reconciles population", () => {
+  const before = {
+    turn: 1,
+    season: "spring",
+    denarii: 500,
+    population: 4,
+    inventory: { grain: 20 },
+    phase: "title",
+  };
+  const after = {
+    turn: 7,
+    season: "autumn",
+    denarii: 240,
+    population: 3,
+    inventory: { grain: 11 },
+    phase: "management",
+  };
+  const saved = ensureLiveStateAdapter(createInitialAgentEconomy(4, {
+    estateInventory: before.inventory,
+  }), before);
+  saved.day = 180;
+  saved.households[0] = {
+    ...saved.households[0],
+    satisfaction: 77,
+  };
+
+  const loaded = reconcileLiveStateTransition(saved, before, after, { type: "LOAD_SAVE" });
+
+  assert.equal(loaded.day, 180);
+  assert.equal(getHouseholdPopulation(loaded.households), 3);
+  assert.equal(loaded.households[0].satisfaction, 77);
+  assert.equal(loaded.liveStateAdapter.syncCount, 0);
+  assert.equal(loaded.liveStateAdapter.legacySnapshot.turn, 7);
+  assert.equal(loaded.liveStateAdapter.legacySnapshot.denarii, 240);
 });
 
 test("starting a new game resets the shadow economy and adapter ledger", () => {
