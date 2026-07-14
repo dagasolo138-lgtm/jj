@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { createElement, useMemo } from "react";
 import {
   Activity,
   AlertTriangle,
@@ -83,7 +83,7 @@ function MetricCard({ icon: Icon, label, value, detail, tone = "gold" }) {
       style={{ backgroundColor: COLORS.panelDeep, borderColor: COLORS.border }}
     >
       <div className="flex items-center gap-2 mb-2">
-        <Icon size={15} color={toneColor} strokeWidth={1.7} />
+        {createElement(Icon, { size: 15, color: toneColor, strokeWidth: 1.7 })}
         <span
           className="text-[10px] uppercase tracking-wider truncate"
           style={{ color: COLORS.muted, fontFamily: "Cinzel, serif" }}
