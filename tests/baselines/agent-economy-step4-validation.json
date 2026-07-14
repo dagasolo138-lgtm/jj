@@ -1,0 +1,16 @@
+{
+  "validatedCommit": "bd160d74633f39b0b602b1e41493a504ed63ed49",
+  "workflowRunId": 29308610920,
+  "nodeVersion": "24",
+  "agentEconomyTests": "success",
+  "legacyEconomyBaseline": "success",
+  "lint": "success",
+  "build": "success",
+  "orderBookSorting": "success",
+  "cashAndInventoryConservation": "success",
+  "midpointTradePrice": "success",
+  "partialFillConstraints": "success",
+  "marketSettlementEnabledInsideAgentEconomy": true,
+  "liveEconomyChanged": false,
+  "shadowMode": true
+}
