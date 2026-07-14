@@ -279,13 +279,14 @@ export function applyCanaryTransaction({
   control,
   comparison,
   projector = projectAgentEconomyToLegacyState,
+  attemptedCanary = false,
 } = {}) {
   const normalized = normalizeEngineControl(control);
   const checkpoint = createCanaryCheckpoint(legacyState);
   const canWrite = normalized.activeMode === ENGINE_MODES.CANARY
     && normalized.writeBackEnabled === true;
 
-  if (!canWrite) {
+  if (!canWrite && !attemptedCanary) {
     return {
       applied: false,
       state: legacyState,

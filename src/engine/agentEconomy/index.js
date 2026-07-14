@@ -55,6 +55,14 @@ export {
 } from "./engineControlSystem.js";
 
 export {
+  CANARY_TRANSACTION_HISTORY_LIMIT,
+  CANARY_TRANSACTION_VERSION,
+  applyCanaryTransaction,
+  createCanaryCheckpoint,
+  validateCanaryProjection,
+} from "./canaryTransactionSystem.js";
+
+export {
   LIVE_STATE_ADAPTER_CAPABILITIES,
   LIVE_STATE_ADAPTER_VERSION,
   createInitialLiveStateAdapter,

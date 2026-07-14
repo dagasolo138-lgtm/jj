@@ -13,8 +13,8 @@ function replaceOnce(path, search, replacement, label) {
 const controlPath = "src/engine/agentEconomy/engineControlSystem.js";
 replaceOnce(
   controlPath,
-  `    version: 1,`,
-  `    version: 2,`,
+  `  return {\n    version: 1,\n    requestedMode,`,
+  `  return {\n    version: 2,\n    requestedMode,`,
   "initial control version",
 );
 replaceOnce(

@@ -96,7 +96,7 @@ export function createInitialEngineControl(options = {}) {
     : ENGINE_MODES.SHADOW;
 
   return {
-    version: 1,
+    version: 2,
     requestedMode,
     activeMode: requestedMode === ENGINE_MODES.LEGACY
       ? ENGINE_MODES.LEGACY
@@ -116,6 +116,10 @@ export function createInitialEngineControl(options = {}) {
       ...(writeBackEnabled ? [] : ["candidate-write-disabled"]),
     ],
     rollbackCount: 0,
+    canaryWriteCount: 0,
+    canaryRollbackCount: 0,
+    lastCanaryTransaction: null,
+    canaryTransactionHistory: [],
     lastRollbackReason: null,
     lastModeChangeTurn: 0,
     lastComparison: null,
@@ -134,14 +138,20 @@ export function normalizeEngineControl(control) {
   const requestedMode = Object.values(ENGINE_MODES).includes(source.requestedMode)
     ? source.requestedMode
     : activeMode;
+  const writeBackEnabled = source.writeBackEnabled === true;
+  const authority = source.authority === ENGINE_MODES.CANARY
+    && activeMode === ENGINE_MODES.CANARY
+    && writeBackEnabled
+    ? ENGINE_MODES.CANARY
+    : ENGINE_MODES.LEGACY;
 
   return {
     ...fallback,
     ...source,
-    version: 1,
+    version: 2,
     requestedMode,
     activeMode,
-    authority: ENGINE_MODES.LEGACY,
+    authority,
     autoRollback: source.autoRollback !== false,
     requiredSafeQuarters: Math.max(1, integer(source.requiredSafeQuarters, REQUIRED_SAFE_QUARTERS)),
     consecutiveSafeQuarters: integer(source.consecutiveSafeQuarters),
@@ -150,11 +160,19 @@ export function normalizeEngineControl(control) {
     unsafeComparisons: integer(source.unsafeComparisons),
     canaryEligible: source.canaryEligible === true,
     adapterCapabilities,
-    writeBackEnabled: source.writeBackEnabled === true,
+    writeBackEnabled,
     promotionBlockers: Array.isArray(source.promotionBlockers)
       ? source.promotionBlockers.filter((item) => typeof item === "string").slice(-20)
       : getAdapterBlockers(adapterCapabilities),
     rollbackCount: integer(source.rollbackCount),
+    canaryWriteCount: integer(source.canaryWriteCount),
+    canaryRollbackCount: integer(source.canaryRollbackCount),
+    lastCanaryTransaction: source.lastCanaryTransaction && typeof source.lastCanaryTransaction === "object"
+      ? source.lastCanaryTransaction
+      : null,
+    canaryTransactionHistory: Array.isArray(source.canaryTransactionHistory)
+      ? source.canaryTransactionHistory.slice(-20)
+      : [],
     lastRollbackReason: typeof source.lastRollbackReason === "string"
       ? source.lastRollbackReason
       : null,
@@ -387,12 +405,21 @@ export function setEngineAdapterCapabilities(control, capabilities = {}) {
 export function setEngineWriteBackEnabled(control, enabled) {
   const normalized = normalizeEngineControl(control);
   const writeBackEnabled = enabled === true;
+  const activeMode = !writeBackEnabled && normalized.activeMode === ENGINE_MODES.CANARY
+    ? ENGINE_MODES.SHADOW
+    : normalized.activeMode;
+  const requestedMode = !writeBackEnabled && normalized.requestedMode === ENGINE_MODES.CANARY
+    ? ENGINE_MODES.SHADOW
+    : normalized.requestedMode;
   const eligibility = calculateEligibility(
-    { ...normalized, writeBackEnabled },
+    { ...normalized, activeMode, requestedMode, writeBackEnabled },
     normalized.consecutiveSafeQuarters,
   );
   return {
     ...normalized,
+    requestedMode,
+    activeMode,
+    authority: writeBackEnabled ? normalized.authority : ENGINE_MODES.LEGACY,
     writeBackEnabled,
     canaryEligible: eligibility.eligible,
     promotionBlockers: eligibility.blockers,
@@ -402,17 +429,22 @@ export function setEngineWriteBackEnabled(control, enabled) {
 export function recordEngineComparison(control, comparison, checkpoint = null) {
   const normalized = normalizeEngineControl(control);
   const safeStreak = comparison?.safe ? normalized.consecutiveSafeQuarters + 1 : 0;
-  const eligibility = calculateEligibility(normalized, safeStreak);
   let activeMode = normalized.activeMode;
+  let writeBackEnabled = normalized.writeBackEnabled;
   let rollbackCount = normalized.rollbackCount;
   let lastRollbackReason = normalized.lastRollbackReason;
 
   if (!comparison?.safe && normalized.autoRollback && activeMode === ENGINE_MODES.CANARY) {
     activeMode = ENGINE_MODES.SHADOW;
+    writeBackEnabled = false;
     rollbackCount += 1;
     lastRollbackReason = comparison.criticalIssues?.[0] ?? "unsafe-engine-comparison";
   }
 
+  const eligibility = calculateEligibility(
+    { ...normalized, activeMode, writeBackEnabled },
+    safeStreak,
+  );
   if (normalized.requestedMode === ENGINE_MODES.CANARY && eligibility.eligible) {
     activeMode = ENGINE_MODES.CANARY;
   } else if (normalized.requestedMode === ENGINE_MODES.LEGACY) {
@@ -421,10 +453,17 @@ export function recordEngineComparison(control, comparison, checkpoint = null) {
     activeMode = ENGINE_MODES.SHADOW;
   }
 
+  const authority = activeMode === ENGINE_MODES.CANARY
+    && writeBackEnabled
+    && normalized.authority === ENGINE_MODES.CANARY
+    ? ENGINE_MODES.CANARY
+    : ENGINE_MODES.LEGACY;
+
   return {
     ...normalized,
     activeMode,
-    authority: ENGINE_MODES.LEGACY,
+    authority,
+    writeBackEnabled,
     consecutiveSafeQuarters: safeStreak,
     totalComparisons: normalized.totalComparisons + 1,
     safeComparisons: normalized.safeComparisons + (comparison?.safe ? 1 : 0),
@@ -470,7 +509,9 @@ export function requestEngineMode(control, requestedMode, turn = 0) {
     ...normalized,
     requestedMode,
     activeMode: normalized.canaryEligible ? ENGINE_MODES.CANARY : ENGINE_MODES.SHADOW,
-    authority: ENGINE_MODES.LEGACY,
+    authority: normalized.canaryEligible && normalized.activeMode === ENGINE_MODES.CANARY
+      ? normalized.authority
+      : ENGINE_MODES.LEGACY,
     lastModeChangeTurn: integer(turn),
     lastRollbackReason: normalized.canaryEligible
       ? normalized.lastRollbackReason
@@ -485,6 +526,12 @@ export function forceEngineRollback(control, reason = "manual-rollback", turn = 
     requestedMode: ENGINE_MODES.SHADOW,
     activeMode: ENGINE_MODES.SHADOW,
     authority: ENGINE_MODES.LEGACY,
+    writeBackEnabled: false,
+    canaryEligible: false,
+    promotionBlockers: calculateEligibility(
+      { ...normalized, writeBackEnabled: false },
+      normalized.consecutiveSafeQuarters,
+    ).blockers,
     rollbackCount: normalized.rollbackCount + 1,
     lastRollbackReason: reason,
     lastModeChangeTurn: integer(turn),

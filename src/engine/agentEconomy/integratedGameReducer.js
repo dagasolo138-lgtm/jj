@@ -11,9 +11,11 @@ import {
   normalizeEngineControl,
   recordEngineComparison,
   requestEngineMode,
+  setEngineWriteBackEnabled,
   shouldRunAgentEngine,
 } from "./engineControlSystem.js";
 import { hydrateAgentEconomy } from "./householdUtils.js";
+import { applyCanaryTransaction } from "./canaryTransactionSystem.js";
 import {
   ensureLiveStateAdapter,
   finalizeAgentQuarterLiveState,
@@ -77,6 +79,28 @@ function applyControlAction(state, action) {
     };
   }
 
+  if (action?.type === "AGENT_ECONOMY_SET_WRITE_BACK") {
+    const enabled = action.payload?.enabled === true;
+    const engineControl = setEngineWriteBackEnabled(
+      state.agentEconomy.engineControl,
+      enabled,
+    );
+    return {
+      ...state,
+      agentEconomy: {
+        ...state.agentEconomy,
+        enabled: false,
+        shadowMode: true,
+        liveStateAdapter: {
+          ...(state.agentEconomy.liveStateAdapter ?? {}),
+          writeBackEnabled: engineControl.writeBackEnabled,
+          shadowOnly: true,
+        },
+        engineControl,
+      },
+    };
+  }
+
   if (action?.type === "AGENT_ECONOMY_FORCE_ROLLBACK") {
     return {
       ...state,
@@ -84,6 +108,11 @@ function applyControlAction(state, action) {
         ...state.agentEconomy,
         enabled: false,
         shadowMode: true,
+        liveStateAdapter: {
+          ...(state.agentEconomy.liveStateAdapter ?? {}),
+          writeBackEnabled: false,
+          shadowOnly: true,
+        },
         engineControl: forceEngineRollback(
           state.agentEconomy.engineControl,
           action.payload?.reason ?? "manual-rollback",
@@ -158,6 +187,8 @@ export function gameReducer(state, action) {
   }
 
   const checkpoint = createLegacyCheckpoint(preparedState);
+  const canaryWasActive = control.activeMode === ENGINE_MODES.CANARY
+    && control.writeBackEnabled === true;
 
   try {
     const simulatedAgentEconomy = simulateAgentQuarter(
@@ -188,6 +219,21 @@ export function gameReducer(state, action) {
       reconciledState,
     );
 
+    if (canaryWasActive) {
+      const transaction = applyCanaryTransaction({
+        beforeState: preparedState,
+        legacyState: reconciledState,
+        agentEconomy: nextAgentEconomy,
+        control: nextControl,
+        comparison,
+        attemptedCanary: true,
+      });
+      return {
+        ...transaction.state,
+        agentEconomy: transaction.agentEconomy,
+      };
+    }
+
     return {
       ...reconciledState,
       agentEconomy: {
@@ -200,11 +246,29 @@ export function gameReducer(state, action) {
   } catch (error) {
     const comparison = buildFailureComparison(preparedState, error);
     const failedControl = recordEngineComparison(control, comparison, checkpoint);
-    const rolledBackControl = forceEngineRollback(
-      failedControl,
-      comparison.criticalIssues[0],
-      preparedState.turn,
-    );
+    if (canaryWasActive) {
+      const transaction = applyCanaryTransaction({
+        beforeState: preparedState,
+        legacyState: reconciledState,
+        agentEconomy: reconciledState.agentEconomy,
+        control: failedControl,
+        comparison,
+        attemptedCanary: true,
+      });
+      return {
+        ...transaction.state,
+        agentEconomy: transaction.agentEconomy,
+      };
+    }
+
+    const rolledBackControl = failedControl.activeMode === ENGINE_MODES.SHADOW
+      && failedControl.writeBackEnabled === false
+      ? failedControl
+      : forceEngineRollback(
+        failedControl,
+        comparison.criticalIssues[0],
+        preparedState.turn,
+      );
 
     return {
       ...reconciledState,

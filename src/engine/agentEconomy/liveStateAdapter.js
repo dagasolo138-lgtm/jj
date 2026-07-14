@@ -1,7 +1,7 @@
 import { distributeEstateInventory, getDistributedInventoryTotals } from "./estateInventoryAdapter.js";
 import { createHousehold, createInitialAgentEconomy } from "./householdFactory.js";
 import { reconcileAgentEconomyPopulation } from "./householdUtils.js";
-import { setEngineAdapterCapabilities } from "./engineControlSystem.js";
+import { ENGINE_MODES, setEngineAdapterCapabilities } from "./engineControlSystem.js";
 
 export const LIVE_STATE_ADAPTER_VERSION = 1;
 
@@ -301,13 +301,21 @@ function conservePopulationAssets(agentEconomy, targetPopulation, options = {}) 
 }
 
 function attachAdapter(agentEconomy, adapter) {
+  const engineControl = setEngineAdapterCapabilities(
+    agentEconomy.engineControl,
+    adapter.capabilities,
+  );
+  const canaryWriting = engineControl.activeMode === ENGINE_MODES.CANARY
+    && engineControl.writeBackEnabled
+    && engineControl.authority === ENGINE_MODES.CANARY;
   return {
     ...agentEconomy,
-    liveStateAdapter: adapter,
-    engineControl: setEngineAdapterCapabilities(
-      agentEconomy.engineControl,
-      adapter.capabilities,
-    ),
+    liveStateAdapter: {
+      ...adapter,
+      writeBackEnabled: engineControl.writeBackEnabled,
+      shadowOnly: !canaryWriting,
+    },
+    engineControl,
   };
 }
 
