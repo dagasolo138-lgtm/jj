@@ -1,0 +1,64 @@
+name: Integrate agent economy step 2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/integrate-agent-economy-step2.yml
+
+permissions:
+  contents: write
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Patch reducer integration
+        run: node scripts/patch-agent-economy-step2.mjs
+
+      - name: Run all unit tests
+        run: npm run test:unit
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build
+        run: npm run build
+
+      - name: Record validation
+        run: |
+          cat > tests/baselines/agent-economy-step2-validation.json <<EOF
+          {
+            "validatedCommit": "${GITHUB_SHA}",
+            "nodeVersion": "24",
+            "unitTests": "success",
+            "lint": "success",
+            "build": "success",
+            "liveEconomyChanged": false,
+            "agentEconomyEnabled": false,
+            "shadowMode": true
+          }
+          EOF
+
+      - name: Commit reducer integration
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/engine/gameReducer.js tests/baselines/agent-economy-step2-validation.json
+          git diff --cached --quiet && exit 0
+          git commit -m "feat(agent-economy): integrate household state"
+          git push origin HEAD:main
