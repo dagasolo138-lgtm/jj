@@ -1,0 +1,63 @@
+{
+  "validatedCommit": "fbe73773bdda1557237d2bc2c53e97ae53a62e79",
+  "workflowRunId": 29345409914,
+  "artifactId": 8315854834,
+  "nodeVersion": "24",
+  "schemaVersion": 7,
+  "configuration": {
+    "seeds": 100,
+    "quartersPerSeed": 40,
+    "daysPerSeed": 1200,
+    "totalQuarterSimulations": 4000,
+    "totalDaySimulations": 120000
+  },
+  "hardValidation": {
+    "status": "pass",
+    "completedSeeds": 100,
+    "failedSeeds": 0,
+    "invariantFailureRate": 0,
+    "populationConservation": "success",
+    "cashAccounting": "success",
+    "inventoryAccounting": "success",
+    "priceBounds": "success",
+    "serialization": "success",
+    "legacyEconomyBaseline": "success",
+    "lint": "success",
+    "build": "success"
+  },
+  "performance": {
+    "meanQuarterMs": 8.3824,
+    "p95QuarterMs": 9.2696,
+    "maxQuarterMs": 14.8056,
+    "runtimeGateMsPerQuarter": 250,
+    "gateExceeded": false
+  },
+  "balanceValidation": {
+    "status": "needs-calibration",
+    "economicSurvivalRate": 0,
+    "gameplayWinRate": null,
+    "gameplayWinRateReason": "No autonomous player strategy is executed by the economy-only harness.",
+    "averageFoodFulfillmentRate": 6.6,
+    "averageFoodConsumed": 380,
+    "averageUnmetFood": 5375.06,
+    "averageFoodDemand": 5755.06,
+    "averageEmploymentRate": 30,
+    "averageIdleBuildingRate": 47.72,
+    "averageInputShortageRate": 47.79,
+    "averageSettledTradesPerSeed": 10.07,
+    "averageTradesPerDay": 0.0084,
+    "averageFailedOrdersPerSeed": 41540.79,
+    "averageHealth": 76.65,
+    "averageSatisfaction": 43.15,
+    "averageWealthGini": 0.0965,
+    "livestockExtremeInflationSeedRate": 89,
+    "livestockMeanPriceRatio": 3.5996,
+    "priceCrashSeedRate": 0
+  },
+  "ledgerBugsFixed": [
+    "Trade settlement no longer floors and destroys fractional inventory remainders.",
+    "Household consumption no longer floors and destroys fractional inventory remainders."
+  ],
+  "promotionDecision": "blocked",
+  "authoritativeEngine": "legacy"
+}
