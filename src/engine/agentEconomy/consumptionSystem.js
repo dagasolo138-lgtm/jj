@@ -62,9 +62,17 @@ export function consumeHousehold(household, rng, context = {}) {
   }
 
   const consumedFood = targetFood - remainingFood;
-  const foodRatio = targetFood === 0 ? 1 : consumedFood / targetFood;
   let needs = normalizeNeeds(household.needs);
-  needs.food = clampNeed(needs.food - Math.round(16 * foodRatio) + (remainingFood > 0 ? 3 : 0));
+  if (targetFood > 0) {
+    const foodRatio = consumedFood / targetFood;
+    needs.food = clampNeed(needs.food - Math.round(16 * foodRatio) + (remainingFood > 0 ? 3 : 0));
+  } else {
+    const storedFood = FOOD_PRIORITY.reduce(
+      (total, commodity) => total + inventoryQuantity(inventory[commodity]),
+      0,
+    );
+    needs.food = clampNeed(needs.food + (storedFood >= weight ? -1 : 0));
+  }
 
   if (needs.clothing >= 60) {
     const source = Math.floor(inventoryQuantity(inventory.cloth)) >= 1 ? "cloth" : "wool";
