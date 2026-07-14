@@ -1,4 +1,8 @@
 import { buildOrderBooks, summarizeOrders } from "./orderBook.js";
+import {
+  MIN_TRADE_QUANTITY,
+  calibratedQuantity,
+} from "./economyCalibration.js";
 
 const PRICE_HISTORY_LIMIT = 24;
 
@@ -7,23 +11,17 @@ function money(value) {
   return Number(Math.max(0, value).toFixed(2));
 }
 
-function orderQuantity(value) {
-  if (!Number.isFinite(value)) return 0;
-  return Math.max(0, Math.floor(value));
-}
-
-function inventoryQuantity(value) {
-  if (!Number.isFinite(value)) return 0;
-  return Number(Math.max(0, value).toFixed(4));
+function quantity(value) {
+  return calibratedQuantity(value);
 }
 
 function getAvailableInventory(household, commodity) {
-  return inventoryQuantity(household?.inventory?.[commodity]);
+  return quantity(household?.inventory?.[commodity]);
 }
 
 function getAffordableQuantity(household, price) {
   if (price <= 0) return 0;
-  return Math.floor(money(household?.cash) / price);
+  return quantity(money(household?.cash) / price);
 }
 
 function appendPriceHistory(household, commodity, price) {
@@ -64,22 +62,24 @@ function settleTrade(householdsById, bid, ask, commodity, sequence) {
   const tradePrice = money((bid.price + ask.price) / 2);
   const affordable = getAffordableQuantity(buyer, tradePrice);
   const available = getAvailableInventory(seller, commodity);
-  const tradeQuantity = orderQuantity(Math.min(
+  const tradeQuantity = quantity(Math.min(
     bid.remainingQuantity,
     ask.remainingQuantity,
     affordable,
     available,
   ));
 
-  if (tradePrice <= 0 || tradeQuantity <= 0) return null;
+  if (tradePrice <= 0 || tradeQuantity < MIN_TRADE_QUANTITY) return null;
 
   const tradeValue = money(tradeQuantity * tradePrice);
+  if (tradeValue <= 0 || tradeValue > money(buyer.cash) + 0.001) return null;
+
   const buyerInventory = { ...buyer.inventory };
   const sellerInventory = { ...seller.inventory };
-  buyerInventory[commodity] = inventoryQuantity(
+  buyerInventory[commodity] = quantity(
     getAvailableInventory(buyer, commodity) + tradeQuantity,
   );
-  sellerInventory[commodity] = inventoryQuantity(available - tradeQuantity);
+  sellerInventory[commodity] = quantity(available - tradeQuantity);
 
   const nextBuyer = updateTradeMemory({
     ...buyer,
@@ -95,8 +95,8 @@ function settleTrade(householdsById, bid, ask, commodity, sequence) {
 
   householdsById.set(buyer.id, nextBuyer);
   householdsById.set(seller.id, nextSeller);
-  bid.remainingQuantity -= tradeQuantity;
-  ask.remainingQuantity -= tradeQuantity;
+  bid.remainingQuantity = quantity(bid.remainingQuantity - tradeQuantity);
+  ask.remainingQuantity = quantity(ask.remainingQuantity - tradeQuantity);
 
   return {
     id: `trade-${String(sequence).padStart(6, "0")}`,
@@ -115,7 +115,7 @@ function collectFailedOrders(books) {
   const failedOrders = [];
   for (const book of Object.values(books)) {
     for (const order of [...book.bids, ...book.asks]) {
-      if (order.remainingQuantity > 0) {
+      if (order.remainingQuantity >= MIN_TRADE_QUANTITY) {
         failedOrders.push({
           id: order.id,
           householdId: order.householdId,
@@ -145,11 +145,11 @@ export function settleOrderBooks(households, orders) {
       const bid = book.bids[bidIndex];
       const ask = book.asks[askIndex];
 
-      if (bid.remainingQuantity <= 0) {
+      if (bid.remainingQuantity < MIN_TRADE_QUANTITY) {
         bidIndex += 1;
         continue;
       }
-      if (ask.remainingQuantity <= 0) {
+      if (ask.remainingQuantity < MIN_TRADE_QUANTITY) {
         askIndex += 1;
         continue;
       }
@@ -163,9 +163,9 @@ export function settleOrderBooks(households, orders) {
       if (!trade) {
         const buyer = householdsById.get(bid.householdId);
         const seller = householdsById.get(ask.householdId);
-        if (!buyer || getAffordableQuantity(buyer, money((bid.price + ask.price) / 2)) <= 0) {
+        if (!buyer || getAffordableQuantity(buyer, money((bid.price + ask.price) / 2)) < MIN_TRADE_QUANTITY) {
           bidIndex += 1;
-        } else if (!seller || getAvailableInventory(seller, commodity) < 1) {
+        } else if (!seller || getAvailableInventory(seller, commodity) < MIN_TRADE_QUANTITY) {
           askIndex += 1;
         } else {
           break;
@@ -180,7 +180,7 @@ export function settleOrderBooks(households, orders) {
 
   const failedOrders = collectFailedOrders(books);
   const tradeValue = money(trades.reduce((total, trade) => total + trade.value, 0));
-  const tradeVolume = trades.reduce((total, trade) => total + trade.quantity, 0);
+  const tradeVolume = quantity(trades.reduce((total, trade) => total + trade.quantity, 0));
   const tradedCommodities = [...new Set(trades.map((trade) => trade.commodity))].sort();
 
   return {
