@@ -6,6 +6,7 @@ import {
   createInitialAgentEconomy,
   normalizeHousehold,
 } from "./householdFactory.js";
+import { normalizeEngineControl } from "./engineControlSystem.js";
 import { createInitialMarketPrices } from "./priceBeliefSystem.js";
 import { DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
 
@@ -87,33 +88,39 @@ export function validateHouseholds(households, expectedPopulation = null) {
 }
 
 function sanitizeMetrics(metrics = {}) {
-  return {
-    totalTrades: toNonNegativeNumber(metrics.totalTrades),
-    failedTrades: toNonNegativeNumber(metrics.failedTrades),
-    daysSimulated: toPopulation(metrics.daysSimulated),
-    quartersSimulated: toPopulation(metrics.quartersSimulated),
-    goodsProduced: toNonNegativeNumber(metrics.goodsProduced),
-    goodsConsumed: toNonNegativeNumber(metrics.goodsConsumed),
-    productionInputsConsumed: toNonNegativeNumber(metrics.productionInputsConsumed),
-    unmetFood: toNonNegativeNumber(metrics.unmetFood),
-    ordersGenerated: toNonNegativeNumber(metrics.ordersGenerated),
-    potentialMatches: toNonNegativeNumber(metrics.potentialMatches),
-    potentialMatchVolume: toNonNegativeNumber(metrics.potentialMatchVolume),
-    settledTrades: toNonNegativeNumber(metrics.settledTrades),
-    failedOrders: toNonNegativeNumber(metrics.failedOrders),
-    tradeVolume: toNonNegativeNumber(metrics.tradeVolume),
-    tradeValue: toNonNegativeNumber(metrics.tradeValue),
-    beliefAdjustments: toNonNegativeNumber(metrics.beliefAdjustments),
-    priceIncreases: toNonNegativeNumber(metrics.priceIncreases),
-    priceDecreases: toNonNegativeNumber(metrics.priceDecreases),
-    workerDaysRequired: toNonNegativeNumber(metrics.workerDaysRequired),
-    workerDaysAssigned: toNonNegativeNumber(metrics.workerDaysAssigned),
-    idleBuildingDays: toNonNegativeNumber(metrics.idleBuildingDays),
-    inputShortageEvents: toNonNegativeNumber(metrics.inputShortageEvents),
-    grossIncome: toNonNegativeNumber(metrics.grossIncome),
-    taxCollected: toNonNegativeNumber(metrics.taxCollected),
-    welfarePaid: toNonNegativeNumber(metrics.welfarePaid),
-  };
+  const keys = [
+    "totalTrades",
+    "failedTrades",
+    "daysSimulated",
+    "quartersSimulated",
+    "goodsProduced",
+    "goodsConsumed",
+    "productionInputsConsumed",
+    "unmetFood",
+    "ordersGenerated",
+    "potentialMatches",
+    "potentialMatchVolume",
+    "settledTrades",
+    "failedOrders",
+    "tradeVolume",
+    "tradeValue",
+    "beliefAdjustments",
+    "priceIncreases",
+    "priceDecreases",
+    "workerDaysRequired",
+    "workerDaysAssigned",
+    "idleBuildingDays",
+    "inputShortageEvents",
+    "grossIncome",
+    "taxCollected",
+    "welfarePaid",
+  ];
+  return Object.fromEntries(keys.map((key) => [
+    key,
+    ["daysSimulated", "quartersSimulated"].includes(key)
+      ? toPopulation(metrics[key])
+      : toNonNegativeNumber(metrics[key]),
+  ]));
 }
 
 function sanitizeMarketPrices(marketPrices) {
@@ -183,6 +190,7 @@ function sanitizeAgentEconomy(savedAgentEconomy) {
     schemaVersion: AGENT_ECONOMY_SCHEMA_VERSION,
     enabled: source.enabled === true,
     shadowMode: source.shadowMode !== false,
+    engineControl: normalizeEngineControl(source.engineControl),
     maxHouseholds,
     nextHouseholdId: nextIdNumber(source, households),
     lastReconciledPopulation: toPopulation(source.lastReconciledPopulation),
@@ -247,6 +255,7 @@ export function reconcileAgentEconomyPopulation(agentEconomy, population, option
       ...created,
       enabled: sanitized.enabled,
       shadowMode: sanitized.shadowMode,
+      engineControl: sanitized.engineControl,
       rngSeed: sanitized.rngSeed,
       rngState: sanitized.rngState,
       day: sanitized.day,
