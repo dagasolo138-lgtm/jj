@@ -4,6 +4,7 @@ import test from "node:test";
 import { initialState as legacyInitialState } from "../../src/engine/gameReducer.js";
 import {
   DAILY_FOOD_TARGET_PER_PERSON,
+  FOOD_PER_PERSON_PER_QUARTER,
   MIN_TRADE_QUANTITY,
   allocateBuildingWorkforce,
   createHousehold,
@@ -59,8 +60,13 @@ test("estate inventory is conserved and assigned to relevant occupations", () =>
   assert.equal(fishermen.reduce((sum, item) => sum + item.inventory.fish, 0), 20);
 });
 
-test("daily food target matches two units per person per quarter", () => {
-  assert.equal(Number((DAILY_FOOD_TARGET_PER_PERSON * 30).toFixed(6)), 2);
+test("daily food target matches the calibrated quarterly target", () => {
+  assert.equal(
+    Number((DAILY_FOOD_TARGET_PER_PERSON * 30).toFixed(6)),
+    FOOD_PER_PERSON_PER_QUARTER,
+  );
+  assert.ok(FOOD_PER_PERSON_PER_QUARTER > 2);
+  assert.ok(FOOD_PER_PERSON_PER_QUARTER < 2.1);
 });
 
 test("fractional surplus can cross the order book", () => {
