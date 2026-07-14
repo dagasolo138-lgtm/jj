@@ -226,9 +226,9 @@ function learnFromOutcome(household, outcome) {
       nextMax: next.max,
       previousCenter: roundMoney(previousCenter),
       nextCenter: roundMoney(nextCenter),
-      direction: nextCenter > previousCenter + 0.01
+      direction: nextCenter - previousCenter >= 0.005
         ? "up"
-        : nextCenter < previousCenter - 0.01 ? "down" : "flat",
+        : previousCenter - nextCenter >= 0.005 ? "down" : "flat",
       buyFilled: outcome.buyFilled,
       sellFilled: outcome.sellFilled,
       failedBuy: outcome.failedBuy,
