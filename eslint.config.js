@@ -27,7 +27,7 @@ export default defineConfig([
     },
   },
   {
-    files: ['playwright.config.js', 'playtest.js', 'playwright-playtest.js'],
+    files: ['tests/**/*.js', 'playwright.config.js', 'playtest.js', 'playwright-playtest.js'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.node,
