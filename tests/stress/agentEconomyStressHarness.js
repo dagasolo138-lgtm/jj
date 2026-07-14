@@ -29,6 +29,10 @@ function nonNegative(value) {
   return Math.max(0, finite(value));
 }
 
+function ratio(numerator, denominator, fallback = 0) {
+  return denominator > 0 ? numerator / denominator : fallback;
+}
+
 function round(value, digits = 4) {
   return Number(finite(value).toFixed(digits));
 }
@@ -75,9 +79,9 @@ function inspectPrices(marketPrices = {}) {
 
   for (const [commodity, record] of Object.entries(marketPrices)) {
     const bounds = getCommodityPriceBounds(commodity);
-    const referencePrice = Math.max(0.5, nonNegative(record?.referencePrice) || bounds.referencePrice);
+    const referencePrice = Math.max(0.5, nonNegative(record?.referencePrice) || bounds.reference);
     const lastPrice = nonNegative(record?.lastPrice);
-    const ratio = lastPrice / referencePrice;
+    const priceRatio = lastPrice / referencePrice;
     const invalid = !Number.isFinite(record?.lastPrice)
       || lastPrice < bounds.floor - 0.01
       || lastPrice > bounds.ceiling + 0.01;
@@ -86,14 +90,15 @@ function inspectPrices(marketPrices = {}) {
       commodity,
       lastPrice: round(lastPrice, 2),
       referencePrice: round(referencePrice, 2),
-      ratio: round(ratio, 4),
+      ratio: round(priceRatio, 4),
       floorHit: lastPrice <= bounds.floor + 0.01,
       ceilingHit: lastPrice >= bounds.ceiling - 0.01,
-      inflation: ratio >= 3,
-      crash: ratio <= 0.4,
+      inflation: priceRatio >= 3,
+      crash: priceRatio <= 0.4,
     });
   }
 
+  const ratios = rows.map((row) => row.ratio);
   return {
     rows,
     criticalIssues,
@@ -101,8 +106,8 @@ function inspectPrices(marketPrices = {}) {
     ceilingHits: rows.filter((row) => row.ceilingHit).map((row) => row.commodity),
     inflationCommodities: rows.filter((row) => row.inflation).map((row) => row.commodity),
     crashCommodities: rows.filter((row) => row.crash).map((row) => row.commodity),
-    minRatio: round(Math.min(...rows.map((row) => row.ratio), 1), 4),
-    maxRatio: round(Math.max(...rows.map((row) => row.ratio), 1), 4),
+    minRatio: round(ratios.length > 0 ? Math.min(...ratios) : 1, 4),
+    maxRatio: round(ratios.length > 0 ? Math.max(...ratios) : 1, 4),
   };
 }
 
@@ -208,11 +213,36 @@ export function runStressSeed(seed, options = {}) {
 
   const households = state.households ?? [];
   const wealthGini = weightedGini(households);
-  const noMarketActivity = nonNegative(state.metrics.settledTrades) === 0;
+  const foodConsumed = nonNegative(state.metrics.foodConsumed);
+  const unmetFood = nonNegative(state.metrics.unmetFood);
+  const foodDemand = foodConsumed + unmetFood;
+  const foodFulfillmentRate = ratio(foodConsumed, foodDemand, 1) * 100;
+  const settledTrades = nonNegative(state.metrics.settledTrades);
+  const failedOrders = nonNegative(state.metrics.failedOrders);
+  const tradeVolume = nonNegative(state.metrics.tradeVolume);
+  const tradesPerDay = ratio(settledTrades, expectedDays);
+  const tradeVolumePerDay = ratio(tradeVolume, expectedDays);
+  const buildingDays = expectedDays * buildings.length;
+  const inputShortageEvents = nonNegative(state.metrics.inputShortageEvents);
+  const idleBuildingDays = nonNegative(state.metrics.idleBuildingDays);
+  const shortageEventRate = ratio(inputShortageEvents, buildingDays) * 100;
+  const idleBuildingRate = ratio(idleBuildingDays, buildingDays) * 100;
+  const workerCoverageRate = ratio(
+    nonNegative(state.metrics.workerDaysAssigned),
+    nonNegative(state.metrics.workerDaysRequired),
+    1,
+  ) * 100;
+  const noMarketActivity = settledTrades === 0;
+  const lowMarketLiquidity = tradesPerDay < 0.05;
   const allBuildingsIdle = monitor.production.totalBuildings > 0
     && monitor.production.idle >= monitor.production.totalBuildings;
-  const economicCollapse = monitor.householdStats.severePovertyRate >= 75
-    || monitor.householdStats.foodStressRate >= 75
+  const lowFoodFulfillment = foodFulfillmentRate < 75;
+  const criticalFoodFulfillment = foodFulfillmentRate < 25;
+  const underemployment = monitor.householdStats.employmentRate < 60;
+  const chronicInputShortages = shortageEventRate > 25;
+  const highIdleBuildingRate = idleBuildingRate > 25;
+  const economicCollapse = criticalFoodFulfillment
+    || monitor.householdStats.severePovertyRate >= 75
     || monitor.householdStats.averageHealth <= 25
     || allBuildingsIdle;
 
@@ -238,31 +268,52 @@ export function runStressSeed(seed, options = {}) {
     inventory: totals.totalInventory,
     wealthGini: round(wealthGini, 4),
     householdStats: monitor.householdStats,
-    production: monitor.production,
+    production: {
+      ...monitor.production,
+      buildingDays,
+      shortageEventRate: round(shortageEventRate, 2),
+      idleBuildingRate: round(idleBuildingRate, 2),
+      workerCoverageRate: round(workerCoverageRate, 2),
+    },
+    food: {
+      consumed: round(foodConsumed, 2),
+      unmet: round(unmetFood, 2),
+      demand: round(foodDemand, 2),
+      fulfillmentRate: round(foodFulfillmentRate, 2),
+    },
     market: {
       totalDemand: monitor.market.totalDemand,
       totalSupply: monitor.market.totalSupply,
       netPressure: monitor.market.netPressure,
-      settledTrades: nonNegative(state.metrics.settledTrades),
-      failedOrders: nonNegative(state.metrics.failedOrders),
-      tradeVolume: nonNegative(state.metrics.tradeVolume),
+      settledTrades,
+      failedOrders,
+      tradeVolume,
+      tradesPerDay: round(tradesPerDay, 4),
+      tradeVolumePerDay: round(tradeVolumePerDay, 4),
       noMarketActivity,
+      lowMarketLiquidity,
       ...priceInspection,
     },
     balance: {
       economicCollapse,
       allBuildingsIdle,
       highPoverty: monitor.householdStats.povertyRate >= 50,
-      severeFoodStress: monitor.householdStats.foodStressRate >= 50,
+      severeEndpointFoodStress: monitor.householdStats.foodStressRate >= 50,
+      lowFoodFulfillment,
+      criticalFoodFulfillment,
+      underemployment,
+      lowMarketLiquidity,
       highWealthConcentration: wealthGini >= 0.65,
-      persistentShortages: nonNegative(state.metrics.inputShortageEvents) >= expectedDays,
+      chronicInputShortages,
+      highIdleBuildingRate,
     },
     metrics: {
       goodsProduced: nonNegative(state.metrics.goodsProduced),
       goodsConsumed: nonNegative(state.metrics.goodsConsumed),
-      unmetFood: nonNegative(state.metrics.unmetFood),
-      inputShortageEvents: nonNegative(state.metrics.inputShortageEvents),
-      idleBuildingDays: nonNegative(state.metrics.idleBuildingDays),
+      foodConsumed,
+      unmetFood,
+      inputShortageEvents,
+      idleBuildingDays,
       workerDaysRequired: nonNegative(state.metrics.workerDaysRequired),
       workerDaysAssigned: nonNegative(state.metrics.workerDaysAssigned),
     },
@@ -275,6 +326,45 @@ function worstSeeds(runs, selector, count = 5) {
     .sort((left, right) => selector(right) - selector(left))
     .slice(0, count)
     .map((run) => ({ seed: run.seed, value: round(selector(run), 4) }));
+}
+
+function lowestSeeds(runs, selector, count = 5) {
+  return [...runs]
+    .filter((run) => run.completed)
+    .sort((left, right) => selector(left) - selector(right))
+    .slice(0, count)
+    .map((run) => ({ seed: run.seed, value: round(selector(run), 4) }));
+}
+
+function summarizeCommodityPrices(completedRuns) {
+  const stats = new Map();
+  for (const run of completedRuns) {
+    for (const row of run.market?.rows ?? []) {
+      const entry = stats.get(row.commodity) ?? {
+        ratios: [],
+        inflationRuns: 0,
+        crashRuns: 0,
+        floorHits: 0,
+        ceilingHits: 0,
+      };
+      entry.ratios.push(row.ratio);
+      entry.inflationRuns += row.inflation ? 1 : 0;
+      entry.crashRuns += row.crash ? 1 : 0;
+      entry.floorHits += row.floorHit ? 1 : 0;
+      entry.ceilingHits += row.ceilingHit ? 1 : 0;
+      stats.set(row.commodity, entry);
+    }
+  }
+
+  return Object.fromEntries([...stats.entries()].map(([commodity, entry]) => [commodity, {
+    meanRatio: round(mean(entry.ratios), 4),
+    minRatio: round(Math.min(...entry.ratios), 4),
+    maxRatio: round(Math.max(...entry.ratios), 4),
+    inflationRate: round(ratio(entry.inflationRuns, completedRuns.length) * 100, 2),
+    crashRate: round(ratio(entry.crashRuns, completedRuns.length) * 100, 2),
+    floorHitRate: round(ratio(entry.floorHits, completedRuns.length) * 100, 2),
+    ceilingHitRate: round(ratio(entry.ceilingHits, completedRuns.length) * 100, 2),
+  }]));
 }
 
 export function summarizeStressRuns(runs, options = {}) {
@@ -295,21 +385,39 @@ export function summarizeStressRuns(runs, options = {}) {
   if (failedRuns.length > 0) criticalFindings.push(`${failedRuns.length} seed runs failed hard invariants`);
   if (runtimeGateExceeded) criticalFindings.push(`runtime gate exceeded (${runtimeGate} ms/quarter)`);
 
-  const balanceFindings = [];
   const collapseRate = rate((run) => run.balance?.economicCollapse);
   const highPovertyRate = rate((run) => run.balance?.highPoverty);
-  const foodStressRate = rate((run) => run.balance?.severeFoodStress);
+  const endpointFoodStressRate = rate((run) => run.balance?.severeEndpointFoodStress);
+  const lowFoodFulfillmentRate = rate((run) => run.balance?.lowFoodFulfillment);
+  const criticalFoodFulfillmentRate = rate((run) => run.balance?.criticalFoodFulfillment);
+  const underemploymentRate = rate((run) => run.balance?.underemployment);
+  const lowLiquidityRate = rate((run) => run.balance?.lowMarketLiquidity);
+  const chronicShortageRate = rate((run) => run.balance?.chronicInputShortages);
+  const highIdleRate = rate((run) => run.balance?.highIdleBuildingRate);
   const inflationRate = rate((run) => (run.market?.inflationCommodities?.length ?? 0) > 0);
   const crashRate = rate((run) => (run.market?.crashCommodities?.length ?? 0) > 0);
   const frozenMarketRate = rate((run) => run.market?.noMarketActivity);
   const concentratedRate = rate((run) => run.balance?.highWealthConcentration);
+  const balanceFindings = [];
 
   if (collapseRate > 5) balanceFindings.push(`economic collapse in ${round(collapseRate, 1)}% of seeds`);
-  if (highPovertyRate > 25) balanceFindings.push(`high poverty in ${round(highPovertyRate, 1)}% of seeds`);
-  if (foodStressRate > 25) balanceFindings.push(`severe food stress in ${round(foodStressRate, 1)}% of seeds`);
+  if (lowFoodFulfillmentRate > 10) {
+    balanceFindings.push(`food fulfillment below 75% in ${round(lowFoodFulfillmentRate, 1)}% of seeds`);
+  }
+  if (criticalFoodFulfillmentRate > 5) {
+    balanceFindings.push(`food fulfillment below 25% in ${round(criticalFoodFulfillmentRate, 1)}% of seeds`);
+  }
+  if (underemploymentRate > 25) balanceFindings.push(`underemployment in ${round(underemploymentRate, 1)}% of seeds`);
+  if (lowLiquidityRate > 10) balanceFindings.push(`low market liquidity in ${round(lowLiquidityRate, 1)}% of seeds`);
+  if (chronicShortageRate > 25) balanceFindings.push(`chronic input shortages in ${round(chronicShortageRate, 1)}% of seeds`);
+  if (highIdleRate > 25) balanceFindings.push(`high building idle rate in ${round(highIdleRate, 1)}% of seeds`);
+  if (highPovertyRate > 25) balanceFindings.push(`high endpoint poverty in ${round(highPovertyRate, 1)}% of seeds`);
+  if (endpointFoodStressRate > 25) {
+    balanceFindings.push(`high endpoint food stress in ${round(endpointFoodStressRate, 1)}% of seeds`);
+  }
   if (inflationRate > 10) balanceFindings.push(`extreme inflation in ${round(inflationRate, 1)}% of seeds`);
   if (crashRate > 10) balanceFindings.push(`price crash in ${round(crashRate, 1)}% of seeds`);
-  if (frozenMarketRate > 10) balanceFindings.push(`market freeze in ${round(frozenMarketRate, 1)}% of seeds`);
+  if (frozenMarketRate > 10) balanceFindings.push(`zero-trade market in ${round(frozenMarketRate, 1)}% of seeds`);
   if (concentratedRate > 25) balanceFindings.push(`high wealth concentration in ${round(concentratedRate, 1)}% of seeds`);
 
   return {
@@ -338,27 +446,40 @@ export function summarizeStressRuns(runs, options = {}) {
       invariantFailure: round(rate((run) => !run.completed), 2),
       economicCollapse: round(collapseRate, 2),
       highPoverty: round(highPovertyRate, 2),
-      severeFoodStress: round(foodStressRate, 2),
+      severeEndpointFoodStress: round(endpointFoodStressRate, 2),
+      lowFoodFulfillment: round(lowFoodFulfillmentRate, 2),
+      criticalFoodFulfillment: round(criticalFoodFulfillmentRate, 2),
+      underemployment: round(underemploymentRate, 2),
+      lowMarketLiquidity: round(lowLiquidityRate, 2),
+      chronicInputShortages: round(chronicShortageRate, 2),
+      highIdleBuildingRate: round(highIdleRate, 2),
       highWealthConcentration: round(concentratedRate, 2),
       extremeInflation: round(inflationRate, 2),
       priceCrash: round(crashRate, 2),
       marketFreeze: round(frozenMarketRate, 2),
-      persistentInputShortages: round(rate((run) => run.balance?.persistentShortages), 2),
       allBuildingsIdle: round(rate((run) => run.balance?.allBuildingsIdle), 2),
     },
     averages: {
       povertyRate: round(completedMean((run) => run.householdStats?.povertyRate), 2),
       severePovertyRate: round(completedMean((run) => run.householdStats?.severePovertyRate), 2),
-      foodStressRate: round(completedMean((run) => run.householdStats?.foodStressRate), 2),
+      endpointFoodStressRate: round(completedMean((run) => run.householdStats?.foodStressRate), 2),
       employmentRate: round(completedMean((run) => run.householdStats?.employmentRate), 2),
       health: round(completedMean((run) => run.householdStats?.averageHealth), 2),
       satisfaction: round(completedMean((run) => run.householdStats?.averageSatisfaction), 2),
       wealthGini: round(completedMean((run) => run.wealthGini), 4),
-      unmetFood: round(completedMean((run) => run.metrics?.unmetFood), 2),
-      shortages: round(completedMean((run) => run.metrics?.inputShortageEvents), 2),
-      idleBuildingDays: round(completedMean((run) => run.metrics?.idleBuildingDays), 2),
+      foodConsumed: round(completedMean((run) => run.food?.consumed), 2),
+      unmetFood: round(completedMean((run) => run.food?.unmet), 2),
+      foodDemand: round(completedMean((run) => run.food?.demand), 2),
+      foodFulfillmentRate: round(completedMean((run) => run.food?.fulfillmentRate), 2),
+      shortageEventRate: round(completedMean((run) => run.production?.shortageEventRate), 2),
+      idleBuildingRate: round(completedMean((run) => run.production?.idleBuildingRate), 2),
+      workerCoverageRate: round(completedMean((run) => run.production?.workerCoverageRate), 2),
       trades: round(completedMean((run) => run.market?.settledTrades), 2),
+      tradesPerDay: round(completedMean((run) => run.market?.tradesPerDay), 4),
+      tradeVolumePerDay: round(completedMean((run) => run.market?.tradeVolumePerDay), 4),
+      failedOrders: round(completedMean((run) => run.market?.failedOrders), 2),
     },
+    priceByCommodity: summarizeCommodityPrices(completedRuns),
     criticalFindings,
     balanceFindings,
     failedSeeds: failedRuns.map((run) => ({
@@ -368,8 +489,9 @@ export function summarizeStressRuns(runs, options = {}) {
     })),
     worstSeeds: {
       poverty: worstSeeds(completedRuns, (run) => run.householdStats?.povertyRate ?? 0),
-      foodStress: worstSeeds(completedRuns, (run) => run.householdStats?.foodStressRate ?? 0),
-      unmetFood: worstSeeds(completedRuns, (run) => run.metrics?.unmetFood ?? 0),
+      foodFulfillment: lowestSeeds(completedRuns, (run) => run.food?.fulfillmentRate ?? 100),
+      unmetFood: worstSeeds(completedRuns, (run) => run.food?.unmet ?? 0),
+      idleBuildingRate: worstSeeds(completedRuns, (run) => run.production?.idleBuildingRate ?? 0),
       wealthConcentration: worstSeeds(completedRuns, (run) => run.wealthGini ?? 0),
       runtime: worstSeeds(completedRuns, (run) => run.averageQuarterMs ?? 0),
     },
