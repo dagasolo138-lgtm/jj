@@ -8,6 +8,7 @@ import {
   finalizeCanaryCampaignTransaction,
   isCanaryCampaignRunning,
 } from "./canaryCampaignSystem.js";
+import { recordCanaryObservation } from "./canaryObservationSystem.js";
 import {
   createLegacyLiveSnapshot,
   projectAgentEconomyToLegacyState,
@@ -277,8 +278,9 @@ function rollbackTransaction({
     checkpoint,
   };
   const recordedControl = recordTransaction(rolledBack, transaction, false);
+  const observedControl = recordCanaryObservation(recordedControl, transaction, comparison);
   const nextControl = finalizeCanaryCampaignTransaction(
-    recordedControl,
+    observedControl,
     transaction,
     beforeState?.turn,
   );
@@ -422,8 +424,9 @@ export function applyCanaryTransaction({
     committed: createCanaryCheckpoint(officialState),
   };
   const recordedControl = recordTransaction(normalized, transaction, true);
+  const observedControl = recordCanaryObservation(recordedControl, transaction, comparison);
   const nextControl = finalizeCanaryCampaignTransaction(
-    recordedControl,
+    observedControl,
     transaction,
     beforeState?.turn,
   );

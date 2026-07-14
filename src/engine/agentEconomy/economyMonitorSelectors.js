@@ -5,6 +5,10 @@ import {
   getCanaryCampaignBlockers,
   normalizeCanaryCampaign,
 } from "./canaryCampaignSystem.js";
+import {
+  getCanaryReleaseGuardrails,
+  normalizeCanaryObservation,
+} from "./canaryObservationSystem.js";
 
 const FOOD_COMMODITIES = new Set(["grain", "livestock", "fish", "flour"]);
 const STATUS_PRIORITY = {
@@ -197,7 +201,15 @@ export function getEconomyMonitorViewModel(state = {}) {
   const buildingRows = getBuildingRows(agentEconomy.lastBuildingProduction);
   const comparison = control.lastComparison;
   const campaign = normalizeCanaryCampaign(control.canaryCampaign);
-  const campaignBlockers = getCanaryCampaignBlockers(control);
+  const campaignBlockers = getCanaryCampaignBlockers(control, { quarterLimit: 3 });
+  const extendedCampaignBlockers = getCanaryCampaignBlockers(control, { quarterLimit: 4 });
+  const releaseGate = getCanaryReleaseGuardrails(control);
+  const observationByTransaction = new Map(
+    (control.canaryObservations ?? [])
+      .map(normalizeCanaryObservation)
+      .filter((observation) => observation.transactionId)
+      .map((observation) => [observation.transactionId, observation]),
+  );
   const metrics = agentEconomy.metrics ?? {};
   const latestQuarter = agentEconomy.lastQuarterSummary;
 
@@ -232,16 +244,35 @@ export function getEconomyMonitorViewModel(state = {}) {
       lastStopReason: campaign.lastStopReason,
       lastTransactionId: campaign.lastTransactionId,
       blockers: campaignBlockers,
+      extendedBlockers: extendedCampaignBlockers,
       running: campaign.status === CANARY_CAMPAIGN_STATUS.RUNNING,
       canStart: campaignBlockers.length === 0 && campaign.status !== CANARY_CAMPAIGN_STATUS.RUNNING,
+      canStartExtended: extendedCampaignBlockers.length === 0
+        && campaign.status !== CANARY_CAMPAIGN_STATUS.RUNNING,
     },
-    transactions: (control.canaryTransactionHistory ?? []).slice(-6).reverse().map((transaction) => ({
-      id: transaction.id,
-      status: transaction.status,
-      turn: transaction.turn,
-      season: transaction.season,
-      issue: transaction.issues?.[0] ?? null,
-    })),
+    releaseGate: {
+      ready: releaseGate.ready,
+      blockers: releaseGate.blockers,
+      completedStandardTrials: releaseGate.completedStandardTrials,
+      requiredStandardTrials: releaseGate.requiredStandardTrials,
+      observationWindow: releaseGate.observationWindow,
+      requiredObservationWindow: releaseGate.requiredObservationWindow,
+      maximumDriftRatios: releaseGate.maximumDriftRatios,
+      limits: releaseGate.limits,
+    },
+    transactions: (control.canaryTransactionHistory ?? []).slice(-6).reverse().map((transaction) => {
+      const observation = observationByTransaction.get(transaction.id);
+      return {
+        id: transaction.id,
+        status: transaction.status,
+        turn: transaction.turn,
+        season: transaction.season,
+        issue: transaction.issues?.[0] ?? null,
+        modelDrift: observation?.modelDrift ?? null,
+        driftRatios: observation?.driftRatios ?? null,
+        resourceShift: observation?.resourceShift ?? null,
+      };
+    }),
     householdStats,
     market: {
       totalDemand,

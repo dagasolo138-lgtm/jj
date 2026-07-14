@@ -111,11 +111,11 @@ test("campaign remains blocked until adapters and the safe-quarter streak are re
 });
 
 test("starting a campaign atomically enables a bounded canary window", () => {
-  const started = startCanaryCampaign(readyControl(), { quarterLimit: 99, turn: 7 });
+  const started = startCanaryCampaign(readyControl(), { quarterLimit: 3, turn: 7 });
 
   assert.equal(isCanaryCampaignRunning(started), true);
   assert.equal(started.canaryCampaign.status, CANARY_CAMPAIGN_STATUS.RUNNING);
-  assert.equal(started.canaryCampaign.quarterLimit, 4);
+  assert.equal(started.canaryCampaign.quarterLimit, 3);
   assert.equal(started.canaryCampaign.startedTurn, 7);
   assert.equal(started.activeMode, ENGINE_MODES.CANARY);
   assert.equal(started.requestedMode, ENGINE_MODES.CANARY);

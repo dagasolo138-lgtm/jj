@@ -69,6 +69,20 @@ export {
 } from "./canaryCampaignSystem.js";
 
 export {
+  CANARY_CAMPAIGN_HISTORY_LIMIT,
+  CANARY_OBSERVATION_HISTORY_LIMIT,
+  CANARY_OBSERVATION_VERSION,
+  MIN_COMPLETED_TRIAL_CAMPAIGNS,
+  RELEASE_DRIFT_LIMITS,
+  RELEASE_GUARDRAIL_WINDOW,
+  archiveCanaryCampaign,
+  getCanaryReleaseGuardrails,
+  normalizeCanaryCampaignSummary,
+  normalizeCanaryObservation,
+  recordCanaryObservation,
+} from "./canaryObservationSystem.js";
+
+export {
   CANARY_TRANSACTION_HISTORY_LIMIT,
   CANARY_TRANSACTION_VERSION,
   applyCanaryTransaction,

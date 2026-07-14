@@ -324,6 +324,18 @@ export default function EconomyMonitorTab({ state, dispatch }) {
                 </button>
                 <button
                   type="button"
+                  disabled={!view.campaign.canStartExtended}
+                  onClick={() => dispatch({
+                    type: "AGENT_ECONOMY_START_CANARY_CAMPAIGN",
+                    payload: { quarterLimit: 4 },
+                  })}
+                  className="px-4 py-2 rounded-md border text-xs uppercase tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
+                  style={{ borderColor: COLORS.gold, color: COLORS.gold, backgroundColor: "rgba(196, 162, 74, 0.08)", fontFamily: "Cinzel, serif" }}
+                >
+                  Start 4-quarter extension
+                </button>
+                <button
+                  type="button"
                   disabled={!view.campaign.running}
                   onClick={() => dispatch({
                     type: "AGENT_ECONOMY_STOP_CANARY_CAMPAIGN",
@@ -334,6 +346,25 @@ export default function EconomyMonitorTab({ state, dispatch }) {
                 >
                   Stop and roll back
                 </button>
+              </div>
+              <div className="mt-4 rounded-md border p-3" style={{ backgroundColor: COLORS.panelDeep, borderColor: view.releaseGate.ready ? COLORS.green : COLORS.border }}>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[10px] uppercase tracking-wider" style={{ color: COLORS.muted }}>4-quarter release gate</span>
+                  <span className="text-xs uppercase" style={{ color: view.releaseGate.ready ? COLORS.green : COLORS.amber }}>
+                    {view.releaseGate.ready ? "Ready" : "Collecting evidence"}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3 text-xs">
+                  <span style={{ color: COLORS.text }}>Trials {view.releaseGate.completedStandardTrials}/{view.releaseGate.requiredStandardTrials}</span>
+                  <span style={{ color: COLORS.text }}>Window {view.releaseGate.observationWindow}/{view.releaseGate.requiredObservationWindow}</span>
+                  <span style={{ color: COLORS.text }}>Gold drift {pct(view.releaseGate.maximumDriftRatios.denarii * 100)}</span>
+                  <span style={{ color: COLORS.text }}>Food drift {pct(view.releaseGate.maximumDriftRatios.food * 100)}</span>
+                </div>
+                {view.releaseGate.blockers.length > 0 && (
+                  <div className="mt-2 text-xs" style={{ color: COLORS.amber }}>
+                    {view.releaseGate.blockers.join(" · ")}
+                  </div>
+                )}
               </div>
             </div>
             <div className="rounded-md p-3" style={{ backgroundColor: COLORS.panelDeep }}>
@@ -347,6 +378,11 @@ export default function EconomyMonitorTab({ state, dispatch }) {
                     <span style={{ color: transaction.status === "committed" ? COLORS.green : COLORS.red }}>{transaction.status}</span>
                   </div>
                   {transaction.issue && <div className="mt-1" style={{ color: COLORS.red }}>{transaction.issue}</div>}
+                  {transaction.modelDrift && (
+                    <div className="mt-1" style={{ color: COLORS.muted }}>
+                      Model drift: gold {number(transaction.modelDrift.denarii, 2)} · food {number(transaction.modelDrift.food, 2)} · inventory {number(transaction.modelDrift.inventory, 2)}
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

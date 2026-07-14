@@ -96,7 +96,7 @@ export function createInitialEngineControl(options = {}) {
     : ENGINE_MODES.SHADOW;
 
   return {
-    version: 2,
+    version: 3,
     requestedMode,
     activeMode: requestedMode === ENGINE_MODES.LEGACY
       ? ENGINE_MODES.LEGACY
@@ -120,6 +120,12 @@ export function createInitialEngineControl(options = {}) {
     canaryRollbackCount: 0,
     lastCanaryTransaction: null,
     canaryTransactionHistory: [],
+    canaryCampaignSequence: 0,
+    canaryObservationSequence: 0,
+    lastCanaryObservation: null,
+    canaryObservations: [],
+    lastCanaryCampaignSummary: null,
+    canaryCampaignHistory: [],
     lastRollbackReason: null,
     lastModeChangeTurn: 0,
     lastComparison: null,
@@ -148,7 +154,7 @@ export function normalizeEngineControl(control) {
   return {
     ...fallback,
     ...source,
-    version: 2,
+    version: 3,
     requestedMode,
     activeMode,
     authority,
@@ -172,6 +178,21 @@ export function normalizeEngineControl(control) {
       : null,
     canaryTransactionHistory: Array.isArray(source.canaryTransactionHistory)
       ? source.canaryTransactionHistory.slice(-20)
+      : [],
+    canaryCampaignSequence: integer(source.canaryCampaignSequence),
+    canaryObservationSequence: integer(source.canaryObservationSequence),
+    lastCanaryObservation: source.lastCanaryObservation && typeof source.lastCanaryObservation === "object"
+      ? source.lastCanaryObservation
+      : null,
+    canaryObservations: Array.isArray(source.canaryObservations)
+      ? source.canaryObservations.slice(-48)
+      : [],
+    lastCanaryCampaignSummary: source.lastCanaryCampaignSummary
+      && typeof source.lastCanaryCampaignSummary === "object"
+      ? source.lastCanaryCampaignSummary
+      : null,
+    canaryCampaignHistory: Array.isArray(source.canaryCampaignHistory)
+      ? source.canaryCampaignHistory.slice(-12)
       : [],
     lastRollbackReason: typeof source.lastRollbackReason === "string"
       ? source.lastRollbackReason
