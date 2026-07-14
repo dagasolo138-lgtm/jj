@@ -5,7 +5,7 @@
  * All tabs unlocked from turn 1 in the resource-based system.
  */
 
-import { Landmark, Map, Store, Shield, Users, ScrollText, Scale, Church, Hammer } from "lucide-react";
+import { Activity, Landmark, Map, Store, Shield, Users, ScrollText, Scale, Church, Hammer } from "lucide-react";
 import { TAB_CONFIG as TAB_LABELS } from "./tabConfig.js";
 
 // Re-export the plain tab list for any JSX consumers that want it from here.
@@ -15,6 +15,7 @@ const TAB_ICONS = {
   estate: Landmark,
   map: Map,
   market: Store,
+  economy: Activity,
   military: Shield,
   people: Users,
   hall: Scale,
@@ -29,7 +30,7 @@ export default function TabBar({ activeTab, onSetTab, disabled }) {
   return (
     <div
       className="w-full flex overflow-x-auto"
-      style={{ backgroundColor: "#0f0d0a" }}
+      style={{ backgroundColor: "#0f0d0a", scrollbarWidth: "thin" }}
     >
       {TABS.map((tab) => {
         const isActive = activeTab === tab.id;
@@ -41,7 +42,7 @@ export default function TabBar({ activeTab, onSetTab, disabled }) {
             onClick={() => !isDisabled && onSetTab(tab.id)}
             disabled={isDisabled}
             title={tab.label}
-            className="tab-button flex-1 min-w-0 px-2 py-3 text-center border-b-2 group"
+            className="tab-button flex-none sm:flex-1 min-w-[72px] sm:min-w-0 px-2 py-3 text-center border-b-2 group"
             style={{
               backgroundColor: isActive ? "#231e16" : "transparent",
               borderBottomColor: isActive ? "#c4a24a" : "transparent",
@@ -73,7 +74,7 @@ export default function TabBar({ activeTab, onSetTab, disabled }) {
             <span className="hidden sm:inline text-sm font-semibold uppercase tracking-wide ml-1">
               {tab.label}
             </span>
-            <span className="sm:hidden text-xs font-semibold uppercase tracking-wide block">
+            <span className="sm:hidden text-[10px] font-semibold uppercase tracking-wide block mt-0.5">
               {tab.label}
             </span>
           </button>
