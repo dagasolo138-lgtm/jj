@@ -95,6 +95,7 @@ function sanitizeMetrics(metrics = {}) {
     "quartersSimulated",
     "goodsProduced",
     "goodsConsumed",
+    "foodConsumed",
     "productionInputsConsumed",
     "unmetFood",
     "ordersGenerated",

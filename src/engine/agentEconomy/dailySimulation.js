@@ -45,6 +45,7 @@ function createMetrics(metrics = {}) {
     quartersSimulated: safeMetric(metrics.quartersSimulated),
     goodsProduced: safeMetric(metrics.goodsProduced),
     goodsConsumed: safeMetric(metrics.goodsConsumed),
+    foodConsumed: safeMetric(metrics.foodConsumed),
     productionInputsConsumed: safeMetric(metrics.productionInputsConsumed),
     unmetFood: safeMetric(metrics.unmetFood),
     ordersGenerated: safeMetric(metrics.ordersGenerated),
@@ -105,11 +106,13 @@ function aggregateOccupationProduction(households, rng, context) {
 function aggregateConsumption(households, rng, context) {
   const consumedByCommodity = {};
   let totalConsumed = 0;
+  let foodConsumed = 0;
   let unmetFood = 0;
   const unmetFoodByHousehold = {};
   const nextHouseholds = households.map((household) => {
     const result = consumeHousehold(household, rng, context);
     totalConsumed += result.totalConsumed;
+    foodConsumed += result.consumedFood;
     unmetFood += result.unmetFood;
     unmetFoodByHousehold[household.id] = result.unmetFood;
     for (const [commodity, amount] of Object.entries(result.consumed)) {
@@ -117,7 +120,7 @@ function aggregateConsumption(households, rng, context) {
     }
     return result.household;
   });
-  return { households: nextHouseholds, consumedByCommodity, totalConsumed, unmetFood, unmetFoodByHousehold };
+  return { households: nextHouseholds, consumedByCommodity, totalConsumed, foodConsumed, unmetFood, unmetFoodByHousehold };
 }
 
 export function simulateAgentDay(state, rng, context = {}) {
@@ -197,6 +200,7 @@ export function simulateAgentDay(state, rng, context = {}) {
   metrics = addMetric(metrics, "goodsProduced", production.totalProduced);
   metrics = addMetric(metrics, "productionInputsConsumed", production.totalInputsConsumed);
   metrics = addMetric(metrics, "goodsConsumed", consumption.totalConsumed);
+  metrics = addMetric(metrics, "foodConsumed", consumption.foodConsumed);
   metrics = addMetric(metrics, "unmetFood", consumption.unmetFood);
   metrics = addMetric(metrics, "ordersGenerated", orders.length);
   metrics = addMetric(metrics, "potentialMatches", marketPreview.potentialMatches);
@@ -232,6 +236,7 @@ export function simulateAgentDay(state, rng, context = {}) {
     inputShortageEvents: production.metrics.inputShortageEvents,
     consumed: consumption.consumedByCommodity,
     totalConsumed: consumption.totalConsumed,
+    foodConsumed: consumption.foodConsumed,
     unmetFood: consumption.unmetFood,
     ordersGenerated: orders.length,
     orderSummary: market.summary.orderSummary,
@@ -304,6 +309,7 @@ export function simulateAgentQuarter(agentEconomy, context = {}) {
     produced: Number((endMetrics.goodsProduced - startMetrics.goodsProduced).toFixed(2)),
     productionInputsConsumed: Number((endMetrics.productionInputsConsumed - startMetrics.productionInputsConsumed).toFixed(2)),
     consumed: Number((endMetrics.goodsConsumed - startMetrics.goodsConsumed).toFixed(2)),
+    foodConsumed: Number((endMetrics.foodConsumed - startMetrics.foodConsumed).toFixed(2)),
     unmetFood: Number((endMetrics.unmetFood - startMetrics.unmetFood).toFixed(2)),
     ordersGenerated: Number((endMetrics.ordersGenerated - startMetrics.ordersGenerated).toFixed(2)),
     potentialMatches: Number((endMetrics.potentialMatches - startMetrics.potentialMatches).toFixed(2)),
