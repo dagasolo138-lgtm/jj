@@ -31,6 +31,12 @@ function quantity(value) {
   return Number(Math.max(0, finite(value)).toFixed(4));
 }
 
+function cloneGameOverReason(value) {
+  if (typeof value === "string") return value;
+  if (value && typeof value === "object") return JSON.parse(JSON.stringify(value));
+  return null;
+}
+
 function cloneInventory(inventory = {}) {
   return Object.fromEntries(
     Object.entries(inventory ?? {}).map(([commodity, amount]) => [commodity, quantity(amount)]),
@@ -82,7 +88,7 @@ export function createLegacyLiveSnapshot(state = {}) {
     population: integer(state.population),
     inventory: cloneInventory(state.inventory),
     phase: typeof state.phase === "string" ? state.phase : "title",
-    gameOverReason: typeof state.gameOverReason === "string" ? state.gameOverReason : null,
+    gameOverReason: cloneGameOverReason(state.gameOverReason),
     pyrrhicVictory: state.pyrrhicVictory === true,
   };
 }
@@ -175,9 +181,9 @@ export function normalizeLiveStateAdapter(adapter, legacyState = {}) {
       ...fallback.outcome,
       ...(source.outcome && typeof source.outcome === "object" ? source.outcome : {}),
       phase: typeof source.outcome?.phase === "string" ? source.outcome.phase : snapshot.phase,
-      gameOverReason: typeof source.outcome?.gameOverReason === "string"
-        ? source.outcome.gameOverReason
-        : null,
+      gameOverReason: cloneGameOverReason(
+        source.outcome?.gameOverReason ?? snapshot.gameOverReason,
+      ),
       victory: source.outcome?.victory === true,
       pyrrhicVictory: source.outcome?.pyrrhicVictory === true,
     },

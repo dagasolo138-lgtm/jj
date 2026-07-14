@@ -34,6 +34,21 @@ function clone(value) {
   return JSON.parse(JSON.stringify(value ?? null));
 }
 
+function cloneGameOverReason(value) {
+  if (typeof value === "string") return value;
+  if (value && typeof value === "object") return clone(value);
+  return null;
+}
+
+function gameOverSignature(value) {
+  if (value == null) return "none";
+  if (typeof value === "string") return "string:" + value;
+  if (typeof value === "object") {
+    return "object:" + (value.type ?? "unknown") + ":" + (value.reason ?? "");
+  }
+  return typeof value + ":" + String(value);
+}
+
 function cloneInventory(inventory = {}) {
   return Object.fromEntries(
     Object.entries(inventory ?? {}).map(([commodity, amount]) => [commodity, quantity(amount)]),
@@ -68,7 +83,7 @@ export function createCanaryCheckpoint(state = {}) {
     population: integer(state.population),
     inventory: cloneInventory(state.inventory),
     phase: typeof state.phase === "string" ? state.phase : "management",
-    gameOverReason: typeof state.gameOverReason === "string" ? state.gameOverReason : null,
+    gameOverReason: cloneGameOverReason(state.gameOverReason),
     pyrrhicVictory: state.pyrrhicVictory === true,
     bankruptcyTurns: integer(state.bankruptcyTurns),
     starvationTurns: integer(state.starvationTurns),
@@ -135,17 +150,18 @@ export function validateCanaryProjection({
     starvationTurns,
     difficulty: beforeState?.difficulty,
   });
-  const legacyGameOver = typeof legacyState?.gameOverReason === "string"
-    ? legacyState.gameOverReason
-    : null;
-  if ((candidateGameOver ?? null) !== legacyGameOver) {
-    issues.push(`outcome-mismatch:${legacyGameOver ?? "none"}->${candidateGameOver ?? "none"}`);
+  const legacyGameOver = cloneGameOverReason(legacyState?.gameOverReason);
+  if (gameOverSignature(candidateGameOver) !== gameOverSignature(legacyGameOver)) {
+    issues.push(
+      "outcome-mismatch:" + gameOverSignature(legacyGameOver)
+        + "->" + gameOverSignature(candidateGameOver),
+    );
   }
 
   if (projectedState.phase !== legacyState?.phase) {
     issues.push(`phase-mismatch:${legacyState?.phase ?? "unknown"}->${projectedState.phase ?? "unknown"}`);
   }
-  if ((projectedState.gameOverReason ?? null) !== legacyGameOver) {
+  if (gameOverSignature(projectedState.gameOverReason) !== gameOverSignature(legacyGameOver)) {
     issues.push("projected-game-over-mismatch");
   }
 
@@ -154,7 +170,7 @@ export function validateCanaryProjection({
     issues: [...new Set(issues)].slice(0, 50),
     bankruptcyTurns,
     starvationTurns,
-    candidateGameOver: candidateGameOver ?? null,
+    candidateGameOver: cloneGameOverReason(candidateGameOver),
   };
 }
 
