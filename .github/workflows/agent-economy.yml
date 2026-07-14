@@ -4,6 +4,11 @@ on:
   pull_request:
     paths:
       - src/engine/agentEconomy/**
+      - src/components/EconomyMonitorTab.jsx
+      - src/components/TabBar.jsx
+      - src/components/tabConfig.js
+      - src/components/TutorialPopup.jsx
+      - src/components/TutorialHint.jsx
       - src/App.jsx
       - tests/unit/agentEconomy*.test.js
       - tests/baselines/agent-economy-step*.json
@@ -14,6 +19,11 @@ on:
     branches: [main]
     paths:
       - src/engine/agentEconomy/**
+      - src/components/EconomyMonitorTab.jsx
+      - src/components/TabBar.jsx
+      - src/components/tabConfig.js
+      - src/components/TutorialPopup.jsx
+      - src/components/TutorialHint.jsx
       - src/App.jsx
       - tests/unit/agentEconomy*.test.js
       - tests/baselines/agent-economy-step*.json
