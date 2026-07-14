@@ -1,3 +1,4 @@
+import { runBuildingProduction } from "./buildingProductionSystem.js";
 import { consumeHousehold, updateHouseholdNeeds } from "./consumptionSystem.js";
 import { generateHouseholdOrderIntents, previewOrderMatches } from "./orderIntentSystem.js";
 import {
@@ -15,7 +16,8 @@ import {
 
 export const AGENT_DAYS_PER_QUARTER = 30;
 export const DAILY_PIPELINE = [
-  "production",
+  "workforce-allocation",
+  "building-production",
   "needs",
   "order-generation",
   "market-settlement",
@@ -43,6 +45,7 @@ function createMetrics(metrics = {}) {
     quartersSimulated: safeMetric(metrics.quartersSimulated),
     goodsProduced: safeMetric(metrics.goodsProduced),
     goodsConsumed: safeMetric(metrics.goodsConsumed),
+    productionInputsConsumed: safeMetric(metrics.productionInputsConsumed),
     unmetFood: safeMetric(metrics.unmetFood),
     ordersGenerated: safeMetric(metrics.ordersGenerated),
     potentialMatches: safeMetric(metrics.potentialMatches),
@@ -54,6 +57,10 @@ function createMetrics(metrics = {}) {
     beliefAdjustments: safeMetric(metrics.beliefAdjustments),
     priceIncreases: safeMetric(metrics.priceIncreases),
     priceDecreases: safeMetric(metrics.priceDecreases),
+    workerDaysRequired: safeMetric(metrics.workerDaysRequired),
+    workerDaysAssigned: safeMetric(metrics.workerDaysAssigned),
+    idleBuildingDays: safeMetric(metrics.idleBuildingDays),
+    inputShortageEvents: safeMetric(metrics.inputShortageEvents),
     grossIncome: safeMetric(metrics.grossIncome),
     taxCollected: safeMetric(metrics.taxCollected),
     welfarePaid: safeMetric(metrics.welfarePaid),
@@ -63,22 +70,36 @@ function createMetrics(metrics = {}) {
 function addMetric(metrics, key, value) {
   return {
     ...metrics,
-    [key]: Number((safeMetric(metrics[key]) + safeMetric(value)).toFixed(2)),
+    [key]: Number((safeMetric(metrics[key]) + safeMetric(value)).toFixed(4)),
   };
 }
 
-function aggregateProduction(households, rng, context) {
-  const producedByCommodity = {};
+function aggregateOccupationProduction(households, rng, context) {
+  const produced = {};
   let totalProduced = 0;
   const nextHouseholds = households.map((household) => {
     const result = produceHousehold(household, rng, context);
     totalProduced += result.totalProduced;
     for (const [commodity, amount] of Object.entries(result.produced)) {
-      producedByCommodity[commodity] = (producedByCommodity[commodity] ?? 0) + amount;
+      produced[commodity] = (produced[commodity] ?? 0) + amount;
     }
     return result.household;
   });
-  return { households: nextHouseholds, producedByCommodity, totalProduced };
+  return {
+    households: nextHouseholds,
+    produced,
+    consumed: {},
+    totalProduced,
+    totalInputsConsumed: 0,
+    buildingReports: [],
+    workforce: null,
+    metrics: {
+      requiredWorkers: 0,
+      assignedWorkers: 0,
+      idleBuildingDays: 0,
+      inputShortageEvents: 0,
+    },
+  };
 }
 
 function aggregateConsumption(households, rng, context) {
@@ -99,10 +120,6 @@ function aggregateConsumption(households, rng, context) {
   return { households: nextHouseholds, consumedByCommodity, totalConsumed, unmetFood, unmetFoodByHousehold };
 }
 
-/**
- * Runs one compressed economic day. This is a pure, headless shadow simulation.
- * The supplied RNG is the only source of randomness.
- */
 export function simulateAgentDay(state, rng, context = {}) {
   if (!rng || typeof rng.next !== "function") {
     throw new TypeError("simulateAgentDay requires a seeded RNG");
@@ -118,10 +135,14 @@ export function simulateAgentDay(state, rng, context = {}) {
       needs: { ...household.needs },
       priceBeliefs: { ...household.priceBeliefs },
       priceHistory: { ...household.priceHistory },
+      productionNeeds: { ...household.productionNeeds },
+      workAssignments: [...(household.workAssignments ?? [])],
     }))
     : [];
 
-  const production = aggregateProduction(households, rng, dayContext);
+  const production = Array.isArray(dayContext.buildings)
+    ? runBuildingProduction(households, dayContext.buildings, dayContext)
+    : aggregateOccupationProduction(households, rng, dayContext);
   households = production.households;
 
   households = households.map((household) => updateHouseholdNeeds(household, dayContext));
@@ -174,6 +195,7 @@ export function simulateAgentDay(state, rng, context = {}) {
   let metrics = createMetrics(state?.metrics);
   metrics = addMetric(metrics, "daysSimulated", 1);
   metrics = addMetric(metrics, "goodsProduced", production.totalProduced);
+  metrics = addMetric(metrics, "productionInputsConsumed", production.totalInputsConsumed);
   metrics = addMetric(metrics, "goodsConsumed", consumption.totalConsumed);
   metrics = addMetric(metrics, "unmetFood", consumption.unmetFood);
   metrics = addMetric(metrics, "ordersGenerated", orders.length);
@@ -188,6 +210,10 @@ export function simulateAgentDay(state, rng, context = {}) {
   metrics = addMetric(metrics, "beliefAdjustments", learning.summary.adjustments);
   metrics = addMetric(metrics, "priceIncreases", learning.summary.increases);
   metrics = addMetric(metrics, "priceDecreases", learning.summary.decreases);
+  metrics = addMetric(metrics, "workerDaysRequired", production.metrics.requiredWorkers);
+  metrics = addMetric(metrics, "workerDaysAssigned", production.metrics.assignedWorkers);
+  metrics = addMetric(metrics, "idleBuildingDays", production.metrics.idleBuildingDays);
+  metrics = addMetric(metrics, "inputShortageEvents", production.metrics.inputShortageEvents);
   metrics = addMetric(metrics, "grossIncome", grossIncome);
   metrics = addMetric(metrics, "taxCollected", taxCollected);
   metrics = addMetric(metrics, "welfarePaid", welfarePaid);
@@ -197,9 +223,14 @@ export function simulateAgentDay(state, rng, context = {}) {
     turn: context.turn ?? null,
     season: context.season ?? null,
     pipeline: [...DAILY_PIPELINE],
-    produced: production.producedByCommodity,
-    consumed: consumption.consumedByCommodity,
+    produced: production.produced,
+    productionInputsConsumed: production.consumed,
     totalProduced: production.totalProduced,
+    totalProductionInputsConsumed: production.totalInputsConsumed,
+    workforce: production.workforce,
+    idleBuildingDays: production.metrics.idleBuildingDays,
+    inputShortageEvents: production.metrics.inputShortageEvents,
+    consumed: consumption.consumedByCommodity,
     totalConsumed: consumption.totalConsumed,
     unmetFood: consumption.unmetFood,
     ordersGenerated: orders.length,
@@ -237,6 +268,8 @@ export function simulateAgentDay(state, rng, context = {}) {
         decreases: learning.summary.decreases,
       },
     ].slice(-60),
+    lastWorkforceSummary: production.workforce,
+    lastBuildingProduction: production.buildingReports.slice(-100),
     lastDailySummary: summary,
     dailyHistory: [...(state?.dailyHistory ?? []), summary].slice(-60),
     metrics,
@@ -269,6 +302,7 @@ export function simulateAgentQuarter(agentEconomy, context = {}) {
     endDay: state.day,
     days,
     produced: Number((endMetrics.goodsProduced - startMetrics.goodsProduced).toFixed(2)),
+    productionInputsConsumed: Number((endMetrics.productionInputsConsumed - startMetrics.productionInputsConsumed).toFixed(2)),
     consumed: Number((endMetrics.goodsConsumed - startMetrics.goodsConsumed).toFixed(2)),
     unmetFood: Number((endMetrics.unmetFood - startMetrics.unmetFood).toFixed(2)),
     ordersGenerated: Number((endMetrics.ordersGenerated - startMetrics.ordersGenerated).toFixed(2)),
@@ -280,6 +314,10 @@ export function simulateAgentQuarter(agentEconomy, context = {}) {
     beliefAdjustments: Number((endMetrics.beliefAdjustments - startMetrics.beliefAdjustments).toFixed(2)),
     priceIncreases: Number((endMetrics.priceIncreases - startMetrics.priceIncreases).toFixed(2)),
     priceDecreases: Number((endMetrics.priceDecreases - startMetrics.priceDecreases).toFixed(2)),
+    workerDaysRequired: Number((endMetrics.workerDaysRequired - startMetrics.workerDaysRequired).toFixed(2)),
+    workerDaysAssigned: Number((endMetrics.workerDaysAssigned - startMetrics.workerDaysAssigned).toFixed(2)),
+    idleBuildingDays: Number((endMetrics.idleBuildingDays - startMetrics.idleBuildingDays).toFixed(2)),
+    inputShortageEvents: Number((endMetrics.inputShortageEvents - startMetrics.inputShortageEvents).toFixed(2)),
     grossIncome: Number((endMetrics.grossIncome - startMetrics.grossIncome).toFixed(2)),
     taxCollected: Number((endMetrics.taxCollected - startMetrics.taxCollected).toFixed(2)),
     welfarePaid: Number((endMetrics.welfarePaid - startMetrics.welfarePaid).toFixed(2)),
