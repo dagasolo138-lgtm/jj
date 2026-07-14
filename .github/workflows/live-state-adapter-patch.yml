@@ -1,0 +1,39 @@
+name: Live state adapter patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/applyLiveStateAdapterPatch.mjs
+      - .github/workflows/live-state-adapter-patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/applyLiveStateAdapterPatch.mjs
+      - name: Commit patch
+        run: |
+          if git diff --quiet; then
+            echo "No patch changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/engine/agentEconomy/engineControlSystem.js \
+            src/engine/agentEconomy/householdFactory.js \
+            src/engine/agentEconomy/householdUtils.js \
+            src/engine/agentEconomy/integratedGameReducer.js \
+            src/engine/agentEconomy/index.js \
+            src/engine/agentEconomy/liveStateAdapter.js \
+            tests/unit/agentEconomyEngineControl.test.js
+          git commit -m "feat(agent-economy): integrate live state adapters"
+          git push
