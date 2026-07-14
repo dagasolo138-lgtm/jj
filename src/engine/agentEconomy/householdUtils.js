@@ -1,10 +1,12 @@
 import {
   AGENT_ECONOMY_SCHEMA_VERSION,
   DEFAULT_MAX_HOUSEHOLDS,
+  HOUSEHOLD_COMMODITIES,
   createHousehold,
   createInitialAgentEconomy,
   normalizeHousehold,
 } from "./householdFactory.js";
+import { createInitialMarketPrices } from "./priceBeliefSystem.js";
 import { DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
 
 function toPopulation(value) {
@@ -91,10 +93,54 @@ function sanitizeMetrics(metrics = {}) {
     failedOrders: toNonNegativeNumber(metrics.failedOrders),
     tradeVolume: toNonNegativeNumber(metrics.tradeVolume),
     tradeValue: toNonNegativeNumber(metrics.tradeValue),
+    beliefAdjustments: toNonNegativeNumber(metrics.beliefAdjustments),
+    priceIncreases: toNonNegativeNumber(metrics.priceIncreases),
+    priceDecreases: toNonNegativeNumber(metrics.priceDecreases),
     grossIncome: toNonNegativeNumber(metrics.grossIncome),
     taxCollected: toNonNegativeNumber(metrics.taxCollected),
     welfarePaid: toNonNegativeNumber(metrics.welfarePaid),
   };
+}
+
+function sanitizeMarketPrices(marketPrices) {
+  const defaults = createInitialMarketPrices(HOUSEHOLD_COMMODITIES);
+  const source = marketPrices && typeof marketPrices === "object" ? marketPrices : {};
+  const normalized = {};
+
+  for (const commodity of HOUSEHOLD_COMMODITIES) {
+    const fallback = defaults[commodity];
+    const record = source[commodity] && typeof source[commodity] === "object"
+      ? source[commodity]
+      : {};
+    const lastPrice = toNonNegativeNumber(record.lastPrice) || fallback.lastPrice;
+    const previousPrice = toNonNegativeNumber(record.previousPrice) || lastPrice;
+    const averagePrice = toNonNegativeNumber(record.averagePrice) || lastPrice;
+    normalized[commodity] = {
+      ...fallback,
+      ...record,
+      commodity,
+      referencePrice: toNonNegativeNumber(record.referencePrice) || fallback.referencePrice,
+      previousPrice,
+      lastPrice,
+      averagePrice,
+      low: toNonNegativeNumber(record.low) || lastPrice,
+      high: toNonNegativeNumber(record.high) || lastPrice,
+      volume: toNonNegativeNumber(record.volume),
+      tradeCount: toPopulation(record.tradeCount),
+      bidVolume: toNonNegativeNumber(record.bidVolume),
+      askVolume: toNonNegativeNumber(record.askVolume),
+      failedBidVolume: toNonNegativeNumber(record.failedBidVolume),
+      failedAskVolume: toNonNegativeNumber(record.failedAskVolume),
+      changePct: Number.isFinite(record.changePct) ? Number(record.changePct) : 0,
+      trend: ["up", "down", "flat"].includes(record.trend) ? record.trend : "flat",
+      lastUpdatedDay: toPopulation(record.lastUpdatedDay),
+      history: Array.isArray(record.history)
+        ? record.history.filter((value) => Number.isFinite(value) && value >= 0.5).slice(-40)
+        : fallback.history,
+    };
+  }
+
+  return normalized;
 }
 
 function sanitizeAgentEconomy(savedAgentEconomy) {
@@ -132,6 +178,13 @@ function sanitizeAgentEconomy(savedAgentEconomy) {
     day: toPopulation(source.day),
     pendingOrders: Array.isArray(source.pendingOrders) ? source.pendingOrders.slice(-500) : [],
     lastTrades: Array.isArray(source.lastTrades) ? source.lastTrades.slice(-100) : [],
+    marketPrices: sanitizeMarketPrices(source.marketPrices),
+    lastBeliefUpdates: Array.isArray(source.lastBeliefUpdates)
+      ? source.lastBeliefUpdates.slice(-200)
+      : [],
+    beliefUpdateHistory: Array.isArray(source.beliefUpdateHistory)
+      ? source.beliefUpdateHistory.slice(-60)
+      : [],
     lastDailySummary: source.lastDailySummary && typeof source.lastDailySummary === "object"
       ? source.lastDailySummary
       : null,
@@ -179,6 +232,9 @@ export function reconcileAgentEconomyPopulation(agentEconomy, population, option
       day: sanitized.day,
       pendingOrders: sanitized.pendingOrders,
       lastTrades: sanitized.lastTrades,
+      marketPrices: sanitized.marketPrices,
+      lastBeliefUpdates: sanitized.lastBeliefUpdates,
+      beliefUpdateHistory: sanitized.beliefUpdateHistory,
       lastDailySummary: sanitized.lastDailySummary,
       lastQuarterSummary: sanitized.lastQuarterSummary,
       dailyHistory: sanitized.dailyHistory,
