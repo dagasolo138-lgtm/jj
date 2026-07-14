@@ -1,0 +1,16 @@
+{
+  "validatedCommit": "483db7a6470d03ace20b1aef9c5cae107df8344b",
+  "workflowRunId": 29307256668,
+  "nodeVersion": "24",
+  "agentEconomyTests": "success",
+  "legacyEconomyBaseline": "success",
+  "lint": "success",
+  "build": "success",
+  "daysPerQuarter": 30,
+  "stressTestQuarters": 40,
+  "stressTestDays": 1200,
+  "seededRandomOnly": true,
+  "liveEconomyChanged": false,
+  "marketSettlementEnabled": false,
+  "shadowMode": true
+}
