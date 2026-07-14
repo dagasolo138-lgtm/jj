@@ -1,0 +1,47 @@
+name: Agent economy stress
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - src/engine/agentEconomy/**
+      - tests/stress/**
+      - tests/unit/agentEconomyStressHarness.test.js
+      - package.json
+      - package-lock.json
+      - .github/workflows/agent-economy-stress.yml
+  push:
+    branches: [main]
+    paths:
+      - src/engine/agentEconomy/**
+      - tests/stress/**
+      - tests/unit/agentEconomyStressHarness.test.js
+      - package.json
+      - package-lock.json
+      - .github/workflows/agent-economy-stress.yml
+
+jobs:
+  stress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run test:agent-economy
+      - run: npm run test:economy
+      - name: Run 100 seeds × 40 quarters
+        run: npm run test:agent-economy:stress
+      - run: npm run lint
+      - run: npm run build
+      - name: Upload stress report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent-economy-stress-report
+          path: artifacts/agent-economy-stress-report.json
+          if-no-files-found: warn
+          retention-days: 30
