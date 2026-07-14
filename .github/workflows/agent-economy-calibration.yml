@@ -7,7 +7,7 @@ on:
       - src/engine/agentEconomy/**
       - tests/calibration/**
       - tests/stress/**
-      - tests/unit/agentEconomyCalibration.test.js
+      - tests/unit/agentEconomy*.test.js
       - docs/agent-economy-calibration.md
       - package.json
       - package-lock.json
@@ -19,7 +19,7 @@ on:
       - src/engine/agentEconomy/**
       - tests/calibration/**
       - tests/stress/**
-      - tests/unit/agentEconomyCalibration.test.js
+      - tests/unit/agentEconomy*.test.js
       - docs/agent-economy-calibration.md
       - package.json
       - package-lock.json
