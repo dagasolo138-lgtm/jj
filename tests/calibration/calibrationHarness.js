@@ -219,6 +219,7 @@ export function runCalibrationMatrix(options = {}) {
       seeds,
       quarters,
       population: scenario.population,
+      estateInventory: scenario.estateInventory,
       buildings: scenario.buildings,
       laborAllocation: scenario.laborAllocation,
       taxRate: scenario.taxRate,
@@ -233,6 +234,7 @@ export function runCalibrationMatrix(options = {}) {
       expectedPressure: scenario.expectedPressure,
       inputs: {
         population: scenario.population,
+        estateInventory: scenario.estateInventory,
         buildings: scenario.buildings.map((building) => typeof building === "string" ? building : building.type),
         laborAllocation: scenario.laborAllocation,
         taxRate: scenario.taxRate,
