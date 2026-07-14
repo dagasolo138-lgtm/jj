@@ -1,11 +1,12 @@
+import { SEASON_CONSUMPTION_MULTIPLIERS } from "../../data/economy.js";
+import { DAILY_FOOD_TARGET_PER_PERSON, calibratedQuantity } from "./economyCalibration.js";
 import { clampNeed, normalizeNeeds } from "./needsSystem.js";
 import { stochasticRound } from "./seededRng.js";
 
 const FOOD_PRIORITY = ["flour", "fish", "grain", "livestock"];
 
 function inventoryQuantity(value) {
-  if (!Number.isFinite(Number(value))) return 0;
-  return Number(Math.max(0, Number(value)).toFixed(4));
+  return calibratedQuantity(value);
 }
 
 export function updateHouseholdNeeds(household, context = {}) {
@@ -23,7 +24,7 @@ export function updateHouseholdNeeds(household, context = {}) {
       clothing: clampNeed(needs.clothing + (day % 5 === 0 ? 1 : 0)),
       tools: clampNeed(needs.tools + (["farmer", "herder", "fisherman", "woodsman", "miner", "artisan"].includes(occupation) && day % 4 === 0 ? 1 : 0)),
       faith: clampNeed(needs.faith + (day % 7 === 0 ? 1 : 0)),
-      employment: clampNeed(needs.employment + (occupation === "unemployed" ? 3 : -1)),
+      employment: clampNeed(needs.employment + (household.employmentRatio > 0 ? -1 : 3)),
     },
   };
 }
@@ -43,7 +44,11 @@ function consumeFromInventory(inventory, commodity, requestedQuantity) {
 
 export function consumeHousehold(household, rng, context = {}) {
   const weight = Math.max(1, Math.floor(household.weight ?? 1));
-  const targetFood = stochasticRound(weight * 0.24, rng);
+  const seasonalMultiplier = SEASON_CONSUMPTION_MULTIPLIERS[context.season] ?? 1;
+  const targetFood = stochasticRound(
+    weight * DAILY_FOOD_TARGET_PER_PERSON * seasonalMultiplier,
+    rng,
+  );
   let remainingFood = targetFood;
   let inventory = { ...household.inventory };
   const consumed = {};
