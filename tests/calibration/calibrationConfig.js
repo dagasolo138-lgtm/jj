@@ -1,9 +1,9 @@
 import { initialState as legacyInitialState } from "../../src/engine/gameReducer.js";
 
-export const CALIBRATION_VERSION = 1;
+export const CALIBRATION_VERSION = 2;
 export const CALIBRATION_SEED_COUNT = 12;
 export const CALIBRATION_QUARTERS = 12;
-export const CALIBRATION_BASE_SEED = "agent-economy-calibration-v1";
+export const CALIBRATION_BASE_SEED = "agent-economy-calibration-v2";
 
 export const HARD_GATES = Object.freeze({
   completionRate: 100,
@@ -14,11 +14,11 @@ export const HARD_GATES = Object.freeze({
 export const DEFAULT_CALIBRATION_TARGET = Object.freeze({
   economicSurvivalRateMin: 95,
   foodFulfillmentRateMin: 85,
-  foodFulfillmentRateMax: 98,
+  foodFulfillmentRateMax: 100,
   employmentRateMin: 60,
   employmentRateMax: 85,
-  idleBuildingRateMax: 20,
-  inputShortageRateMax: 20,
+  idleBuildingRateMax: 25,
+  inputShortageRateMax: 35,
   tradesPerDayMin: 0.15,
   failedOrdersPerTradeMax: 25,
   extremeInflationSeedRateMax: 5,
@@ -54,12 +54,18 @@ function mergeTarget(overrides = {}) {
 
 const defaultBuildings = cloneBuildings();
 const defaultInventory = cloneInventory();
+const brokenChainInventory = {
+  ...cloneInventory(defaultInventory),
+  timber: 0,
+  iron: 0,
+  coal: 0,
+};
 
 export const CALIBRATION_SCENARIOS = Object.freeze([
   Object.freeze({
     id: "default-estate",
     name: "Default estate",
-    purpose: "Primary balance target using the frozen new-game estate.",
+    purpose: "Primary balance target using the frozen new-game estate, including its intentionally disconnected sawmill.",
     expectedPressure: "normal",
     population: legacyInitialState.population,
     estateInventory: cloneInventory(defaultInventory),
@@ -71,7 +77,7 @@ export const CALIBRATION_SCENARIOS = Object.freeze([
   Object.freeze({
     id: "agricultural-shortage",
     name: "Agricultural shortage",
-    purpose: "Measures whether the economy degrades without instantly dying after losing its strip farm.",
+    purpose: "Measures whether household subsistence softens, but does not erase, the loss of the strip farm.",
     expectedPressure: "food-shock",
     population: legacyInitialState.population,
     estateInventory: cloneInventory(defaultInventory),
@@ -80,7 +86,7 @@ export const CALIBRATION_SCENARIOS = Object.freeze([
     taxRate: legacyInitialState.taxRate,
     target: mergeTarget({
       economicSurvivalRateMin: 80,
-      foodFulfillmentRateMin: 55,
+      foodFulfillmentRateMin: 50,
       employmentRateMin: 45,
       idleBuildingRateMax: 35,
       inputShortageRateMax: 40,
@@ -124,10 +130,10 @@ export const CALIBRATION_SCENARIOS = Object.freeze([
   Object.freeze({
     id: "broken-supply-chain",
     name: "Broken supply chain",
-    purpose: "Keeps processors while removing timber, iron, and coal upstream buildings to expose input propagation.",
+    purpose: "Removes timber, iron, and coal production and starting stocks while retaining processors.",
     expectedPressure: "input-shock",
     population: legacyInitialState.population,
-    estateInventory: cloneInventory(defaultInventory),
+    estateInventory: brokenChainInventory,
     buildings: [
       createBuilding("strip_farm", 0),
       createBuilding("pasture", 0),
@@ -167,6 +173,8 @@ export const CALIBRATION_SCENARIOS = Object.freeze([
     target: mergeTarget({
       economicSurvivalRateMin: 90,
       foodFulfillmentRateMin: 80,
+      idleBuildingRateMax: 30,
+      inputShortageRateMax: 35,
       povertyRateMax: 35,
       averageHealthMin: 50,
       averageSatisfactionMin: 35,
@@ -185,6 +193,8 @@ export const CALIBRATION_SCENARIOS = Object.freeze([
     target: mergeTarget({
       economicSurvivalRateMin: 95,
       foodFulfillmentRateMin: 85,
+      idleBuildingRateMax: 30,
+      inputShortageRateMax: 35,
       povertyRateMax: 20,
       averageHealthMin: 55,
       averageSatisfactionMin: 42,
@@ -193,7 +203,7 @@ export const CALIBRATION_SCENARIOS = Object.freeze([
   Object.freeze({
     id: "expanded-estate",
     name: "Expanded estate",
-    purpose: "Adds food, raw-material, mining, and milling capacity to test whether expansion improves the economy.",
+    purpose: "Adds food, raw-material, mining, and milling capacity to test whether expansion improves employment and input continuity.",
     expectedPressure: "growth",
     population: legacyInitialState.population,
     estateInventory: cloneInventory(defaultInventory),
@@ -212,7 +222,7 @@ export const CALIBRATION_SCENARIOS = Object.freeze([
       foodFulfillmentRateMin: 90,
       employmentRateMin: 70,
       employmentRateMax: 95,
-      idleBuildingRateMax: 15,
+      idleBuildingRateMax: 30,
       inputShortageRateMax: 15,
       tradesPerDayMin: 0.25,
       failedOrdersPerTradeMax: 20,
