@@ -13,6 +13,7 @@ import {
   getDistributedInventoryTotals,
   runBuildingProduction,
   settleOrderBooks,
+  updateHouseholdWellbeing,
 } from "../../src/engine/agentEconomy/index.js";
 
 function household(id, occupation, overrides = {}) {
@@ -97,6 +98,31 @@ test("fractional surplus can cross the order book", () => {
   assert.equal(nextSeller.inventory.grain, 2);
 });
 
+test("production input orders cross even when household beliefs disagree", () => {
+  const buyer = household("artisan", "artisan", {
+    cash: 20,
+    inventory: { coal: 0 },
+    productionNeeds: { coal: 0.03 },
+  });
+  const seller = household("miner", "miner", {
+    cash: 1,
+    inventory: { coal: 10 },
+  });
+  buyer.priceBeliefs.coal = { min: 0.5, max: 1, lastPrice: 0.75 };
+  seller.priceBeliefs.coal = { min: 10, max: 12, lastPrice: 11 };
+
+  const orders = generateHouseholdOrderIntents([buyer, seller], { day: 1 });
+  const bid = orders.find((order) => order.householdId === buyer.id && order.commodity === "coal");
+  const ask = orders.find((order) => order.householdId === seller.id && order.commodity === "coal");
+  assert.ok(bid);
+  assert.ok(ask);
+  assert.ok(bid.price >= ask.price);
+
+  const result = settleOrderBooks([buyer, seller], orders);
+  assert.equal(result.trades.length, 1);
+  assert.ok(result.trades[0].quantity >= MIN_TRADE_QUANTITY);
+});
+
 test("a farm can employ and scale beyond its minimum crew", () => {
   const farmers = Array.from({ length: 8 }, (_, index) =>
     household(`farmer-${index}`, "farmer", { inventory: { grain: 0 } }));
@@ -123,6 +149,21 @@ test("a farm can employ and scale beyond its minimum crew", () => {
   assert.ok(expanded.produced.grain > oneWorker.produced.grain * 7);
 });
 
+test("idle economic workers perform low-output subsistence work", () => {
+  const farmers = Array.from({ length: 5 }, (_, index) =>
+    household(`subsistence-${index}`, "farmer", { inventory: { grain: 0 } }));
+  const result = runBuildingProduction(
+    farmers,
+    [building("pasture", "no-herders")],
+    { season: "summer", laborAllocation: { construction: 0 } },
+  );
+
+  assert.equal(result.subsistence.assignedWorkers, 5);
+  assert.ok(result.subsistence.produced.grain > 0);
+  assert.ok(result.produced.grain > 0);
+  assert.ok(result.households.every((item) => item.employmentRatio === 1));
+});
+
 test("service work raises employment without creating building output", () => {
   const households = [
     household("farmer", "farmer"),
@@ -141,4 +182,34 @@ test("service work raises employment without creating building output", () => {
   assert.equal(result.summary.employedWorkers, 4);
   assert.equal(result.summary.employmentCoverage, 1);
   assert.equal(result.buildingWorkforce[0].assignedWorkers, 1);
+});
+
+test("wellbeing changes only when a meal is due or missed", () => {
+  const source = household("meal-cadence", "laborer", {
+    health: 60,
+    employmentRatio: 1,
+    needs: { food: 20 },
+  });
+  const noMealDue = updateHouseholdWellbeing(source, {
+    day: 1,
+    targetFood: 0,
+    consumedFood: 0,
+    unmetFood: 0,
+  });
+  const missedMeal = updateHouseholdWellbeing(source, {
+    day: 1,
+    targetFood: 1,
+    consumedFood: 0,
+    unmetFood: 1,
+  });
+  const fullMeal = updateHouseholdWellbeing(source, {
+    day: 1,
+    targetFood: 1,
+    consumedFood: 1,
+    unmetFood: 0,
+  });
+
+  assert.equal(noMealDue.health, 60);
+  assert.equal(missedMeal.health, 58);
+  assert.equal(fullMeal.health, 61);
 });
