@@ -177,18 +177,18 @@ export function evaluateDirectionalExpectations(results) {
       "employmentRate",
     ),
     directionalCheck(
-      "broken-chain-increases-shortages",
+      "broken-chain-increases-idle-processing",
       broken,
       "gte",
       baseline,
-      "inputShortageRate",
+      "idleBuildingRate",
     ),
     directionalCheck(
-      "expansion-improves-food",
+      "expansion-reduces-input-shortages",
       expanded,
-      "gte",
+      "lte",
       baseline,
-      "foodFulfillmentRate",
+      "inputShortageRate",
     ),
     directionalCheck(
       "expansion-improves-employment",
