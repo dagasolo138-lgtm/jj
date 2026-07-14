@@ -200,7 +200,7 @@ export default function EconomyMonitorTab({ state, dispatch }) {
   const view = useMemo(() => getEconomyMonitorViewModel(state), [state]);
   const mode = view.mode;
   const comparison = view.comparison;
-  const operatorMode = useMemo(resolveOperatorMode, []);
+  const operatorMode = useMemo(() => resolveOperatorMode(), []);
 
   function setMode(nextMode) {
     dispatch({ type: "AGENT_ECONOMY_SET_MODE", payload: { mode: nextMode } });
