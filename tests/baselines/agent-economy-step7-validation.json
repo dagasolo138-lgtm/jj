@@ -1,0 +1,30 @@
+{
+  "validatedCommit": "b70d93137de56792f5f73145c88b123413c3ea52",
+  "workflowRunId": 29315112812,
+  "nodeVersion": "24",
+  "agentEconomyTests": "success",
+  "legacyEconomyBaseline": "success",
+  "lint": "success",
+  "build": "success",
+  "schemaVersion": 6,
+  "defaultMode": "shadow",
+  "authoritativeEngine": "legacy",
+  "legacyOnlyMode": true,
+  "canaryRequestMode": true,
+  "requiredSafeQuarters": 8,
+  "automaticRollback": true,
+  "exceptionFallbackToLegacy": true,
+  "cashAccountingCheck": true,
+  "inventoryAccountingCheck": true,
+  "populationConservationCheck": true,
+  "priceBoundaryCheck": true,
+  "comparisonHistoryLimit": 40,
+  "legacyCheckpointStored": true,
+  "promotionBlockedUntilAdaptersReady": [
+    "treasury",
+    "estateInventory",
+    "population",
+    "victoryAndGameOver"
+  ],
+  "liveEconomyChanged": false
+}
