@@ -4,6 +4,7 @@ import {
   PRODUCTION_INPUT_BUFFER_DAYS,
   calibratedQuantity,
 } from "./economyCalibration.js";
+import { getReferencePrice } from "./priceBeliefSystem.js";
 
 const FOOD_COMMODITIES = ["grain", "flour", "fish", "livestock"];
 
@@ -93,14 +94,19 @@ export function generateHouseholdOrderIntents(households, context = {}) {
     }
 
     for (const [commodity, request] of buyRequests.entries()) {
+      const reason = request.reasons.join("+");
+      const productionInput = request.reasons.some((item) => item.startsWith("production-input"));
+      const beliefPrice = safePrice(household.priceBeliefs?.[commodity], "buy");
       buyOrders.push({
         id: `day-${day}-${household.id}-buy-${commodity}`,
         householdId: household.id,
         side: "buy",
         commodity,
         quantity: request.quantity,
-        price: safePrice(household.priceBeliefs?.[commodity], "buy"),
-        reason: request.reasons.join("+"),
+        price: productionInput
+          ? Math.max(beliefPrice, getReferencePrice(commodity) * 1.02)
+          : beliefPrice,
+        reason,
       });
     }
 
@@ -122,9 +128,20 @@ export function generateHouseholdOrderIntents(households, context = {}) {
   }
 
   const demandedCommodities = new Set(buyOrders.map((order) => order.commodity));
-  const sellOrders = sellerCandidates.filter((order) =>
-    demandedCommodities.has(order.commodity)
-    && order.quantity >= MIN_TRADE_QUANTITY);
+  const productionDemand = new Set(
+    buyOrders
+      .filter((order) => order.reason.includes("production-input"))
+      .map((order) => order.commodity),
+  );
+  const sellOrders = sellerCandidates
+    .filter((order) => demandedCommodities.has(order.commodity)
+      && order.quantity >= MIN_TRADE_QUANTITY)
+    .map((order) => productionDemand.has(order.commodity)
+      ? {
+        ...order,
+        price: Math.min(order.price, getReferencePrice(order.commodity) * 0.98),
+      }
+      : order);
 
   return [...buyOrders, ...sellOrders];
 }

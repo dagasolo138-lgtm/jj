@@ -45,7 +45,8 @@ export function applyHouseholdTaxAndWelfare(household, context = {}) {
   const taxPaid = money(Math.min(household.cash ?? 0, grossIncome * taxRate));
   let cash = money((Number(household.cash) || 0) - taxPaid);
   const foodNeed = Math.max(0, Number(household.needs?.food) || 0);
-  const welfareEligible = foodNeed >= 75 && cash < weight * 2.5;
+  const unmetFood = Math.max(0, Number(context.unmetFood) || 0);
+  const welfareEligible = (foodNeed >= 75 || unmetFood > 0) && cash < weight * 2.5;
   const welfarePaid = welfareEligible ? money(Math.min(weight * 0.45, weight * 2.5 - cash)) : 0;
   cash = money(cash + welfarePaid);
 
@@ -59,9 +60,15 @@ export function applyHouseholdTaxAndWelfare(household, context = {}) {
 export function updateHouseholdWellbeing(household, context = {}) {
   const needs = normalizeNeeds(household.needs);
   const unmetFood = Math.max(0, Number(context.unmetFood) || 0);
-  const employmentPenalty = household.occupation === "unemployed" ? 2 : 0;
-  const hungerPenalty = unmetFood > 0 || needs.food >= 80 ? 3 : needs.food >= 60 ? 1 : 0;
-  const healthRecovery = unmetFood === 0 && needs.food < 50 ? 1 : 0;
+  const targetFood = Math.max(0, Number(context.targetFood) || 0);
+  const consumedFood = Math.max(0, Number(context.consumedFood) || 0);
+  const employmentPenalty = Number(household.employmentRatio) > 0 ? 0 : 2;
+  const hungerPenalty = targetFood > 0 && unmetFood > 0
+    ? 2
+    : needs.food >= 90 ? 1 : 0;
+  const healthRecovery = targetFood > 0 && consumedFood >= targetFood
+    ? 1
+    : context.day % 14 === 0 && needs.food < 40 ? 1 : 0;
   const health = Math.max(0, Math.min(100,
     Math.round((Number(household.health) || 0) + healthRecovery - hungerPenalty),
   ));

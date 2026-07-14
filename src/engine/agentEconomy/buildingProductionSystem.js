@@ -8,6 +8,17 @@ export const SHADOW_INPUT_OVERRIDES = {
 };
 
 const DAYS_PER_SEASON = 30;
+const SUBSISTENCE_RATES = {
+  farmer: { grain: 0.035 },
+  fisherman: { fish: 0.02 },
+  herder: { livestock: 0.008 },
+};
+const SUBSISTENCE_SEASON_MULTIPLIERS = {
+  spring: 1,
+  summer: 1.1,
+  autumn: 1.15,
+  winter: 0.65,
+};
 
 function quantity(value) {
   if (!Number.isFinite(value)) return 0;
@@ -122,6 +133,63 @@ function sumInto(target, source) {
   }
 }
 
+function runSubsistenceProduction(households, workerLimit, context = {}) {
+  let remainingWorkers = Math.max(0, Math.floor(Number(workerLimit) || 0));
+  const produced = {};
+  const assignments = [];
+  const seasonMultiplier = SUBSISTENCE_SEASON_MULTIPLIERS[context.season] ?? 1;
+
+  for (const household of households) {
+    if (remainingWorkers <= 0) break;
+    const recipe = SUBSISTENCE_RATES[household.occupation];
+    if (!recipe) continue;
+    const available = Math.max(
+      0,
+      Math.floor(Number(household.weight) || 0) - Math.floor(Number(household.assignedWorkers) || 0),
+    );
+    const workers = Math.min(available, remainingWorkers);
+    if (workers <= 0) continue;
+    const health = Math.max(0, Math.min(100, Number(household.health) || 0));
+    const satisfaction = Math.max(0, Math.min(100, Number(household.satisfaction) || 0));
+    const quality = Math.max(0.35, Math.min(1.1, 0.45 + health / 250 + satisfaction / 500));
+    const householdProduced = {};
+    for (const [commodity, rate] of Object.entries(recipe)) {
+      const amount = quantity(rate * workers * seasonMultiplier * quality);
+      if (amount <= 0) continue;
+      household.inventory = {
+        ...household.inventory,
+        [commodity]: quantity(quantity(household.inventory?.[commodity]) + amount),
+      };
+      householdProduced[commodity] = amount;
+      produced[commodity] = quantity(quantity(produced[commodity]) + amount);
+    }
+    const assignment = {
+      householdId: household.id,
+      workers,
+      buildingInstanceId: `subsistence-${household.occupation}`,
+      buildingType: "subsistence",
+      service: true,
+    };
+    household.workAssignments = [...(household.workAssignments ?? []), assignment];
+    household.assignedWorkers = Math.min(
+      household.weight,
+      Math.max(0, Number(household.assignedWorkers) || 0) + workers,
+    );
+    household.employmentRatio = household.assignedWorkers / Math.max(1, household.weight);
+    household.workplaceId ??= assignment.buildingInstanceId;
+    assignments.push({ ...assignment, produced: householdProduced });
+    remainingWorkers -= workers;
+  }
+
+  return {
+    produced,
+    totalProduced: quantity(Object.values(produced).reduce((total, amount) => total + amount, 0)),
+    assignedWorkers: assignments.reduce((total, assignment) => total + assignment.workers, 0),
+    assignments,
+    remainingWorkers,
+  };
+}
+
 export function runBuildingProduction(households, buildings, context = {}) {
   const workforce = allocateBuildingWorkforce(
     households,
@@ -232,6 +300,23 @@ export function runBuildingProduction(households, buildings, context = {}) {
     });
   }
 
+  const subsistence = runSubsistenceProduction(
+    nextHouseholds,
+    workforce.summary.unassignedEconomicWorkers,
+    context,
+  );
+  sumInto(produced, subsistence.produced);
+  const workforceSummary = {
+    ...workforce.summary,
+    subsistenceAssignedWorkers: subsistence.assignedWorkers,
+    employedWorkers: workforce.summary.employedWorkers + subsistence.assignedWorkers,
+    unassignedEconomicWorkers: subsistence.remainingWorkers,
+    employmentCoverage: workforce.summary.economicWorkerCapacity > 0
+      ? (workforce.summary.employedWorkers + subsistence.assignedWorkers)
+        / workforce.summary.economicWorkerCapacity
+      : 1,
+  };
+
   return {
     households: nextHouseholds,
     produced,
@@ -239,10 +324,11 @@ export function runBuildingProduction(households, buildings, context = {}) {
     totalProduced: quantity(Object.values(produced).reduce((total, amount) => total + amount, 0)),
     totalInputsConsumed: quantity(Object.values(consumed).reduce((total, amount) => total + amount, 0)),
     buildingReports,
-    workforce: workforce.summary,
+    subsistence,
+    workforce: workforceSummary,
     metrics: {
-      requiredWorkers: workforce.summary.requiredWorkers,
-      assignedWorkers: workforce.summary.assignedWorkers,
+      requiredWorkers: workforceSummary.requiredWorkers,
+      assignedWorkers: workforceSummary.assignedWorkers,
       idleBuildingDays,
       inputShortageEvents,
     },

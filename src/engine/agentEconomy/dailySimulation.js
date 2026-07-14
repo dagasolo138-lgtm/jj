@@ -109,18 +109,31 @@ function aggregateConsumption(households, rng, context) {
   let foodConsumed = 0;
   let unmetFood = 0;
   const unmetFoodByHousehold = {};
+  const targetFoodByHousehold = {};
+  const consumedFoodByHousehold = {};
   const nextHouseholds = households.map((household) => {
     const result = consumeHousehold(household, rng, context);
     totalConsumed += result.totalConsumed;
     foodConsumed += result.consumedFood;
     unmetFood += result.unmetFood;
     unmetFoodByHousehold[household.id] = result.unmetFood;
+    targetFoodByHousehold[household.id] = result.targetFood;
+    consumedFoodByHousehold[household.id] = result.consumedFood;
     for (const [commodity, amount] of Object.entries(result.consumed)) {
       consumedByCommodity[commodity] = (consumedByCommodity[commodity] ?? 0) + amount;
     }
     return result.household;
   });
-  return { households: nextHouseholds, consumedByCommodity, totalConsumed, foodConsumed, unmetFood, unmetFoodByHousehold };
+  return {
+    households: nextHouseholds,
+    consumedByCommodity,
+    totalConsumed,
+    foodConsumed,
+    unmetFood,
+    unmetFoodByHousehold,
+    targetFoodByHousehold,
+    consumedFoodByHousehold,
+  };
 }
 
 export function simulateAgentDay(state, rng, context = {}) {
@@ -193,6 +206,8 @@ export function simulateAgentDay(state, rng, context = {}) {
   households = households.map((household) => updateHouseholdWellbeing(household, {
     ...dayContext,
     unmetFood: consumption.unmetFoodByHousehold[household.id] ?? 0,
+    targetFood: consumption.targetFoodByHousehold[household.id] ?? 0,
+    consumedFood: consumption.consumedFoodByHousehold[household.id] ?? 0,
   }));
 
   let metrics = createMetrics(state?.metrics);
