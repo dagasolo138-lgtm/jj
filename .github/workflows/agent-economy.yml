@@ -11,10 +11,12 @@ on:
       - src/components/TutorialHint.jsx
       - src/App.jsx
       - tests/unit/agentEconomy*.test.js
+      - tests/stress/**
       - tests/baselines/agent-economy-step*.json
       - package.json
       - package-lock.json
       - .github/workflows/agent-economy.yml
+      - .github/workflows/agent-economy-stress.yml
   push:
     branches: [main]
     paths:
@@ -26,10 +28,12 @@ on:
       - src/components/TutorialHint.jsx
       - src/App.jsx
       - tests/unit/agentEconomy*.test.js
+      - tests/stress/**
       - tests/baselines/agent-economy-step*.json
       - package.json
       - package-lock.json
       - .github/workflows/agent-economy.yml
+      - .github/workflows/agent-economy-stress.yml
 
 jobs:
   verify:
