@@ -1,0 +1,36 @@
+name: Release guardrails lint diagnostics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/release-guardrails-lint-diagnostics.yml
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Capture lint output
+        run: |
+          set +e
+          npm run lint > /tmp/lint-output.txt 2>&1
+          status=$?
+          tail -n 160 /tmp/lint-output.txt > tests/baselines/release-guardrails-lint-output.txt
+          echo "LINT_EXIT_STATUS=$status" >> tests/baselines/release-guardrails-lint-output.txt
+          exit 0
+      - name: Commit diagnostics
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/baselines/release-guardrails-lint-output.txt
+          git commit -m "chore(agent-economy): record release guardrail lint failure"
+          git push
