@@ -1,0 +1,39 @@
+name: Release guardrails patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/apply_release_guardrails_patch.py
+      - .github/workflows/release-guardrails-patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/apply_release_guardrails_patch.py
+      - name: Commit guardrails
+        run: |
+          if git diff --quiet; then
+            echo "No changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/engine/agentEconomy/engineControlSystem.js \
+            src/engine/agentEconomy/canaryTransactionSystem.js \
+            src/engine/agentEconomy/index.js \
+            src/engine/agentEconomy/economyMonitorSelectors.js \
+            src/components/EconomyMonitorTab.jsx \
+            src/engine/agentEconomy/householdFactory.js \
+            tests/unit/agentEconomyCanaryCampaign.test.js
+          git commit -m "feat(agent-economy): integrate release guardrails"
+          git push
