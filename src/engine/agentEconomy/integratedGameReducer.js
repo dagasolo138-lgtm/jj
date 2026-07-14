@@ -2,7 +2,8 @@ import {
   gameReducer as legacyGameReducer,
   initialState as legacyInitialState,
 } from "../gameReducer.js";
-import { hydrateAgentEconomy } from "./householdUtils.js";
+import { AGENT_DAYS_PER_QUARTER, simulateAgentQuarter } from "./dailySimulation.js";
+import { hydrateAgentEconomy, reconcileAgentEconomyPopulation } from "./householdUtils.js";
 
 function normalizePopulation(value) {
   if (!Number.isFinite(value)) return 0;
@@ -38,6 +39,12 @@ export const initialState = ensureAgentEconomyState(
   "initial-state",
 );
 
+function shouldRunShadowQuarter(preparedState, action) {
+  return action?.type === "SIMULATE_SEASON"
+    && preparedState.phase === "management"
+    && preparedState.turn < 40;
+}
+
 export function gameReducer(state, action) {
   const preparedState = ensureAgentEconomyState(
     state ?? initialState,
@@ -52,7 +59,30 @@ export function gameReducer(state, action) {
     origin = "save-migration";
   }
 
-  return ensureAgentEconomyState(nextState, origin);
+  const reconciledState = ensureAgentEconomyState(nextState, origin);
+  if (!shouldRunShadowQuarter(preparedState, action)) return reconciledState;
+
+  const simulatedAgentEconomy = simulateAgentQuarter(
+    preparedState.agentEconomy,
+    {
+      days: AGENT_DAYS_PER_QUARTER,
+      turn: preparedState.turn,
+      season: preparedState.season,
+      taxRate: preparedState.taxRate,
+    },
+  );
+
+  return {
+    ...reconciledState,
+    agentEconomy: reconcileAgentEconomyPopulation(
+      simulatedAgentEconomy,
+      reconciledState.population,
+      {
+        createdTurn: preparedState.turn,
+        origin: "shadow-quarter-resolution",
+      },
+    ),
+  };
 }
 
 export default gameReducer;
