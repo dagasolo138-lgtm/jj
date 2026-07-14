@@ -118,35 +118,49 @@ function applyControlAction(state, action) {
 
   if (action?.type === "AGENT_ECONOMY_SET_MODE") {
     const mode = action.payload?.mode;
+    const currentControl = state.agentEconomy.engineControl;
+    const engineControl = isCanaryCampaignRunning(currentControl)
+      && mode !== ENGINE_MODES.CANARY
+      ? stopCanaryCampaign(currentControl, `mode-change:${mode ?? "unknown"}`, state.turn)
+      : requestEngineMode(currentControl, mode, state.turn);
+    const running = isCanaryCampaignRunning(engineControl)
+      && engineControl.activeMode === ENGINE_MODES.CANARY
+      && engineControl.writeBackEnabled === true;
     return {
       ...state,
       agentEconomy: {
         ...state.agentEconomy,
-        engineControl: requestEngineMode(
-          state.agentEconomy.engineControl,
-          mode,
-          state.turn,
-        ),
+        enabled: running,
+        shadowMode: !running,
+        liveStateAdapter: {
+          ...(state.agentEconomy.liveStateAdapter ?? {}),
+          writeBackEnabled: running,
+          shadowOnly: !running,
+        },
+        engineControl,
       },
     };
   }
 
   if (action?.type === "AGENT_ECONOMY_SET_WRITE_BACK") {
     const enabled = action.payload?.enabled === true;
-    const engineControl = setEngineWriteBackEnabled(
-      state.agentEconomy.engineControl,
-      enabled,
-    );
+    const currentControl = state.agentEconomy.engineControl;
+    const engineControl = !enabled && isCanaryCampaignRunning(currentControl)
+      ? stopCanaryCampaign(currentControl, "writeback-disabled", state.turn)
+      : setEngineWriteBackEnabled(currentControl, enabled);
+    const running = isCanaryCampaignRunning(engineControl)
+      && engineControl.activeMode === ENGINE_MODES.CANARY
+      && engineControl.writeBackEnabled === true;
     return {
       ...state,
       agentEconomy: {
         ...state.agentEconomy,
-        enabled: false,
-        shadowMode: true,
+        enabled: running,
+        shadowMode: !running,
         liveStateAdapter: {
           ...(state.agentEconomy.liveStateAdapter ?? {}),
-          writeBackEnabled: engineControl.writeBackEnabled,
-          shadowOnly: true,
+          writeBackEnabled: running,
+          shadowOnly: !running,
         },
         engineControl,
       },

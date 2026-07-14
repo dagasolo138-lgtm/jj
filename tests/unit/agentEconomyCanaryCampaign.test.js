@@ -295,3 +295,58 @@ test("monitor selector exposes campaign progress and recent transactions", () =>
   assert.equal(view.mode.writeBackEnabled, true);
   assert.equal(view.transactions[0].id, "tx-visible");
 });
+
+
+test("switching away from canary aborts a running campaign", () => {
+  const started = gameReducer(initialState, {
+    type: "START_GAME",
+    payload: { difficulty: "normal" },
+  });
+  const running = gameReducer({
+    ...started,
+    agentEconomy: {
+      ...started.agentEconomy,
+      engineControl: readyControl(1),
+    },
+  }, {
+    type: "AGENT_ECONOMY_START_CANARY_CAMPAIGN",
+    payload: { quarterLimit: 3 },
+  });
+  const shadow = gameReducer(running, {
+    type: "AGENT_ECONOMY_SET_MODE",
+    payload: { mode: ENGINE_MODES.SHADOW },
+  });
+
+  assert.equal(shadow.agentEconomy.engineControl.canaryCampaign.status, CANARY_CAMPAIGN_STATUS.ABORTED);
+  assert.equal(shadow.agentEconomy.engineControl.activeMode, ENGINE_MODES.SHADOW);
+  assert.equal(shadow.agentEconomy.engineControl.writeBackEnabled, false);
+  assert.equal(shadow.agentEconomy.liveStateAdapter.writeBackEnabled, false);
+  assert.equal(shadow.agentEconomy.enabled, false);
+});
+
+test("disabling write-back aborts the campaign instead of leaving a ghost run", () => {
+  const started = gameReducer(initialState, {
+    type: "START_GAME",
+    payload: { difficulty: "normal" },
+  });
+  const running = gameReducer({
+    ...started,
+    agentEconomy: {
+      ...started.agentEconomy,
+      engineControl: readyControl(1),
+    },
+  }, {
+    type: "AGENT_ECONOMY_START_CANARY_CAMPAIGN",
+    payload: { quarterLimit: 3 },
+  });
+  const disabled = gameReducer(running, {
+    type: "AGENT_ECONOMY_SET_WRITE_BACK",
+    payload: { enabled: false },
+  });
+
+  assert.equal(disabled.agentEconomy.engineControl.canaryCampaign.status, CANARY_CAMPAIGN_STATUS.ABORTED);
+  assert.equal(disabled.agentEconomy.engineControl.canaryCampaign.lastStopReason, "writeback-disabled");
+  assert.equal(disabled.agentEconomy.engineControl.writeBackEnabled, false);
+  assert.equal(disabled.agentEconomy.engineControl.authority, ENGINE_MODES.LEGACY);
+  assert.equal(disabled.agentEconomy.shadowMode, true);
+});
