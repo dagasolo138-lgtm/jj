@@ -1,0 +1,102 @@
+{
+  "calibrationStep": 1,
+  "calibrationVersion": 1,
+  "validatedCommit": "722a278badb45e3461754a8a5e9b275ee742dbd8",
+  "workflowRunId": 29347413615,
+  "artifactId": 8316670783,
+  "nodeVersion": "24",
+  "configuration": {
+    "scenarioCount": 7,
+    "seedsPerScenario": 12,
+    "quartersPerScenario": 12,
+    "daysPerSeed": 360,
+    "totalQuarterSimulations": 1008,
+    "totalDaySimulations": 30240,
+    "sharedDeterministicSeeds": true,
+    "frozenEstateInventory": true
+  },
+  "standards": {
+    "hardGates": {
+      "completionRate": 100,
+      "invariantFailureRate": 0,
+      "maxQuarterRuntimeMs": 250
+    },
+    "defaultEstateTargets": {
+      "economicSurvivalRateMin": 95,
+      "foodFulfillmentRateMin": 85,
+      "foodFulfillmentRateMax": 98,
+      "employmentRateMin": 60,
+      "employmentRateMax": 85,
+      "idleBuildingRateMax": 20,
+      "inputShortageRateMax": 20,
+      "tradesPerDayMin": 0.15,
+      "failedOrdersPerTradeMax": 25,
+      "extremeInflationSeedRateMax": 5,
+      "priceCrashSeedRateMax": 5,
+      "povertyRateMax": 25,
+      "averageHealthMin": 55,
+      "averageSatisfactionMin": 40,
+      "commodityPriceRatioMin": 0.6,
+      "commodityPriceRatioMax": 2
+    }
+  },
+  "scenarios": [
+    "default-estate",
+    "agricultural-shortage",
+    "labor-shortage",
+    "broken-supply-chain",
+    "high-tax",
+    "low-tax",
+    "expanded-estate"
+  ],
+  "result": {
+    "hardStatus": "pass",
+    "calibrationStatus": "needs-calibration",
+    "targetMissCount": 31,
+    "directionalStatus": "pass",
+    "directionalChecksPassed": 6,
+    "directionalChecksTotal": 6
+  },
+  "defaultEstateObserved": {
+    "economicSurvivalRate": 100,
+    "foodFulfillmentRate": 53.72,
+    "employmentRate": 80,
+    "idleBuildingRate": 50,
+    "inputShortageRate": 50,
+    "tradesPerDay": 0.0028,
+    "failedOrdersPerTrade": 12966.67,
+    "extremeInflationSeedRate": 0,
+    "priceCrashSeedRate": 0,
+    "povertyRate": 0,
+    "averageHealth": 99.68,
+    "averageSatisfaction": 58.07,
+    "minimumCommodityPriceRatio": 1,
+    "maximumCommodityPriceRatio": 1.04,
+    "missedTargets": [
+      "food-fulfillment-rate-minimum",
+      "idle-building-rate",
+      "input-shortage-rate",
+      "trades-per-day",
+      "failed-orders-per-trade"
+    ]
+  },
+  "expandedEstateObserved": {
+    "economicSurvivalRate": 100,
+    "foodFulfillmentRate": 54.65,
+    "employmentRate": 90,
+    "idleBuildingRate": 40.58,
+    "inputShortageRate": 23.85,
+    "tradesPerDay": 0.5028,
+    "failedOrdersPerTrade": 70.2,
+    "extremeInflationSeedRate": 0,
+    "priceCrashSeedRate": 0,
+    "povertyRate": 0,
+    "averageHealth": 99.75,
+    "averageSatisfaction": 59.52,
+    "minimumCommodityPriceRatio": 0.778,
+    "maximumCommodityPriceRatio": 1.04
+  },
+  "parameterChangesMadeByCalibrationStep": false,
+  "promotionDecision": "blocked",
+  "authoritativeEngine": "legacy"
+}
