@@ -6,6 +6,9 @@ on:
     paths:
       - .github/workflows/calibration-test-diagnostic.yml
 
+env:
+  DIAGNOSTIC_VERSION: "2"
+
 jobs:
   diagnostic:
     runs-on: ubuntu-latest
