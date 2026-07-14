@@ -1,105 +1,19 @@
 
-> the-lords-ledger@1.0.0 test:agent-economy
-> node --test tests/unit/agentEconomy*.test.js
+> the-lords-ledger@1.0.0 lint
+> eslint .
 
-✔ same seed and input produce an identical 30-day quarter (115.765634ms)
-✔ saved RNG state resumes the same deterministic trajectory (54.378125ms)
-✔ 40 quarters stay finite, serializable, and population-safe (4339.805458ms)
-✔ simulateAgentDay rejects uncontrolled randomness (1.045372ms)
-✔ integrated reducer runs 30 shadow days without changing live settlement (42.672689ms)
-✔ new games start in shadow mode with legacy authority (16.711502ms)
-✔ season simulation records a safe engine comparison without changing legacy authority (71.223047ms)
-✔ legacy-only mode skips the candidate engine (14.799131ms)
-✔ canary requests remain blocked while game-state adapters are incomplete (8.37971ms)
-✔ eight safe comparisons and complete adapters make canary eligible (0.788561ms)
-✔ unsafe comparison automatically rolls canary back to shadow (0.342703ms)
-✔ comparison detects corrupt household output (12.215761ms)
-✔ comparison history is capped at forty quarters (2.197746ms)
-✔ creates deterministic household proxies with exact population weight (18.226267ms)
-✔ households contain serializable inventory, needs, and price memory (5.701573ms)
-✔ population reconciliation preserves household memory while growing and shrinking (10.189267ms)
-✔ legacy and malformed saves are hydrated into the current schema (1.5555ms)
-✔ new games and loaded saves always contain population-synchronized household state (20.439208ms)
-✔ direct population gains reconcile household weights (11.33624ms)
-✔ economy tab is present exactly once (1.311021ms)
-✔ commodity labels are readable (0.262974ms)
-✔ monitor aggregates household employment poverty and market pressure (19.259433ms)
-✔ monitor reflects a real building-driven daily simulation (15.64033ms)
-✔ monitor reports dual-engine safety issues without throwing (2.645566ms)
-✔ order books sort bids high-to-low and asks low-to-high (1.734326ms)
-✔ matching orders transfer inventory and cash at midpoint price (2.275131ms)
-✔ trade settlement preserves fractional inventory remainders (0.822674ms)
-✔ uncrossed orders do not trade and remain as failed orders (0.627287ms)
-✔ cash and inventory constraints cap partial fills (0.660059ms)
-✔ failed urgent buy orders raise the household price band (3.935788ms)
-✔ unsold surplus lowers the seller price band (0.535675ms)
-✔ completed trade moves buyer and seller beliefs in opposite directions (1.936275ms)
-✔ repeated failures cannot push beliefs outside commodity bounds (8.387044ms)
-✔ market index records volume-weighted price and trend (0.978107ms)
-✔ 40-quarter price learning remains bounded and serializable (3726.650447ms)
-✔ matching households are assigned to building workplaces (3.801676ms)
-✔ a building without the required occupation stays idle (1.034272ms)
-✔ staffed farms produce and ruined farms do not (1.093132ms)
-✔ converter buildings consume inputs and produce outputs (0.717306ms)
-✔ missing converter inputs create production needs and market buy orders (2.752456ms)
-✔ shadow sawmills and tanneries form real input chains (0.74059ms)
-✔ understaffing reduces output without inventing workers (1.07656ms)
-✔ construction allocation reduces workers available to the estate (0.45798ms)
-✔ an empty estate cannot produce through occupation-only fallback (7.427933ms)
-✔ 40 building-driven quarters remain finite and population-safe (1043.359368ms)
-✔ stress seed generation is deterministic and unique (2.111444ms)
-✖ the same stress seed produces the same economic result (196.092918ms)
-✖ small multi-seed scan reports hard invariants separately from balance (196.712253ms)
-✔ summary fails hard when a seed violates invariants (3.016142ms)
-ℹ tests 49
-ℹ suites 0
-ℹ pass 47
-ℹ fail 2
-ℹ cancelled 0
-ℹ skipped 0
-ℹ todo 0
-ℹ duration_ms 4704.70567
 
-✖ failing tests:
+/home/runner/work/jj/jj/tests/stress/runAgentEconomyStress.js
+  13:20  error  'process' is not defined  no-undef
+  14:58  error  'process' is not defined  no-undef
+  21:20  error  'process' is not defined  no-undef
+  33:3   error  'process' is not defined  no-undef
+  36:16  error  'process' is not defined  no-undef
+  36:53  error  'process' is not defined  no-undef
+  37:23  error  'process' is not defined  no-undef
+  38:6   error  'process' is not defined  no-undef
+  65:42  error  'process' is not defined  no-undef
+  66:58  error  'process' is not defined  no-undef
 
-test at tests/unit/agentEconomyStressHarness.test.js:26:1
-✖ the same stress seed produces the same economic result (196.092918ms)
-  AssertionError [ERR_ASSERTION]: inventory-accounting-error:-23.9663
-  
-  false !== true
-  
-      at TestContext.<anonymous> (file:///home/runner/work/jj/jj/tests/unit/agentEconomyStressHarness.test.js:31:10)
-      at Test.runInAsyncScope (node:async_hooks:227:14)
-      at Test.run (node:internal/test_runner/test:1325:25)
-      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
-      at Test.postRun (node:internal/test_runner/test:1465:19)
-      at Test.run (node:internal/test_runner/test:1390:12)
-      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
-    generatedMessage: false,
-    code: 'ERR_ASSERTION',
-    actual: false,
-    expected: true,
-    operator: 'strictEqual',
-    diff: 'simple'
-  }
+✖ 10 problems (10 errors, 0 warnings)
 
-test at tests/unit/agentEconomyStressHarness.test.js:38:1
-✖ small multi-seed scan reports hard invariants separately from balance (196.712253ms)
-  AssertionError [ERR_ASSERTION]: 3 seed runs failed hard invariants
-  
-  'fail' !== 'pass'
-  
-      at TestContext.<anonymous> (file:///home/runner/work/jj/jj/tests/unit/agentEconomyStressHarness.test.js:48:10)
-      at Test.runInAsyncScope (node:async_hooks:227:14)
-      at Test.run (node:internal/test_runner/test:1325:25)
-      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
-      at Test.postRun (node:internal/test_runner/test:1465:19)
-      at Test.run (node:internal/test_runner/test:1390:12)
-      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
-    generatedMessage: false,
-    code: 'ERR_ASSERTION',
-    actual: 'fail',
-    expected: 'pass',
-    operator: 'strictEqual',
-    diff: 'simple'
-  }
