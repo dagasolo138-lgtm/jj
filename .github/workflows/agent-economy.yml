@@ -15,6 +15,7 @@ on:
       - tests/baselines/agent-economy-step*.json
       - package.json
       - package-lock.json
+      - eslint.config.js
       - .github/workflows/agent-economy.yml
       - .github/workflows/agent-economy-stress.yml
   push:
@@ -32,6 +33,7 @@ on:
       - tests/baselines/agent-economy-step*.json
       - package.json
       - package-lock.json
+      - eslint.config.js
       - .github/workflows/agent-economy.yml
       - .github/workflows/agent-economy-stress.yml
 
