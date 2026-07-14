@@ -36,14 +36,14 @@ jobs:
         shell: bash
         run: |
           set -o pipefail
-          npm run test:unit 2>&1 | tee tests/baselines/agent-economy-step2-debug.log
+          npm run test:unit 2>&1 | tee tests/baselines/agent-economy-step2-debug.txt
 
       - name: Commit diagnostic output
         if: steps.unit.outcome != 'success'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add tests/baselines/agent-economy-step2-debug.log
+          git add -f tests/baselines/agent-economy-step2-debug.txt
           git commit -m "test(agent-economy): capture step 2 failure"
           git push origin HEAD:main
 
@@ -59,7 +59,7 @@ jobs:
 
       - name: Record validation
         run: |
-          rm -f tests/baselines/agent-economy-step2-debug.log
+          rm -f tests/baselines/agent-economy-step2-debug.txt
           cat > tests/baselines/agent-economy-step2-validation.json <<EOF
           {
             "validatedCommit": "${GITHUB_SHA}",
@@ -78,7 +78,8 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/App.jsx tests/unit/agentEconomyHouseholds.test.js tests/baselines/agent-economy-step2-validation.json tests/baselines/agent-economy-step2-debug.log
+          git add src/App.jsx tests/unit/agentEconomyHouseholds.test.js tests/baselines/agent-economy-step2-validation.json
+          git add -u tests/baselines/agent-economy-step2-debug.txt || true
           git diff --cached --quiet && exit 0
           git commit -m "feat(agent-economy): activate household state wrapper"
           git push origin HEAD:main
