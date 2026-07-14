@@ -114,7 +114,7 @@ test("missing converter inputs create production needs and market buy orders", (
   assert.equal(result.buildingReports[0].status, "input-shortage");
   assert.ok(nextArtisan.productionNeeds.grain > 0);
   assert.ok(grainOrder);
-  assert.ok(grainOrder.quantity >= 1);
+  assert.ok(grainOrder.quantity > 0);
 });
 
 test("shadow sawmills and tanneries form real input chains", () => {

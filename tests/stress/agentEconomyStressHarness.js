@@ -135,7 +135,10 @@ export function runStressSeed(seed, options = {}) {
     ...(options.laborAllocation ?? {}),
   };
   const taxRate = options.taxRate ?? legacyInitialState.taxRate;
-  const initial = createInitialAgentEconomy(population, { seed });
+  const initial = createInitialAgentEconomy(population, {
+    seed,
+    estateInventory: options.estateInventory ?? legacyInitialState.inventory,
+  });
   const initialTotals = getAgentEconomyTotals(initial);
   let state = initial;
   let exception = null;
