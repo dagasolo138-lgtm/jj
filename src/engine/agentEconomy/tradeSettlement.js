@@ -7,13 +7,18 @@ function money(value) {
   return Number(Math.max(0, value).toFixed(2));
 }
 
-function quantity(value) {
+function orderQuantity(value) {
   if (!Number.isFinite(value)) return 0;
   return Math.max(0, Math.floor(value));
 }
 
+function inventoryQuantity(value) {
+  if (!Number.isFinite(value)) return 0;
+  return Number(Math.max(0, value).toFixed(4));
+}
+
 function getAvailableInventory(household, commodity) {
-  return quantity(household?.inventory?.[commodity]);
+  return inventoryQuantity(household?.inventory?.[commodity]);
 }
 
 function getAffordableQuantity(household, price) {
@@ -59,7 +64,7 @@ function settleTrade(householdsById, bid, ask, commodity, sequence) {
   const tradePrice = money((bid.price + ask.price) / 2);
   const affordable = getAffordableQuantity(buyer, tradePrice);
   const available = getAvailableInventory(seller, commodity);
-  const tradeQuantity = quantity(Math.min(
+  const tradeQuantity = orderQuantity(Math.min(
     bid.remainingQuantity,
     ask.remainingQuantity,
     affordable,
@@ -71,8 +76,10 @@ function settleTrade(householdsById, bid, ask, commodity, sequence) {
   const tradeValue = money(tradeQuantity * tradePrice);
   const buyerInventory = { ...buyer.inventory };
   const sellerInventory = { ...seller.inventory };
-  buyerInventory[commodity] = getAvailableInventory(buyer, commodity) + tradeQuantity;
-  sellerInventory[commodity] = available - tradeQuantity;
+  buyerInventory[commodity] = inventoryQuantity(
+    getAvailableInventory(buyer, commodity) + tradeQuantity,
+  );
+  sellerInventory[commodity] = inventoryQuantity(available - tradeQuantity);
 
   const nextBuyer = updateTradeMemory({
     ...buyer,
@@ -158,7 +165,7 @@ export function settleOrderBooks(households, orders) {
         const seller = householdsById.get(ask.householdId);
         if (!buyer || getAffordableQuantity(buyer, money((bid.price + ask.price) / 2)) <= 0) {
           bidIndex += 1;
-        } else if (!seller || getAvailableInventory(seller, commodity) <= 0) {
+        } else if (!seller || getAvailableInventory(seller, commodity) < 1) {
           askIndex += 1;
         } else {
           break;
