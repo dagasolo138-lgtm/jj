@@ -7,7 +7,7 @@ import {
 } from "./priceBeliefSystem.js";
 import { DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
 
-export const AGENT_ECONOMY_SCHEMA_VERSION = 4;
+export const AGENT_ECONOMY_SCHEMA_VERSION = 5;
 export const DEFAULT_MAX_HOUSEHOLDS = 120;
 
 export const HOUSEHOLD_COMMODITIES = [
@@ -34,6 +34,11 @@ export const HOUSEHOLD_COMMODITIES = [
 function toNonNegativeInteger(value, fallback = 0) {
   if (!Number.isFinite(value)) return fallback;
   return Math.max(0, Math.floor(value));
+}
+
+function toNonNegativeQuantity(value, fallback = 0) {
+  if (!Number.isFinite(value)) return fallback;
+  return Number(Math.max(0, value).toFixed(4));
 }
 
 function createEmptyHouseholdInventory() {
@@ -63,6 +68,32 @@ function createPriceHistory(priceBeliefs) {
   );
 }
 
+function normalizeProductionNeeds(productionNeeds) {
+  const source = productionNeeds && typeof productionNeeds === "object" ? productionNeeds : {};
+  const normalized = {};
+  for (const commodity of HOUSEHOLD_COMMODITIES) {
+    const amount = toNonNegativeQuantity(source[commodity]);
+    if (amount > 0) normalized[commodity] = amount;
+  }
+  return normalized;
+}
+
+function normalizeWorkAssignments(assignments) {
+  if (!Array.isArray(assignments)) return [];
+  return assignments
+    .filter((assignment) => assignment && typeof assignment === "object")
+    .map((assignment) => ({
+      householdId: typeof assignment.householdId === "string" ? assignment.householdId : "",
+      workers: Math.max(1, toNonNegativeInteger(assignment.workers, 1)),
+      buildingInstanceId: typeof assignment.buildingInstanceId === "string"
+        ? assignment.buildingInstanceId
+        : "",
+      buildingType: typeof assignment.buildingType === "string" ? assignment.buildingType : "unknown",
+    }))
+    .filter((assignment) => assignment.householdId && assignment.buildingInstanceId)
+    .slice(-12);
+}
+
 export function createHousehold({
   id,
   index = 0,
@@ -88,6 +119,10 @@ export function createHousehold({
     priceBeliefs,
     priceHistory: createPriceHistory(priceBeliefs),
     workplaceId: null,
+    workAssignments: [],
+    assignedWorkers: 0,
+    employmentRatio: 0,
+    productionNeeds: {},
     homeId: null,
     health: 78 + (normalizedIndex % 18),
     satisfaction: 48 + (normalizedIndex % 17),
@@ -119,7 +154,7 @@ export function normalizeHousehold(household, index = 0) {
     : {};
   const normalizedInventory = {};
   for (const commodity of HOUSEHOLD_COMMODITIES) {
-    normalizedInventory[commodity] = toNonNegativeInteger(
+    normalizedInventory[commodity] = toNonNegativeQuantity(
       inventorySource[commodity],
       fallback.inventory[commodity],
     );
@@ -138,6 +173,12 @@ export function normalizeHousehold(household, index = 0) {
       : [normalizedBeliefs[commodity].lastPrice];
   }
 
+  const workAssignments = normalizeWorkAssignments(source.workAssignments);
+  const assignedWorkers = Math.min(
+    weight,
+    workAssignments.reduce((total, assignment) => total + assignment.workers, 0),
+  );
+
   return {
     ...fallback,
     ...source,
@@ -150,6 +191,14 @@ export function normalizeHousehold(household, index = 0) {
     priceBeliefs: normalizedBeliefs,
     priceHistory: normalizedHistory,
     workplaceId: typeof source.workplaceId === "string" ? source.workplaceId : null,
+    workAssignments,
+    assignedWorkers,
+    employmentRatio: Math.max(0, Math.min(1,
+      Number.isFinite(source.employmentRatio)
+        ? source.employmentRatio
+        : assignedWorkers / weight,
+    )),
+    productionNeeds: normalizeProductionNeeds(source.productionNeeds),
     homeId: typeof source.homeId === "string" ? source.homeId : null,
     health: Math.max(0, Math.min(100, Number(source.health) || fallback.health)),
     satisfaction: Math.max(0, Math.min(100, Number(source.satisfaction) || fallback.satisfaction)),
@@ -209,6 +258,8 @@ export function createInitialAgentEconomy(population, options = {}) {
     marketPrices: createInitialMarketPrices(HOUSEHOLD_COMMODITIES),
     lastBeliefUpdates: [],
     beliefUpdateHistory: [],
+    lastWorkforceSummary: null,
+    lastBuildingProduction: [],
     lastDailySummary: null,
     lastQuarterSummary: null,
     dailyHistory: [],
@@ -220,6 +271,7 @@ export function createInitialAgentEconomy(population, options = {}) {
       quartersSimulated: 0,
       goodsProduced: 0,
       goodsConsumed: 0,
+      productionInputsConsumed: 0,
       unmetFood: 0,
       ordersGenerated: 0,
       potentialMatches: 0,
@@ -231,6 +283,10 @@ export function createInitialAgentEconomy(population, options = {}) {
       beliefAdjustments: 0,
       priceIncreases: 0,
       priceDecreases: 0,
+      workerDaysRequired: 0,
+      workerDaysAssigned: 0,
+      idleBuildingDays: 0,
+      inputShortageEvents: 0,
       grossIncome: 0,
       taxCollected: 0,
       welfarePaid: 0,
