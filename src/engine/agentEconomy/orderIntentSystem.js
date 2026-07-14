@@ -12,17 +12,28 @@ function reserveFor(commodity, weight) {
   return 0;
 }
 
+function foodStock(inventory) {
+  return FOOD_COMMODITIES.reduce((total, commodity) =>
+    total + Math.max(0, Math.floor(Number(inventory?.[commodity]) || 0)), 0);
+}
+
 export function generateHouseholdOrderIntents(households, context = {}) {
   const day = Math.max(1, Math.floor(context.day ?? 1));
   const orders = [];
 
   for (const household of households ?? []) {
     const weight = Math.max(1, Math.floor(household.weight ?? 1));
+    const inventory = household.inventory ?? {};
     const foodNeed = Math.max(0, Number(household.needs?.food) || 0);
+    const currentFood = foodStock(inventory);
+    const targetFood = Math.max(1, weight * 2);
 
-    if (foodNeed >= 35) {
+    if (foodNeed >= 35 && currentFood < targetFood) {
       const commodity = "grain";
-      const quantity = Math.max(1, Math.ceil(weight * Math.min(1.5, foodNeed / 70)));
+      const quantity = Math.max(
+        1,
+        Math.ceil(Math.min(targetFood - currentFood, weight * Math.min(1.5, foodNeed / 70))),
+      );
       orders.push({
         id: `day-${day}-${household.id}-buy-${commodity}`,
         householdId: household.id,
@@ -34,7 +45,31 @@ export function generateHouseholdOrderIntents(households, context = {}) {
       });
     }
 
-    for (const [commodity, rawAmount] of Object.entries(household.inventory ?? {})) {
+    if ((household.needs?.clothing ?? 0) >= 60 && (inventory.cloth ?? 0) < weight) {
+      orders.push({
+        id: `day-${day}-${household.id}-buy-cloth`,
+        householdId: household.id,
+        side: "buy",
+        commodity: "cloth",
+        quantity: Math.max(1, Math.ceil(weight / 2)),
+        price: safePrice(household.priceBeliefs?.cloth, "buy"),
+        reason: "clothing-need",
+      });
+    }
+
+    if ((household.needs?.tools ?? 0) >= 65 && (inventory.tools ?? 0) < 1) {
+      orders.push({
+        id: `day-${day}-${household.id}-buy-tools`,
+        householdId: household.id,
+        side: "buy",
+        commodity: "tools",
+        quantity: 1,
+        price: safePrice(household.priceBeliefs?.tools, "buy"),
+        reason: "tools-need",
+      });
+    }
+
+    for (const [commodity, rawAmount] of Object.entries(inventory)) {
       const amount = Math.max(0, Math.floor(Number(rawAmount) || 0));
       const reserve = reserveFor(commodity, weight);
       const surplus = amount - reserve;
@@ -55,8 +90,8 @@ export function generateHouseholdOrderIntents(households, context = {}) {
 }
 
 /**
- * Step 3 dry-run matcher. It measures crossing demand and supply but deliberately
- * does not transfer inventory or cash. Step 4 replaces this with the order book.
+ * Dry-run matcher kept for diagnostics and comparison. Step 4 live shadow market
+ * uses settleOrderBooks so money and inventory move inside agentEconomy.
  */
 export function previewOrderMatches(orders) {
   const commodities = new Set((orders ?? []).map((order) => order.commodity));
@@ -66,10 +101,10 @@ export function previewOrderMatches(orders) {
   for (const commodity of commodities) {
     const bids = orders
       .filter((order) => order.commodity === commodity && order.side === "buy")
-      .sort((a, b) => b.price - a.price);
+      .sort((a, b) => b.price - a.price || a.id.localeCompare(b.id));
     const asks = orders
       .filter((order) => order.commodity === commodity && order.side === "sell")
-      .sort((a, b) => a.price - b.price);
+      .sort((a, b) => a.price - b.price || a.id.localeCompare(b.id));
 
     let bidIndex = 0;
     let askIndex = 0;
