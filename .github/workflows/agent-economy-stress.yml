@@ -6,18 +6,20 @@ on:
     paths:
       - src/engine/agentEconomy/**
       - tests/stress/**
-      - tests/unit/agentEconomyStressHarness.test.js
+      - tests/unit/agentEconomy*.test.js
       - package.json
       - package-lock.json
+      - eslint.config.js
       - .github/workflows/agent-economy-stress.yml
   push:
     branches: [main]
     paths:
       - src/engine/agentEconomy/**
       - tests/stress/**
-      - tests/unit/agentEconomyStressHarness.test.js
+      - tests/unit/agentEconomy*.test.js
       - package.json
       - package-lock.json
+      - eslint.config.js
       - .github/workflows/agent-economy-stress.yml
 
 jobs:
