@@ -1,0 +1,20 @@
+{
+  "validatedCommit": "42ee46c34d232f4a360dd4eb9afed5540eec6196",
+  "workflowRunId": 29309653870,
+  "nodeVersion": "24",
+  "agentEconomyTests": "success",
+  "legacyEconomyBaseline": "success",
+  "lint": "success",
+  "build": "success",
+  "priceLearningEnabled": true,
+  "failedBuyRaisesBelief": true,
+  "failedSellLowersBelief": true,
+  "successfulTradesAnchorBeliefs": true,
+  "priceFloorMultiplier": 0.25,
+  "priceCeilingMultiplier": 5,
+  "marketPriceHistoryLimit": 40,
+  "stressTestQuarters": 40,
+  "stressTestDays": 1200,
+  "liveEconomyChanged": false,
+  "shadowMode": true
+}
