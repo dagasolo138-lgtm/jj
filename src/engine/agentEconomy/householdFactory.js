@@ -1,9 +1,13 @@
 import { BASE_BUY_PRICES } from "../../data/economy.js";
 import { createInitialNeeds, normalizeNeeds } from "./needsSystem.js";
 import { getDefaultOccupation, normalizeOccupation } from "./occupationSystem.js";
+import {
+  createInitialMarketPrices,
+  normalizePriceBelief,
+} from "./priceBeliefSystem.js";
 import { DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
 
-export const AGENT_ECONOMY_SCHEMA_VERSION = 3;
+export const AGENT_ECONOMY_SCHEMA_VERSION = 4;
 export const DEFAULT_MAX_HOUSEHOLDS = 120;
 
 export const HOUSEHOLD_COMMODITIES = [
@@ -43,11 +47,11 @@ function createPriceBeliefs(index = 0) {
   for (const commodity of HOUSEHOLD_COMMODITIES) {
     const referencePrice = BASE_BUY_PRICES[commodity] ?? 5;
     const center = Math.max(0.5, referencePrice * (1 + offset));
-    beliefs[commodity] = {
-      min: Number(Math.max(0.5, center * 0.8).toFixed(2)),
-      max: Number(Math.max(0.5, center * 1.2).toFixed(2)),
-      lastPrice: Number(center.toFixed(2)),
-    };
+    beliefs[commodity] = normalizePriceBelief(commodity, {
+      min: center * 0.8,
+      max: center * 1.2,
+      lastPrice: center,
+    });
   }
 
   return beliefs;
@@ -104,12 +108,10 @@ export function normalizeHousehold(household, index = 0) {
   const normalizedBeliefs = {};
 
   for (const commodity of HOUSEHOLD_COMMODITIES) {
-    const fallbackBelief = fallback.priceBeliefs[commodity];
-    const belief = beliefsSource[commodity] ?? fallbackBelief;
-    const min = Math.max(0.5, Number(belief?.min) || fallbackBelief.min);
-    const max = Math.max(min, Number(belief?.max) || fallbackBelief.max);
-    const lastPrice = Math.max(0.5, Number(belief?.lastPrice) || fallbackBelief.lastPrice);
-    normalizedBeliefs[commodity] = { min, max, lastPrice };
+    normalizedBeliefs[commodity] = normalizePriceBelief(
+      commodity,
+      beliefsSource[commodity] ?? fallback.priceBeliefs[commodity],
+    );
   }
 
   const inventorySource = source.inventory && typeof source.inventory === "object"
@@ -204,6 +206,9 @@ export function createInitialAgentEconomy(population, options = {}) {
     day: 0,
     pendingOrders: [],
     lastTrades: [],
+    marketPrices: createInitialMarketPrices(HOUSEHOLD_COMMODITIES),
+    lastBeliefUpdates: [],
+    beliefUpdateHistory: [],
     lastDailySummary: null,
     lastQuarterSummary: null,
     dailyHistory: [],
@@ -223,6 +228,9 @@ export function createInitialAgentEconomy(population, options = {}) {
       failedOrders: 0,
       tradeVolume: 0,
       tradeValue: 0,
+      beliefAdjustments: 0,
+      priceIncreases: 0,
+      priceDecreases: 0,
       grossIncome: 0,
       taxCollected: 0,
       welfarePaid: 0,
