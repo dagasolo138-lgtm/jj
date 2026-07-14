@@ -3,7 +3,7 @@ import { createInitialNeeds, normalizeNeeds } from "./needsSystem.js";
 import { getDefaultOccupation, normalizeOccupation } from "./occupationSystem.js";
 import { DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
 
-export const AGENT_ECONOMY_SCHEMA_VERSION = 2;
+export const AGENT_ECONOMY_SCHEMA_VERSION = 3;
 export const DEFAULT_MAX_HOUSEHOLDS = 120;
 
 export const HOUSEHOLD_COMMODITIES = [
@@ -203,6 +203,7 @@ export function createInitialAgentEconomy(population, options = {}) {
     rngState: rngSeed,
     day: 0,
     pendingOrders: [],
+    lastTrades: [],
     lastDailySummary: null,
     lastQuarterSummary: null,
     dailyHistory: [],
@@ -218,6 +219,10 @@ export function createInitialAgentEconomy(population, options = {}) {
       ordersGenerated: 0,
       potentialMatches: 0,
       potentialMatchVolume: 0,
+      settledTrades: 0,
+      failedOrders: 0,
+      tradeVolume: 0,
+      tradeValue: 0,
       grossIncome: 0,
       taxCollected: 0,
       welfarePaid: 0,
