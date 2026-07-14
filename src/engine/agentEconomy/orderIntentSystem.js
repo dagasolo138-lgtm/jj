@@ -6,15 +6,26 @@ function safePrice(belief, side) {
   return Math.max(0.5, Number(belief?.min) || fallback);
 }
 
-function reserveFor(commodity, weight) {
-  if (FOOD_COMMODITIES.includes(commodity)) return Math.max(1, weight * 2);
-  if (commodity === "tools" || commodity === "cloth") return weight;
-  return 0;
+function reserveFor(household, commodity, weight) {
+  let reserve = 0;
+  if (FOOD_COMMODITIES.includes(commodity)) reserve = Math.max(1, weight * 2);
+  if (commodity === "tools" || commodity === "cloth") reserve = Math.max(reserve, weight);
+  reserve += Math.ceil(Math.max(0, Number(household.productionNeeds?.[commodity]) || 0));
+  return reserve;
 }
 
 function foodStock(inventory) {
   return FOOD_COMMODITIES.reduce((total, commodity) =>
     total + Math.max(0, Math.floor(Number(inventory?.[commodity]) || 0)), 0);
+}
+
+function addBuyRequest(requests, commodity, quantity, reason) {
+  const amount = Math.max(0, Math.ceil(Number(quantity) || 0));
+  if (amount <= 0) return;
+  const current = requests.get(commodity) ?? { quantity: 0, reasons: [] };
+  current.quantity += amount;
+  if (!current.reasons.includes(reason)) current.reasons.push(reason);
+  requests.set(commodity, current);
 }
 
 export function generateHouseholdOrderIntents(households, context = {}) {
@@ -27,51 +38,52 @@ export function generateHouseholdOrderIntents(households, context = {}) {
     const foodNeed = Math.max(0, Number(household.needs?.food) || 0);
     const currentFood = foodStock(inventory);
     const targetFood = Math.max(1, weight * 2);
+    const buyRequests = new Map();
 
     if (foodNeed >= 35 && currentFood < targetFood) {
-      const commodity = "grain";
-      const quantity = Math.max(
-        1,
-        Math.ceil(Math.min(targetFood - currentFood, weight * Math.min(1.5, foodNeed / 70))),
+      addBuyRequest(
+        buyRequests,
+        "grain",
+        Math.min(targetFood - currentFood, weight * Math.min(1.5, foodNeed / 70)),
+        "food-need",
       );
+    }
+
+    if ((household.needs?.clothing ?? 0) >= 60 && (inventory.cloth ?? 0) < weight) {
+      addBuyRequest(buyRequests, "cloth", Math.max(1, weight / 2), "clothing-need");
+    }
+
+    if ((household.needs?.tools ?? 0) >= 65 && (inventory.tools ?? 0) < 1) {
+      addBuyRequest(buyRequests, "tools", 1, "tools-need");
+    }
+
+    for (const [commodity, amount] of Object.entries(household.productionNeeds ?? {})) {
+      const currentStock = Math.max(0, Number(inventory[commodity]) || 0);
+      const shortage = Math.max(0, Number(amount) || 0);
+      if (shortage <= 0) continue;
+      addBuyRequest(
+        buyRequests,
+        commodity,
+        Math.max(0, shortage - currentStock),
+        "production-input",
+      );
+    }
+
+    for (const [commodity, request] of buyRequests.entries()) {
       orders.push({
         id: `day-${day}-${household.id}-buy-${commodity}`,
         householdId: household.id,
         side: "buy",
         commodity,
-        quantity,
+        quantity: request.quantity,
         price: safePrice(household.priceBeliefs?.[commodity], "buy"),
-        reason: "food-need",
-      });
-    }
-
-    if ((household.needs?.clothing ?? 0) >= 60 && (inventory.cloth ?? 0) < weight) {
-      orders.push({
-        id: `day-${day}-${household.id}-buy-cloth`,
-        householdId: household.id,
-        side: "buy",
-        commodity: "cloth",
-        quantity: Math.max(1, Math.ceil(weight / 2)),
-        price: safePrice(household.priceBeliefs?.cloth, "buy"),
-        reason: "clothing-need",
-      });
-    }
-
-    if ((household.needs?.tools ?? 0) >= 65 && (inventory.tools ?? 0) < 1) {
-      orders.push({
-        id: `day-${day}-${household.id}-buy-tools`,
-        householdId: household.id,
-        side: "buy",
-        commodity: "tools",
-        quantity: 1,
-        price: safePrice(household.priceBeliefs?.tools, "buy"),
-        reason: "tools-need",
+        reason: request.reasons.join("+"),
       });
     }
 
     for (const [commodity, rawAmount] of Object.entries(inventory)) {
       const amount = Math.max(0, Math.floor(Number(rawAmount) || 0));
-      const reserve = reserveFor(commodity, weight);
+      const reserve = reserveFor(household, commodity, weight);
       const surplus = amount - reserve;
       if (surplus <= 0) continue;
       orders.push({
