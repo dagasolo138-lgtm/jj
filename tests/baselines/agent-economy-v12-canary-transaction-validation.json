@@ -1,0 +1,144 @@
+{
+  "validatedCommit": "95f99a1423d3afbcfaf6e928595163741d3f11b4",
+  "nodeVersion": "24",
+  "schemaVersion": 10,
+  "engineControlVersion": 2,
+  "canaryTransactionVersion": 1,
+  "defaultMode": {
+    "authoritativeEngine": "legacy",
+    "candidateEnabled": false,
+    "shadowMode": true,
+    "writeBackEnabled": false,
+    "explicitWriteBackActionRequired": true,
+    "explicitCanaryModeRequestRequired": true,
+    "requiredSafeQuarterStreak": 8
+  },
+  "atomicWriteBack": {
+    "officialFieldsWritten": [
+      "denarii",
+      "food",
+      "population",
+      "inventory",
+      "bankruptcyTurns",
+      "starvationTurns",
+      "resourceDeltas",
+      "economyHistory"
+    ],
+    "legacyFieldsPreserved": [
+      "phase",
+      "gameOverReason",
+      "pyrrhicVictory",
+      "garrison",
+      "buildings",
+      "military",
+      "people",
+      "chronicle",
+      "seasonReport",
+      "events",
+      "raids",
+      "market",
+      "greatHall",
+      "chapel",
+      "tavern"
+    ],
+    "checkpointBeforeWrite": true,
+    "projectionValidationBeforeCommit": true,
+    "fullLegacyStateReturnedOnFailure": true,
+    "writeBackDisabledAfterRollback": true,
+    "authorityReturnedToLegacyAfterRollback": true,
+    "transactionHistoryLimit": 20
+  },
+  "projectionValidation": {
+    "finiteTreasury": "success",
+    "nonNegativeFood": "success",
+    "nonNegativeInventory": "success",
+    "integerPopulation": "success",
+    "householdPopulationConsistency": "success",
+    "foodInventoryConsistency": "success",
+    "phaseConsistency": "success",
+    "objectGameOverReasonValueComparison": "success",
+    "projectionExceptionRollback": "success",
+    "invalidProjectionRollback": "success"
+  },
+  "integrationValidation": {
+    "safeCanaryQuarterCommits": "success",
+    "candidateResourceFieldsBecomeOfficial": "success",
+    "nonResourceLegacyFieldsRemainAuthoritative": "success",
+    "manualWriteBackDisableDemotesCanary": "success",
+    "manualRollbackDisablesWriteBack": "success",
+    "rollbackRestoresCandidateWriteDisabledBlocker": "success",
+    "defaultShadowModeUnchanged": "success",
+    "oldSaveNormalization": "success"
+  },
+  "workflows": {
+    "agentEconomy": {
+      "runId": 29357173153,
+      "status": "success"
+    },
+    "calibration": {
+      "runId": 29357174333,
+      "artifactId": 8320619191,
+      "status": "success"
+    },
+    "stress": {
+      "runId": 29357173276,
+      "artifactId": 8320642065,
+      "status": "success"
+    }
+  },
+  "hardValidation": {
+    "agentEconomyTests": "success",
+    "legacyEconomyBaseline": "success",
+    "lint": "success",
+    "build": "success",
+    "calibrationMatrix": "meets-target",
+    "stressStatus": "pass",
+    "stressBalanceStatus": "stable"
+  },
+  "calibration": {
+    "scenarioCount": 7,
+    "seedsPerScenario": 12,
+    "quartersPerSeed": 12,
+    "totalQuarterSimulations": 1008,
+    "totalDaySimulations": 30240,
+    "targetMissCount": 0,
+    "directionalChecksPassed": 6,
+    "directionalChecksTotal": 6,
+    "defaultEstate": {
+      "economicSurvivalRate": 100,
+      "foodFulfillmentRate": 99.2,
+      "employmentRate": 80,
+      "povertyRate": 5.42,
+      "averageHealth": 99.99,
+      "averageSatisfaction": 57.57,
+      "idleBuildingRate": 22.41,
+      "inputShortageRate": 31.18,
+      "tradesPerDay": 2.2553,
+      "minimumCommodityPriceRatio": 0.8225,
+      "maximumCommodityPriceRatio": 1.009
+    }
+  },
+  "stress": {
+    "seedCount": 100,
+    "quartersPerSeed": 40,
+    "daysPerSeed": 1200,
+    "totalQuarterSimulations": 4000,
+    "totalDaySimulations": 120000,
+    "completionRate": 100,
+    "economicSurvivalRate": 100,
+    "invariantFailureRate": 0,
+    "foodFulfillmentRate": 99.35,
+    "employmentRate": 80,
+    "povertyRate": 3,
+    "marketFreezeSeedRate": 0,
+    "extremeInflationSeedRate": 0,
+    "priceCrashSeedRate": 0,
+    "chronicInputShortageSeedRate": 0,
+    "meanQuarterMs": 18.2121,
+    "p95QuarterMs": 19.4914,
+    "maxQuarterMs": 26.4275,
+    "runtimeGateMsPerQuarter": 250
+  },
+  "promotionDecision": "atomic-canary-ready-but-disabled-by-default",
+  "nextGate": "limited-live-canary-campaign-and-operator-controls"
+}
