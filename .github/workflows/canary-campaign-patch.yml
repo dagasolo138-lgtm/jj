@@ -1,0 +1,39 @@
+name: Canary campaign patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/apply_canary_campaign.py
+      - .github/workflows/canary-campaign-patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python scripts/apply_canary_campaign.py
+      - name: Commit patch
+        run: |
+          if git diff --quiet; then
+            echo "No patch changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/engine/agentEconomy/householdFactory.js \
+            src/engine/agentEconomy/index.js \
+            src/engine/agentEconomy/integratedGameReducer.js \
+            src/engine/agentEconomy/canaryTransactionSystem.js \
+            src/engine/agentEconomy/economyMonitorSelectors.js \
+            src/components/EconomyMonitorTab.jsx \
+            tests/unit/agentEconomyCanaryTransaction.test.js
+          git commit -m "feat(agent-economy): integrate limited canary campaigns"
+          git push
