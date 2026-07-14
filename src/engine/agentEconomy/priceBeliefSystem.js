@@ -1,4 +1,5 @@
 import { BASE_BUY_PRICES, BASE_SELL_PRICES } from "../../data/economy.js";
+import { MIN_TRADE_QUANTITY, calibratedQuantity } from "./economyCalibration.js";
 
 export const PRICE_HISTORY_LIMIT = 40;
 export const MIN_ABSOLUTE_PRICE = 0.5;
@@ -113,27 +114,30 @@ export function collectPriceOutcomes(orders = [], trades = [], failedOrders = []
 
   for (const order of orders) {
     const outcome = ensureOutcome(outcomes, order.householdId, order.commodity);
-    const quantity = Math.max(0, Math.floor(Number(order.quantity) || 0));
-    if (order.side === "buy") outcome.buyOrdered += quantity;
-    else outcome.sellOrdered += quantity;
+    const quantity = calibratedQuantity(order.quantity);
+    if (quantity < MIN_TRADE_QUANTITY) continue;
+    if (order.side === "buy") outcome.buyOrdered = calibratedQuantity(outcome.buyOrdered + quantity);
+    else outcome.sellOrdered = calibratedQuantity(outcome.sellOrdered + quantity);
   }
 
   for (const trade of trades) {
-    const quantity = Math.max(0, Math.floor(Number(trade.quantity) || 0));
+    const quantity = calibratedQuantity(trade.quantity);
+    if (quantity < MIN_TRADE_QUANTITY) continue;
     const value = Math.max(0, Number(trade.value) || quantity * (Number(trade.price) || 0));
     const buyer = ensureOutcome(outcomes, trade.buyerId, trade.commodity);
-    buyer.buyFilled += quantity;
+    buyer.buyFilled = calibratedQuantity(buyer.buyFilled + quantity);
     buyer.buyValue += value;
     const seller = ensureOutcome(outcomes, trade.sellerId, trade.commodity);
-    seller.sellFilled += quantity;
+    seller.sellFilled = calibratedQuantity(seller.sellFilled + quantity);
     seller.sellValue += value;
   }
 
   for (const order of failedOrders) {
     const outcome = ensureOutcome(outcomes, order.householdId, order.commodity);
-    const remaining = Math.max(0, Math.floor(Number(order.remainingQuantity) || 0));
-    if (order.side === "buy") outcome.failedBuy += remaining;
-    else outcome.failedSell += remaining;
+    const remaining = calibratedQuantity(order.remainingQuantity);
+    if (remaining < MIN_TRADE_QUANTITY) continue;
+    if (order.side === "buy") outcome.failedBuy = calibratedQuantity(outcome.failedBuy + remaining);
+    else outcome.failedSell = calibratedQuantity(outcome.failedSell + remaining);
   }
 
   return outcomes;
@@ -150,7 +154,7 @@ function learnFromOutcome(household, outcome) {
   const tradePrice = tradeQuantity > 0 ? tradeValue / tradeQuantity : null;
 
   if (outcome.buyFilled > 0) {
-    const fillRatio = outcome.buyFilled / Math.max(1, outcome.buyOrdered);
+    const fillRatio = outcome.buyFilled / Math.max(MIN_TRADE_QUANTITY, outcome.buyOrdered);
     next = shiftBelief(outcome.commodity, next, {
       anchorPrice: outcome.buyValue / outcome.buyFilled,
       anchorWeight: 0.35,
@@ -161,7 +165,7 @@ function learnFromOutcome(household, outcome) {
   }
 
   if (outcome.sellFilled > 0) {
-    const fillRatio = outcome.sellFilled / Math.max(1, outcome.sellOrdered);
+    const fillRatio = outcome.sellFilled / Math.max(MIN_TRADE_QUANTITY, outcome.sellOrdered);
     next = shiftBelief(outcome.commodity, next, {
       anchorPrice: outcome.sellValue / outcome.sellFilled,
       anchorWeight: 0.35,
@@ -172,7 +176,7 @@ function learnFromOutcome(household, outcome) {
   }
 
   if (outcome.failedBuy > 0) {
-    const ratio = outcome.failedBuy / Math.max(1, outcome.buyOrdered);
+    const ratio = outcome.failedBuy / Math.max(MIN_TRADE_QUANTITY, outcome.buyOrdered);
     const urgency = FOOD_COMMODITIES.has(outcome.commodity)
       ? clamp((Number(household.needs?.food) || 0) / 100, 0, 1)
       : 0;
@@ -183,7 +187,7 @@ function learnFromOutcome(household, outcome) {
   }
 
   if (outcome.failedSell > 0) {
-    const ratio = outcome.failedSell / Math.max(1, outcome.sellOrdered);
+    const ratio = outcome.failedSell / Math.max(MIN_TRADE_QUANTITY, outcome.sellOrdered);
     next = shiftBelief(outcome.commodity, next, {
       centerMultiplier: 1 - 0.025 - ratio * 0.05,
       spreadMultiplier: 1.04,
@@ -321,12 +325,21 @@ export function updateMarketPriceIndex(previousPrices = {}, orders = [], trades 
       failedBidVolume,
       failedAskVolume,
       changePct,
-      trend: changePct > 1 ? "up" : changePct < -1 ? "down" : "flat",
-      lastUpdatedDay: day,
-      history: [...(previous.history ?? []), lastPrice].slice(-PRICE_HISTORY_LIMIT),
+      trend: changePct > 0.5 ? "up" : changePct < -0.5 ? "down" : "flat",
+      lastUpdatedDay: Math.max(0, Math.floor(day)),
+      history: [...(previous.history ?? [previousPrice]), lastPrice].slice(-PRICE_HISTORY_LIMIT),
     };
     nextPrices[commodity] = record;
-    if (commodityOrders.length > 0 || commodityTrades.length > 0) snapshot[commodity] = record;
+    snapshot[commodity] = {
+      lastPrice,
+      volume,
+      tradeCount: commodityTrades.length,
+      bidVolume,
+      askVolume,
+      failedBidVolume,
+      failedAskVolume,
+      trend: record.trend,
+    };
   }
 
   return { marketPrices: nextPrices, snapshot };
