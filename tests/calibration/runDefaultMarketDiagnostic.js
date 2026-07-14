@@ -4,82 +4,118 @@ import path from "node:path";
 import { initialState as legacyInitialState } from "../../src/engine/gameReducer.js";
 import {
   createInitialAgentEconomy,
-  generateHouseholdOrderIntents,
   getAgentEconomyTotals,
   simulateAgentQuarter,
 } from "../../src/engine/agentEconomy/index.js";
 
 const outputPath = process.env.DIAGNOSTIC_REPORT_PATH
   || "artifacts/agent-economy-default-market-diagnostic.json";
-
-let state = createInitialAgentEconomy(legacyInitialState.population, {
-  seed: "default-market-diagnostic",
-  estateInventory: legacyInitialState.inventory,
-});
-const days = [];
 const seasons = ["spring", "summer", "autumn", "winter"];
+const scenarios = [
+  {
+    id: "default",
+    buildings: legacyInitialState.buildings,
+    laborAllocation: legacyInitialState.laborAllocation,
+  },
+  {
+    id: "agricultural-shortage",
+    buildings: legacyInitialState.buildings.filter((building) =>
+      (typeof building === "string" ? building : building.type) !== "strip_farm"),
+    laborAllocation: legacyInitialState.laborAllocation,
+  },
+  {
+    id: "labor-shortage",
+    buildings: legacyInitialState.buildings,
+    laborAllocation: {
+      ...legacyInitialState.laborAllocation,
+      demesne: 15,
+      peasant: 15,
+      construction: 70,
+    },
+  },
+];
 
-function summarizeBooks(orders) {
-  const commodities = [...new Set(orders.map((order) => order.commodity))].sort();
-  return Object.fromEntries(commodities.map((commodity) => {
-    const bids = orders.filter((order) => order.commodity === commodity && order.side === "buy");
-    const asks = orders.filter((order) => order.commodity === commodity && order.side === "sell");
-    return [commodity, {
-      bidCount: bids.length,
-      askCount: asks.length,
-      highestBid: bids.length > 0 ? Math.max(...bids.map((order) => order.price)) : null,
-      lowestAsk: asks.length > 0 ? Math.min(...asks.map((order) => order.price)) : null,
-      bidVolume: Number(bids.reduce((total, order) => total + order.quantity, 0).toFixed(4)),
-      askVolume: Number(asks.reduce((total, order) => total + order.quantity, 0).toFixed(4)),
-      crossed: bids.length > 0 && asks.length > 0
-        ? Math.max(...bids.map((order) => order.price)) >= Math.min(...asks.map((order) => order.price))
-        : false,
-    }];
+function addObject(target, source = {}) {
+  for (const [key, amount] of Object.entries(source)) {
+    target[key] = Number(((target[key] ?? 0) + (Number(amount) || 0)).toFixed(4));
+  }
+}
+
+function summarizeHouseholds(households) {
+  return households.map((household) => ({
+    id: household.id,
+    occupation: household.occupation,
+    cash: household.cash,
+    health: household.health,
+    satisfaction: household.satisfaction,
+    foodNeed: household.needs?.food,
+    assignedWorkers: household.assignedWorkers,
+    employmentRatio: household.employmentRatio,
+    inventory: Object.fromEntries(
+      Object.entries(household.inventory ?? {}).filter(([, amount]) => Number(amount) > 0.001),
+    ),
   }));
 }
 
-for (let day = 1; day <= 60; day += 1) {
-  const season = seasons[Math.floor((day - 1) / 30) % seasons.length];
-  const previewOrders = generateHouseholdOrderIntents(state.households, { day });
-  const before = getAgentEconomyTotals(state);
-  state = simulateAgentQuarter(state, {
-    days: 1,
-    turn: Math.floor((day - 1) / 30) + 1,
-    season,
-    taxRate: legacyInitialState.taxRate,
-    buildings: legacyInitialState.buildings,
-    laborAllocation: legacyInitialState.laborAllocation,
+function runScenario(scenario) {
+  let state = createInitialAgentEconomy(legacyInitialState.population, {
+    seed: `calibration-diagnostic-${scenario.id}`,
+    estateInventory: legacyInitialState.inventory,
   });
-  const after = getAgentEconomyTotals(state);
-  days.push({
-    day,
-    season,
-    preProductionBooks: summarizeBooks(previewOrders),
-    summary: state.lastDailySummary,
-    buildingStatus: state.lastBuildingProduction.map((report) => ({
-      type: report.type,
-      status: report.status,
-      assignedWorkers: report.assignedWorkers,
-      laborRatio: report.laborRatio,
-      inputRatio: report.inputRatio,
-      shortages: report.shortages,
-      produced: report.produced,
-    })),
-    inventoryDelta: Number((after.totalInventory - before.totalInventory).toFixed(4)),
-    foodInventory: Number([
-      "grain",
-      "flour",
-      "fish",
-      "livestock",
-    ].reduce((total, commodity) => total + (after.inventory[commodity] ?? 0), 0).toFixed(4)),
-  });
+  const buildings = {};
+
+  for (let day = 1; day <= 360; day += 1) {
+    const season = seasons[Math.floor((day - 1) / 30) % seasons.length];
+    state = simulateAgentQuarter(state, {
+      days: 1,
+      turn: Math.floor((day - 1) / 30) + 1,
+      season,
+      taxRate: legacyInitialState.taxRate,
+      buildings: scenario.buildings,
+      laborAllocation: scenario.laborAllocation,
+    });
+
+    for (const report of state.lastBuildingProduction) {
+      const record = buildings[report.type] ?? {
+        days: 0,
+        idleDays: 0,
+        shortageDays: 0,
+        inputLimitedDays: 0,
+        assignedWorkerDays: 0,
+        produced: {},
+        consumed: {},
+        shortages: {},
+      };
+      record.days += 1;
+      record.assignedWorkerDays += Number(report.assignedWorkers) || 0;
+      if (["no-workers", "ruined", "input-shortage", "unknown-building"].includes(report.status)) {
+        record.idleDays += 1;
+      }
+      if (["input-shortage", "input-limited"].includes(report.status)) record.shortageDays += 1;
+      if (report.status === "input-limited") record.inputLimitedDays += 1;
+      addObject(record.produced, report.produced);
+      addObject(record.consumed, report.consumed);
+      addObject(record.shortages, report.shortages);
+      buildings[report.type] = record;
+    }
+  }
+
+  return {
+    id: scenario.id,
+    buildings: scenario.buildings,
+    laborAllocation: scenario.laborAllocation,
+    metrics: state.metrics,
+    totals: getAgentEconomyTotals(state),
+    marketPrices: state.marketPrices,
+    workforce: state.lastWorkforceSummary,
+    buildingSummary: buildings,
+    households: summarizeHouseholds(state.households),
+  };
 }
 
 const result = {
   initialInventory: legacyInitialState.inventory,
-  finalMetrics: state.metrics,
-  finalTotals: getAgentEconomyTotals(state),
-  days,
+  scenarios: scenarios.map(runScenario),
 };
 
 fs.mkdirSync(path.dirname(outputPath), { recursive: true });
