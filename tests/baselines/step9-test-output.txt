@@ -1,0 +1,104 @@
+
+> the-lords-ledger@1.0.0 test:agent-economy
+> node --test tests/unit/agentEconomy*.test.js
+
+✔ same seed and input produce an identical 30-day quarter (149.268581ms)
+✔ saved RNG state resumes the same deterministic trajectory (71.844897ms)
+✔ 40 quarters stay finite, serializable, and population-safe (4035.997139ms)
+✔ simulateAgentDay rejects uncontrolled randomness (0.997326ms)
+✔ integrated reducer runs 30 shadow days without changing live settlement (41.25426ms)
+✔ new games start in shadow mode with legacy authority (18.754037ms)
+✔ season simulation records a safe engine comparison without changing legacy authority (78.075269ms)
+✔ legacy-only mode skips the candidate engine (10.730722ms)
+✔ canary requests remain blocked while game-state adapters are incomplete (6.148811ms)
+✔ eight safe comparisons and complete adapters make canary eligible (0.75014ms)
+✔ unsafe comparison automatically rolls canary back to shadow (0.296448ms)
+✔ comparison detects corrupt household output (9.980382ms)
+✔ comparison history is capped at forty quarters (1.799443ms)
+✔ creates deterministic household proxies with exact population weight (29.992502ms)
+✔ households contain serializable inventory, needs, and price memory (10.610525ms)
+✔ population reconciliation preserves household memory while growing and shrinking (16.116124ms)
+✔ legacy and malformed saves are hydrated into the current schema (2.759605ms)
+✔ new games and loaded saves always contain population-synchronized household state (35.218056ms)
+✔ direct population gains reconcile household weights (25.528785ms)
+✔ economy tab is present exactly once (1.092357ms)
+✔ commodity labels are readable (0.242128ms)
+✔ monitor aggregates household employment poverty and market pressure (16.575704ms)
+✔ monitor reflects a real building-driven daily simulation (14.368978ms)
+✔ monitor reports dual-engine safety issues without throwing (2.742419ms)
+✔ order books sort bids high-to-low and asks low-to-high (5.213156ms)
+✔ matching orders transfer inventory and cash at midpoint price (5.719566ms)
+✔ uncrossed orders do not trade and remain as failed orders (0.953912ms)
+✔ cash and inventory constraints cap partial fills (3.966611ms)
+✔ failed urgent buy orders raise the household price band (3.261858ms)
+✔ unsold surplus lowers the seller price band (0.475984ms)
+✔ completed trade moves buyer and seller beliefs in opposite directions (1.52672ms)
+✔ repeated failures cannot push beliefs outside commodity bounds (6.377609ms)
+✔ market index records volume-weighted price and trend (2.016324ms)
+✔ 40-quarter price learning remains bounded and serializable (3937.159486ms)
+✔ matching households are assigned to building workplaces (2.780355ms)
+✔ a building without the required occupation stays idle (0.822327ms)
+✔ staffed farms produce and ruined farms do not (0.861906ms)
+✔ converter buildings consume inputs and produce outputs (0.553299ms)
+✔ missing converter inputs create production needs and market buy orders (1.805102ms)
+✔ shadow sawmills and tanneries form real input chains (0.660548ms)
+✔ understaffing reduces output without inventing workers (0.834575ms)
+✔ construction allocation reduces workers available to the estate (0.444858ms)
+✔ an empty estate cannot produce through occupation-only fallback (6.115992ms)
+✔ 40 building-driven quarters remain finite and population-safe (1262.000423ms)
+✔ stress seed generation is deterministic and unique (2.57431ms)
+✖ the same stress seed produces the same economic result (236.869308ms)
+✖ small multi-seed scan reports hard invariants separately from balance (310.068961ms)
+✔ summary fails hard when a seed violates invariants (0.726685ms)
+ℹ tests 48
+ℹ suites 0
+ℹ pass 46
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4495.456397
+
+✖ failing tests:
+
+test at tests/unit/agentEconomyStressHarness.test.js:26:1
+✖ the same stress seed produces the same economic result (236.869308ms)
+  AssertionError [ERR_ASSERTION]: inventory-accounting-error:-23.9911
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///home/runner/work/jj/jj/tests/unit/agentEconomyStressHarness.test.js:31:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:385:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/unit/agentEconomyStressHarness.test.js:38:1
+✖ small multi-seed scan reports hard invariants separately from balance (310.068961ms)
+  AssertionError [ERR_ASSERTION]: 3 seed runs failed hard invariants
+  
+  'fail' !== 'pass'
+  
+      at TestContext.<anonymous> (file:///home/runner/work/jj/jj/tests/unit/agentEconomyStressHarness.test.js:48:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1325:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:911:18)
+      at Test.postRun (node:internal/test_runner/test:1465:19)
+      at Test.run (node:internal/test_runner/test:1390:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:911:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'fail',
+    expected: 'pass',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
