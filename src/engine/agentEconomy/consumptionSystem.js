@@ -30,8 +30,10 @@ export function updateHouseholdNeeds(household, context = {}) {
     weight * FOOD_STOCK_TARGET_PER_PERSON,
   );
   const foodDelta = foodReserveRatio >= 1
-    ? -3
-    : foodReserveRatio >= 0.5 ? 1 : 4;
+    ? -2
+    : foodReserveRatio >= 0.5
+      ? 0
+      : day % 5 === 0 ? 1 : 0;
   const nextFoodNeed = clampNeed(needs.food + foodDelta);
 
   return {
@@ -40,11 +42,11 @@ export function updateHouseholdNeeds(household, context = {}) {
       ...needs,
       food: nextFoodNeed,
       housing: clampNeed(needs.housing + (household.homeId ? -1 : day % 4 === 0 ? 1 : 0)),
-      health: clampNeed(needs.health + (nextFoodNeed >= 80 ? 1 : needs.health > 10 ? -1 : 0)),
+      health: clampNeed(needs.health + (nextFoodNeed >= 85 ? 1 : needs.health > 10 ? -1 : 0)),
       clothing: clampNeed(needs.clothing + (day % 5 === 0 ? 1 : 0)),
       tools: clampNeed(needs.tools + (["farmer", "herder", "fisherman", "woodsman", "miner", "artisan"].includes(occupation) && day % 4 === 0 ? 1 : 0)),
       faith: clampNeed(needs.faith + (day % 7 === 0 ? 1 : 0)),
-      employment: clampNeed(needs.employment + (household.employmentRatio > 0 ? -1 : 3)),
+      employment: clampNeed(needs.employment + (household.employmentRatio > 0 ? -1 : 2)),
     },
   };
 }
@@ -85,7 +87,7 @@ export function consumeHousehold(household, rng, context = {}) {
   let needs = normalizeNeeds(household.needs);
   if (targetFood > 0) {
     const foodRatio = consumedFood / targetFood;
-    needs.food = clampNeed(needs.food - Math.round(18 * foodRatio) + (remainingFood > 0 ? 4 : 0));
+    needs.food = clampNeed(needs.food - Math.round(6 * foodRatio) + (remainingFood > 0 ? 2 : 0));
   }
 
   if (needs.clothing >= 60) {
@@ -110,6 +112,7 @@ export function consumeHousehold(household, rng, context = {}) {
   return {
     household: { ...household, inventory, needs },
     consumed,
+    targetFood,
     consumedFood,
     unmetFood: remainingFood,
     totalConsumed: Object.values(consumed).reduce((total, amount) => total + amount, 0),
