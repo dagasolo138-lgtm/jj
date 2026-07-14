@@ -1,5 +1,6 @@
 import { BASE_BUY_PRICES } from "../../data/economy.js";
 import { createInitialEngineControl } from "./engineControlSystem.js";
+import { distributeEstateInventory } from "./estateInventoryAdapter.js";
 import { createInitialNeeds, normalizeNeeds } from "./needsSystem.js";
 import { getDefaultOccupation, normalizeOccupation } from "./occupationSystem.js";
 import {
@@ -8,7 +9,7 @@ import {
 } from "./priceBeliefSystem.js";
 import { DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
 
-export const AGENT_ECONOMY_SCHEMA_VERSION = 7;
+export const AGENT_ECONOMY_SCHEMA_VERSION = 8;
 export const DEFAULT_MAX_HOUSEHOLDS = 120;
 
 export const HOUSEHOLD_COMMODITIES = [
@@ -236,11 +237,16 @@ export function createInitialAgentEconomy(population, options = {}) {
     options.maxHouseholds,
     DEFAULT_MAX_HOUSEHOLDS,
   ));
-  const households = createHouseholdsForPopulation(population, {
+  const generatedHouseholds = createHouseholdsForPopulation(population, {
     maxHouseholds,
     createdTurn: options.createdTurn ?? 0,
     origin: options.origin ?? "generated",
   });
+  const hasEstateInventory = options.estateInventory
+    && typeof options.estateInventory === "object";
+  const households = hasEstateInventory
+    ? distributeEstateInventory(generatedHouseholds, options.estateInventory, { replace: true })
+    : generatedHouseholds;
   const rngSeed = normalizeSeed(options.seed ?? DEFAULT_AGENT_ECONOMY_SEED);
 
   return {
@@ -251,6 +257,8 @@ export function createInitialAgentEconomy(population, options = {}) {
     maxHouseholds,
     nextHouseholdId: households.length + 1,
     lastReconciledPopulation: toNonNegativeInteger(population),
+    inventoryAdapterVersion: hasEstateInventory ? 1 : 0,
+    inventorySeededFromEstate: Boolean(hasEstateInventory),
     households,
     rngSeed,
     rngState: rngSeed,
