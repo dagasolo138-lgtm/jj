@@ -183,6 +183,7 @@ test("invalid candidate projection restores the complete legacy result and disab
   assert.equal(result.control.activeMode, ENGINE_MODES.SHADOW);
   assert.equal(result.control.authority, ENGINE_MODES.LEGACY);
   assert.equal(result.control.writeBackEnabled, false);
+  assert.ok(result.control.promotionBlockers.includes("candidate-write-disabled"));
   assert.equal(result.control.rollbackCount, 1);
   assert.equal(result.control.canaryWriteCount, 0);
   assert.equal(result.control.canaryRollbackCount, 1);
