@@ -1,0 +1,82 @@
+import { clampNeed, normalizeNeeds } from "./needsSystem.js";
+import { stochasticRound } from "./seededRng.js";
+
+const FOOD_PRIORITY = ["flour", "fish", "grain", "livestock"];
+
+export function updateHouseholdNeeds(household, context = {}) {
+  const day = Math.max(1, Math.floor(context.day ?? 1));
+  const occupation = household.occupation ?? "laborer";
+  const needs = normalizeNeeds(household.needs);
+
+  return {
+    ...household,
+    needs: {
+      ...needs,
+      food: clampNeed(needs.food + 4),
+      housing: clampNeed(needs.housing + (household.homeId ? -1 : day % 4 === 0 ? 1 : 0)),
+      health: clampNeed(needs.health + (needs.food >= 70 ? 2 : day % 6 === 0 ? 1 : 0)),
+      clothing: clampNeed(needs.clothing + (day % 5 === 0 ? 1 : 0)),
+      tools: clampNeed(needs.tools + (["farmer", "herder", "fisherman", "woodsman", "miner", "artisan"].includes(occupation) && day % 4 === 0 ? 1 : 0)),
+      faith: clampNeed(needs.faith + (day % 7 === 0 ? 1 : 0)),
+      employment: clampNeed(needs.employment + (occupation === "unemployed" ? 3 : -1)),
+    },
+  };
+}
+
+function consumeFromInventory(inventory, commodity, quantity) {
+  const available = Math.max(0, Math.floor(Number(inventory[commodity]) || 0));
+  const consumed = Math.min(available, Math.max(0, Math.floor(quantity)));
+  return {
+    inventory: { ...inventory, [commodity]: available - consumed },
+    consumed,
+  };
+}
+
+export function consumeHousehold(household, rng, context = {}) {
+  const weight = Math.max(1, Math.floor(household.weight ?? 1));
+  const targetFood = stochasticRound(weight * 0.24, rng);
+  let remainingFood = targetFood;
+  let inventory = { ...household.inventory };
+  const consumed = {};
+
+  for (const commodity of FOOD_PRIORITY) {
+    if (remainingFood <= 0) break;
+    const result = consumeFromInventory(inventory, commodity, remainingFood);
+    inventory = result.inventory;
+    if (result.consumed > 0) consumed[commodity] = result.consumed;
+    remainingFood -= result.consumed;
+  }
+
+  const consumedFood = targetFood - remainingFood;
+  const foodRatio = targetFood === 0 ? 1 : consumedFood / targetFood;
+  let needs = normalizeNeeds(household.needs);
+  needs.food = clampNeed(needs.food - Math.round(16 * foodRatio) + (remainingFood > 0 ? 3 : 0));
+
+  if (needs.clothing >= 60) {
+    const source = (inventory.cloth ?? 0) > 0 ? "cloth" : "wool";
+    const result = consumeFromInventory(inventory, source, 1);
+    inventory = result.inventory;
+    if (result.consumed > 0) {
+      consumed[source] = (consumed[source] ?? 0) + result.consumed;
+      needs.clothing = clampNeed(needs.clothing - 25);
+    }
+  }
+
+  if (needs.tools >= 65) {
+    const result = consumeFromInventory(inventory, "tools", 1);
+    inventory = result.inventory;
+    if (result.consumed > 0) {
+      consumed.tools = (consumed.tools ?? 0) + result.consumed;
+      needs.tools = clampNeed(needs.tools - 30);
+    }
+  }
+
+  return {
+    household: { ...household, inventory, needs },
+    consumed,
+    consumedFood,
+    unmetFood: remainingFood,
+    totalConsumed: Object.values(consumed).reduce((total, amount) => total + amount, 0),
+    contextDay: context.day ?? null,
+  };
+}
