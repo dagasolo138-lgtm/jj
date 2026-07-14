@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  LEARNED_PRICE_CEILING_MULTIPLIER,
+  LEARNED_PRICE_FLOOR_MULTIPLIER,
   applyPriceLearning,
   createHousehold,
   createInitialAgentEconomy,
@@ -91,7 +93,7 @@ test("completed trade moves buyer and seller beliefs in opposite directions", ()
   assert.equal(nextSeller.priceBeliefs.grain.lastPrice, 5);
 });
 
-test("repeated failures cannot push beliefs outside commodity bounds", () => {
+test("repeated failures stay inside the calibrated learning band", () => {
   let household = createHousehold({ id: "hh-1", index: 0 });
   household.needs.food = 100;
   const buyOrder = order({ householdId: household.id, quantity: 10 });
@@ -106,6 +108,8 @@ test("repeated failures cannot push beliefs outside commodity bounds", () => {
 
   const bounds = getCommodityPriceBounds("grain");
   const belief = household.priceBeliefs.grain;
+  assert.ok(belief.min >= bounds.reference * LEARNED_PRICE_FLOOR_MULTIPLIER - 0.01);
+  assert.ok(belief.max <= bounds.reference * LEARNED_PRICE_CEILING_MULTIPLIER + 0.01);
   assert.ok(belief.min >= bounds.floor);
   assert.ok(belief.max <= bounds.ceiling);
   assert.ok(belief.min <= belief.max);
