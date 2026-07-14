@@ -35,6 +35,15 @@ test("the same stress seed produces the same economic result", () => {
   assert.ok(Math.abs(first.accounting.inventoryAccountingError) <= 0.1);
 });
 
+test("calibrated default estate remains below the chronic shortage threshold", () => {
+  const run = runStressSeed(3193591166, { quarters: 40 });
+
+  assert.equal(run.completed, true, run.criticalIssues?.join("\n"));
+  assert.ok(run.production.shortageEventRate <= 35);
+  assert.equal(run.balance.chronicInputShortages, false);
+  assert.equal(run.balance.economicCollapse, false);
+});
+
 test("small multi-seed scan reports hard invariants separately from balance", () => {
   const report = runAgentEconomyStress({
     seeds: [101, 202, 303],
