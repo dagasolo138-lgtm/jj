@@ -12,7 +12,7 @@
     "test:e2e": "npx playwright test",
     "test:unit": "node --test tests/unit/*.test.js",
     "test:economy": "node --test tests/unit/economyBaseline.test.js",
-    "test:agent-economy": "node --test tests/unit/agentEconomyHouseholds.test.js",
+    "test:agent-economy": "node --test tests/unit/agentEconomy*.test.js",
     "test:economy:baseline:update": "node tests/baselines/generateEconomyBaseline.js",
     "test:visual": "npx playwright test tests/e2e/visual/",
     "test:update-snapshots": "npx playwright test --update-snapshots",
