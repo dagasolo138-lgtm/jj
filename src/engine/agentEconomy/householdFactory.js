@@ -1,4 +1,5 @@
 import { BASE_BUY_PRICES } from "../../data/economy.js";
+import { createInitialEngineControl } from "./engineControlSystem.js";
 import { createInitialNeeds, normalizeNeeds } from "./needsSystem.js";
 import { getDefaultOccupation, normalizeOccupation } from "./occupationSystem.js";
 import {
@@ -7,7 +8,7 @@ import {
 } from "./priceBeliefSystem.js";
 import { DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
 
-export const AGENT_ECONOMY_SCHEMA_VERSION = 5;
+export const AGENT_ECONOMY_SCHEMA_VERSION = 6;
 export const DEFAULT_MAX_HOUSEHOLDS = 120;
 
 export const HOUSEHOLD_COMMODITIES = [
@@ -246,6 +247,7 @@ export function createInitialAgentEconomy(population, options = {}) {
     schemaVersion: AGENT_ECONOMY_SCHEMA_VERSION,
     enabled: false,
     shadowMode: true,
+    engineControl: createInitialEngineControl(),
     maxHouseholds,
     nextHouseholdId: households.length + 1,
     lastReconciledPopulation: toNonNegativeInteger(population),
