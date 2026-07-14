@@ -63,9 +63,18 @@ export function validateHouseholds(households, expectedPopulation = null) {
     }
     if (!household.inventory || typeof household.inventory !== "object") {
       errors.push(`household ${household.id || index} has no inventory`);
+    } else if (Object.values(household.inventory).some((amount) => !Number.isFinite(amount) || amount < 0)) {
+      errors.push(`household ${household.id || index} has invalid inventory quantity`);
     }
     if (!household.priceBeliefs || typeof household.priceBeliefs !== "object") {
       errors.push(`household ${household.id || index} has no price beliefs`);
+    }
+    if (!Array.isArray(household.workAssignments)) {
+      errors.push(`household ${household.id || index} has invalid work assignments`);
+    }
+    if (!Number.isFinite(household.assignedWorkers) || household.assignedWorkers < 0
+      || household.assignedWorkers > household.weight) {
+      errors.push(`household ${household.id || index} has invalid assigned workers`);
     }
   });
 
@@ -85,6 +94,7 @@ function sanitizeMetrics(metrics = {}) {
     quartersSimulated: toPopulation(metrics.quartersSimulated),
     goodsProduced: toNonNegativeNumber(metrics.goodsProduced),
     goodsConsumed: toNonNegativeNumber(metrics.goodsConsumed),
+    productionInputsConsumed: toNonNegativeNumber(metrics.productionInputsConsumed),
     unmetFood: toNonNegativeNumber(metrics.unmetFood),
     ordersGenerated: toNonNegativeNumber(metrics.ordersGenerated),
     potentialMatches: toNonNegativeNumber(metrics.potentialMatches),
@@ -96,6 +106,10 @@ function sanitizeMetrics(metrics = {}) {
     beliefAdjustments: toNonNegativeNumber(metrics.beliefAdjustments),
     priceIncreases: toNonNegativeNumber(metrics.priceIncreases),
     priceDecreases: toNonNegativeNumber(metrics.priceDecreases),
+    workerDaysRequired: toNonNegativeNumber(metrics.workerDaysRequired),
+    workerDaysAssigned: toNonNegativeNumber(metrics.workerDaysAssigned),
+    idleBuildingDays: toNonNegativeNumber(metrics.idleBuildingDays),
+    inputShortageEvents: toNonNegativeNumber(metrics.inputShortageEvents),
     grossIncome: toNonNegativeNumber(metrics.grossIncome),
     taxCollected: toNonNegativeNumber(metrics.taxCollected),
     welfarePaid: toNonNegativeNumber(metrics.welfarePaid),
@@ -185,6 +199,12 @@ function sanitizeAgentEconomy(savedAgentEconomy) {
     beliefUpdateHistory: Array.isArray(source.beliefUpdateHistory)
       ? source.beliefUpdateHistory.slice(-60)
       : [],
+    lastWorkforceSummary: source.lastWorkforceSummary && typeof source.lastWorkforceSummary === "object"
+      ? source.lastWorkforceSummary
+      : null,
+    lastBuildingProduction: Array.isArray(source.lastBuildingProduction)
+      ? source.lastBuildingProduction.slice(-100)
+      : [],
     lastDailySummary: source.lastDailySummary && typeof source.lastDailySummary === "object"
       ? source.lastDailySummary
       : null,
@@ -235,6 +255,8 @@ export function reconcileAgentEconomyPopulation(agentEconomy, population, option
       marketPrices: sanitized.marketPrices,
       lastBeliefUpdates: sanitized.lastBeliefUpdates,
       beliefUpdateHistory: sanitized.beliefUpdateHistory,
+      lastWorkforceSummary: sanitized.lastWorkforceSummary,
+      lastBuildingProduction: sanitized.lastBuildingProduction,
       lastDailySummary: sanitized.lastDailySummary,
       lastQuarterSummary: sanitized.lastQuarterSummary,
       dailyHistory: sanitized.dailyHistory,
@@ -305,10 +327,6 @@ export function reconcileAgentEconomyPopulation(agentEconomy, population, option
   };
 }
 
-/**
- * Loads current or legacy save data. Missing household state is generated from
- * the saved population, while existing household memory is preserved.
- */
 export function hydrateAgentEconomy(savedAgentEconomy, population, options = {}) {
   if (!savedAgentEconomy || typeof savedAgentEconomy !== "object") {
     return createInitialAgentEconomy(population, {
