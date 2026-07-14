@@ -1,0 +1,38 @@
+name: Canary transaction patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/applyCanaryTransactionPatch.mjs
+      - .github/workflows/canary-transaction-patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: node scripts/applyCanaryTransactionPatch.mjs
+      - name: Commit patch
+        run: |
+          if git diff --quiet; then
+            echo "No patch changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/engine/agentEconomy/engineControlSystem.js \
+            src/engine/agentEconomy/liveStateAdapter.js \
+            src/engine/agentEconomy/canaryTransactionSystem.js \
+            src/engine/agentEconomy/householdFactory.js \
+            src/engine/agentEconomy/integratedGameReducer.js \
+            src/engine/agentEconomy/index.js
+          git commit -m "feat(agent-economy): integrate atomic canary write-back"
+          git push
