@@ -10,6 +10,7 @@ export const TAB_CONFIG = [
   { id: "estate",    label: "Estate" },
   { id: "map",       label: "Map" },
   { id: "market",    label: "Market" },
+  { id: "economy",   label: "Economy" },
   { id: "military",  label: "Military" },
   { id: "people",    label: "People" },
   { id: "hall",      label: "Hall" },
