@@ -14,6 +14,10 @@ const HINTS = {
     { maxTurn: 4, text: "Visit merchant stalls to haggle for better prices, or use Quick Trade for instant deals at the posted rate." },
     { maxTurn: 6, text: "Your reputation with merchants grows as you trade. Higher reputation means better opening offers when haggling." },
   ],
+  economy: [
+    { maxTurn: 4, text: "Simulate a season first, then inspect prices, worker coverage and any production-chain bottlenecks here." },
+    { maxTurn: 8, text: "Shadow Compare is the safe default. Canary requests stay blocked until all official game-state adapters are complete." },
+  ],
   military: [
     { maxTurn: 6, text: "Recruit soldiers to defend your estate. Upgrade your castle and install defenses for lasting protection." },
     { maxTurn: 8, text: "Soldiers cost upkeep each season and eat food. Don't recruit more than you can afford to feed!" },

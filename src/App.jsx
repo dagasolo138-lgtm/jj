@@ -31,6 +31,7 @@ import TutorialPopup from "./components/TutorialPopup";
 const Tavern = lazy(() => import("./components/Tavern"));
 const GreatHall = lazy(() => import("./components/GreatHall"));
 const BlacksmithTab = lazy(() => import("./components/BlacksmithTab"));
+const EconomyMonitorTab = lazy(() => import("./components/EconomyMonitorTab"));
 
 // Minimal fallback while a lazy tab chunk downloads
 function TabLoadingFallback() {
@@ -569,6 +570,13 @@ export default function App() {
             onSell={handleSell}
             onBuy={handleBuy}
           />
+        )}
+
+        {/* --- ECONOMY MONITOR TAB --- */}
+        {!isFlipPhase && displayTab === "economy" && isManagement && (
+          <Suspense fallback={<TabLoadingFallback />}>
+            <EconomyMonitorTab state={state} dispatch={dispatch} />
+          </Suspense>
         )}
 
         {/* --- MILITARY TAB --- */}

@@ -7,7 +7,7 @@
  */
 
 import {
-  Landmark, Map, Store, Shield, Users,
+  Activity, Landmark, Map, Store, Shield, Users,
   Scale, Church, Hammer, ScrollText,
 } from "lucide-react";
 
@@ -15,6 +15,7 @@ const TAB_ICONS = {
   estate: Landmark,
   map: Map,
   market: Store,
+  economy: Activity,
   military: Shield,
   people: Users,
   hall: Scale,
@@ -82,6 +83,26 @@ const TUTORIALS = {
       },
     ],
     tip: "Sell excess grain after a good harvest, and stockpile food before winter when production drops sharply.",
+  },
+
+  economy: {
+    title: "Economy Monitor",
+    subtitle: "Households, Prices & Safety",
+    sections: [
+      {
+        heading: "Household Economy",
+        text: "Track employment, poverty, food stress, health and satisfaction across the households represented by the new economy simulation.",
+      },
+      {
+        heading: "Prices & Production",
+        text: "See supply pressure, price trends, production chains, worker coverage and the exact reason a building is constrained or idle.",
+      },
+      {
+        heading: "Dual-Engine Safety",
+        text: "Compare the household simulation with the legacy economy. Accounting errors or unsafe state automatically block promotion and preserve the legacy result.",
+      },
+    ],
+    tip: "Keep Shadow Compare active while the new economy is being validated. Canary mode remains blocked until every official-state adapter is ready.",
   },
 
   military: {
