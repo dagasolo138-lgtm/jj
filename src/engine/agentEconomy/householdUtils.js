@@ -5,10 +5,16 @@ import {
   createInitialAgentEconomy,
   normalizeHousehold,
 } from "./householdFactory.js";
+import { DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
 
 function toPopulation(value) {
   if (!Number.isFinite(value)) return 0;
   return Math.max(0, Math.floor(value));
+}
+
+function toNonNegativeNumber(value) {
+  if (!Number.isFinite(value)) return 0;
+  return Math.max(0, value);
 }
 
 function nextIdNumber(agentEconomy, households) {
@@ -69,6 +75,24 @@ export function validateHouseholds(households, expectedPopulation = null) {
   return { valid: errors.length === 0, errors, population };
 }
 
+function sanitizeMetrics(metrics = {}) {
+  return {
+    totalTrades: toNonNegativeNumber(metrics.totalTrades),
+    failedTrades: toNonNegativeNumber(metrics.failedTrades),
+    daysSimulated: toPopulation(metrics.daysSimulated),
+    quartersSimulated: toPopulation(metrics.quartersSimulated),
+    goodsProduced: toNonNegativeNumber(metrics.goodsProduced),
+    goodsConsumed: toNonNegativeNumber(metrics.goodsConsumed),
+    unmetFood: toNonNegativeNumber(metrics.unmetFood),
+    ordersGenerated: toNonNegativeNumber(metrics.ordersGenerated),
+    potentialMatches: toNonNegativeNumber(metrics.potentialMatches),
+    potentialMatchVolume: toNonNegativeNumber(metrics.potentialMatchVolume),
+    grossIncome: toNonNegativeNumber(metrics.grossIncome),
+    taxCollected: toNonNegativeNumber(metrics.taxCollected),
+    welfarePaid: toNonNegativeNumber(metrics.welfarePaid),
+  };
+}
+
 function sanitizeAgentEconomy(savedAgentEconomy) {
   const source = savedAgentEconomy && typeof savedAgentEconomy === "object"
     ? savedAgentEconomy
@@ -88,6 +112,9 @@ function sanitizeAgentEconomy(savedAgentEconomy) {
     households.push({ ...normalized, id });
   });
 
+  const rngSeed = normalizeSeed(source.rngSeed ?? DEFAULT_AGENT_ECONOMY_SEED);
+  const rngState = normalizeSeed(source.rngState ?? rngSeed, rngSeed);
+
   return {
     schemaVersion: AGENT_ECONOMY_SCHEMA_VERSION,
     enabled: source.enabled === true,
@@ -96,11 +123,19 @@ function sanitizeAgentEconomy(savedAgentEconomy) {
     nextHouseholdId: nextIdNumber(source, households),
     lastReconciledPopulation: toPopulation(source.lastReconciledPopulation),
     households,
-    metrics: {
-      totalTrades: toPopulation(source.metrics?.totalTrades),
-      failedTrades: toPopulation(source.metrics?.failedTrades),
-      daysSimulated: toPopulation(source.metrics?.daysSimulated),
-    },
+    rngSeed,
+    rngState,
+    day: toPopulation(source.day),
+    pendingOrders: Array.isArray(source.pendingOrders) ? source.pendingOrders.slice(-500) : [],
+    lastDailySummary: source.lastDailySummary && typeof source.lastDailySummary === "object"
+      ? source.lastDailySummary
+      : null,
+    lastQuarterSummary: source.lastQuarterSummary && typeof source.lastQuarterSummary === "object"
+      ? source.lastQuarterSummary
+      : null,
+    dailyHistory: Array.isArray(source.dailyHistory) ? source.dailyHistory.slice(-60) : [],
+    quarterHistory: Array.isArray(source.quarterHistory) ? source.quarterHistory.slice(-40) : [],
+    metrics: sanitizeMetrics(source.metrics),
   };
 }
 
@@ -124,11 +159,26 @@ export function reconcileAgentEconomyPopulation(agentEconomy, population, option
   }
 
   if (households.length === 0) {
-    return createInitialAgentEconomy(targetPopulation, {
+    const created = createInitialAgentEconomy(targetPopulation, {
       maxHouseholds,
       createdTurn: options.createdTurn ?? 0,
       origin: options.origin ?? "migration",
+      seed: sanitized.rngSeed,
     });
+    return {
+      ...created,
+      enabled: sanitized.enabled,
+      shadowMode: sanitized.shadowMode,
+      rngSeed: sanitized.rngSeed,
+      rngState: sanitized.rngState,
+      day: sanitized.day,
+      pendingOrders: sanitized.pendingOrders,
+      lastDailySummary: sanitized.lastDailySummary,
+      lastQuarterSummary: sanitized.lastQuarterSummary,
+      dailyHistory: sanitized.dailyHistory,
+      quarterHistory: sanitized.quarterHistory,
+      metrics: sanitized.metrics,
+    };
   }
 
   let representedPopulation = getHouseholdPopulation(households);
@@ -203,6 +253,7 @@ export function hydrateAgentEconomy(savedAgentEconomy, population, options = {})
       maxHouseholds: options.maxHouseholds,
       createdTurn: options.createdTurn ?? 0,
       origin: "legacy-save-migration",
+      seed: options.seed,
     });
   }
   return reconcileAgentEconomyPopulation(savedAgentEconomy, population, options);
