@@ -48,6 +48,20 @@ export {
 } from "./productionSystem.js";
 
 export {
+  BUILDING_OCCUPATIONS,
+  allocateBuildingWorkforce,
+  getBuildingInstanceId,
+  getBuildingType,
+  getEconomicWorkerCapacity,
+  getRequiredOccupation,
+} from "./workforceSystem.js";
+
+export {
+  SHADOW_INPUT_OVERRIDES,
+  runBuildingProduction,
+} from "./buildingProductionSystem.js";
+
+export {
   consumeHousehold,
   updateHouseholdNeeds,
 } from "./consumptionSystem.js";
