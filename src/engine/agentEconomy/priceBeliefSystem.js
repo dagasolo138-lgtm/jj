@@ -1,5 +1,10 @@
 import { BASE_BUY_PRICES, BASE_SELL_PRICES } from "../../data/economy.js";
-import { MIN_TRADE_QUANTITY, calibratedQuantity } from "./economyCalibration.js";
+import {
+  LEARNED_PRICE_CEILING_MULTIPLIER,
+  LEARNED_PRICE_FLOOR_MULTIPLIER,
+  MIN_TRADE_QUANTITY,
+  calibratedQuantity,
+} from "./economyCalibration.js";
 
 export const PRICE_HISTORY_LIMIT = 40;
 export const MIN_ABSOLUTE_PRICE = 0.5;
@@ -70,19 +75,27 @@ function shiftBelief(commodity, belief, options = {}) {
 
   center *= Number.isFinite(options.centerMultiplier) ? options.centerMultiplier : 1;
   halfSpread *= Number.isFinite(options.spreadMultiplier) ? options.spreadMultiplier : 1;
-  center = clamp(center, bounds.floor, bounds.ceiling);
-  halfSpread = clamp(halfSpread, bounds.reference * 0.04, bounds.reference * 0.75);
+  const learnedFloor = Math.max(
+    bounds.floor,
+    bounds.reference * LEARNED_PRICE_FLOOR_MULTIPLIER,
+  );
+  const learnedCeiling = Math.min(
+    bounds.ceiling,
+    bounds.reference * LEARNED_PRICE_CEILING_MULTIPLIER,
+  );
+  center = clamp(center, learnedFloor, learnedCeiling);
+  halfSpread = clamp(halfSpread, bounds.reference * 0.04, bounds.reference * 0.35);
 
-  let min = clamp(center - halfSpread, bounds.floor, bounds.ceiling);
-  let max = clamp(center + halfSpread, bounds.floor, bounds.ceiling);
+  let min = clamp(center - halfSpread, learnedFloor, learnedCeiling);
+  let max = clamp(center + halfSpread, learnedFloor, learnedCeiling);
   if (max < min) [min, max] = [max, min];
 
   return {
     min: roundMoney(min),
     max: roundMoney(max),
     lastPrice: Number.isFinite(options.lastPrice)
-      ? roundMoney(clamp(options.lastPrice, bounds.floor, bounds.ceiling))
-      : normalized.lastPrice,
+      ? roundMoney(clamp(options.lastPrice, learnedFloor, learnedCeiling))
+      : roundMoney(clamp(normalized.lastPrice, learnedFloor, learnedCeiling)),
   };
 }
 
@@ -175,22 +188,28 @@ function learnFromOutcome(household, outcome) {
     });
   }
 
-  if (outcome.failedBuy > 0) {
+  if (outcome.failedBuy > 0 && outcome.buyFilled < MIN_TRADE_QUANTITY) {
     const ratio = outcome.failedBuy / Math.max(MIN_TRADE_QUANTITY, outcome.buyOrdered);
     const urgency = FOOD_COMMODITIES.has(outcome.commodity)
       ? clamp((Number(household.needs?.food) || 0) / 100, 0, 1)
       : 0;
+    const reference = getReferencePrice(outcome.commodity);
     next = shiftBelief(outcome.commodity, next, {
-      centerMultiplier: 1 + 0.03 + ratio * 0.05 + urgency * 0.025,
-      spreadMultiplier: 1.04,
+      anchorPrice: reference * 1.08,
+      anchorWeight: 0.08,
+      centerMultiplier: 1 + 0.002 + ratio * 0.004 + urgency * 0.002,
+      spreadMultiplier: 1.01,
     });
   }
 
-  if (outcome.failedSell > 0) {
+  if (outcome.failedSell > 0 && outcome.sellFilled < MIN_TRADE_QUANTITY) {
     const ratio = outcome.failedSell / Math.max(MIN_TRADE_QUANTITY, outcome.sellOrdered);
+    const reference = getReferencePrice(outcome.commodity);
     next = shiftBelief(outcome.commodity, next, {
-      centerMultiplier: 1 - 0.025 - ratio * 0.05,
-      spreadMultiplier: 1.04,
+      anchorPrice: reference * 0.92,
+      anchorWeight: 0.08,
+      centerMultiplier: 1 - 0.002 - ratio * 0.004,
+      spreadMultiplier: 1.01,
     });
   }
 
