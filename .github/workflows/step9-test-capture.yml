@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 env:
-  CAPTURE_VERSION: "2"
+  CAPTURE_VERSION: "3"
 
 jobs:
   capture:
@@ -22,8 +22,8 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
-      - name: Capture agent tests
-        run: npm run test:agent-economy > tests/baselines/step9-test-output.txt 2>&1 || true
+      - name: Capture lint
+        run: npm run lint > tests/baselines/step9-test-output.txt 2>&1 || true
       - name: Commit output
         run: |
           git config user.name "github-actions[bot]"
