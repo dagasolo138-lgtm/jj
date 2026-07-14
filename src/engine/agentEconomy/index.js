@@ -17,6 +17,20 @@ export {
 } from "./householdUtils.js";
 
 export {
+  COMPARISON_HISTORY_LIMIT,
+  ENGINE_MODES,
+  REQUIRED_SAFE_QUARTERS,
+  buildEngineComparison,
+  createInitialEngineControl,
+  createLegacyCheckpoint,
+  forceEngineRollback,
+  normalizeEngineControl,
+  recordEngineComparison,
+  requestEngineMode,
+  shouldRunAgentEngine,
+} from "./engineControlSystem.js";
+
+export {
   OCCUPATIONS,
   getDefaultOccupation,
   getOccupationCounts,
