@@ -1,3 +1,8 @@
+import {
+  MIN_TRADE_QUANTITY,
+  calibratedQuantity,
+} from "./economyCalibration.js";
+
 const FOOD_COMMODITIES = ["grain", "flour", "fish", "livestock"];
 
 function safePrice(belief, side) {
@@ -10,20 +15,20 @@ function reserveFor(household, commodity, weight) {
   let reserve = 0;
   if (FOOD_COMMODITIES.includes(commodity)) reserve = Math.max(1, weight * 2);
   if (commodity === "tools" || commodity === "cloth") reserve = Math.max(reserve, weight);
-  reserve += Math.ceil(Math.max(0, Number(household.productionNeeds?.[commodity]) || 0));
-  return reserve;
+  reserve += Math.max(0, Number(household.productionNeeds?.[commodity]) || 0);
+  return calibratedQuantity(reserve);
 }
 
 function foodStock(inventory) {
-  return FOOD_COMMODITIES.reduce((total, commodity) =>
-    total + Math.max(0, Math.floor(Number(inventory?.[commodity]) || 0)), 0);
+  return calibratedQuantity(FOOD_COMMODITIES.reduce((total, commodity) =>
+    total + Math.max(0, Number(inventory?.[commodity]) || 0), 0));
 }
 
 function addBuyRequest(requests, commodity, quantity, reason) {
-  const amount = Math.max(0, Math.ceil(Number(quantity) || 0));
-  if (amount <= 0) return;
+  const amount = calibratedQuantity(quantity);
+  if (amount < MIN_TRADE_QUANTITY) return;
   const current = requests.get(commodity) ?? { quantity: 0, reasons: [] };
-  current.quantity += amount;
+  current.quantity = calibratedQuantity(current.quantity + amount);
   if (!current.reasons.includes(reason)) current.reasons.push(reason);
   requests.set(commodity, current);
 }
@@ -50,7 +55,7 @@ export function generateHouseholdOrderIntents(households, context = {}) {
     }
 
     if ((household.needs?.clothing ?? 0) >= 60 && (inventory.cloth ?? 0) < weight) {
-      addBuyRequest(buyRequests, "cloth", Math.max(1, weight / 2), "clothing-need");
+      addBuyRequest(buyRequests, "cloth", Math.max(MIN_TRADE_QUANTITY, weight / 2), "clothing-need");
     }
 
     if ((household.needs?.tools ?? 0) >= 65 && (inventory.tools ?? 0) < 1) {
@@ -82,10 +87,10 @@ export function generateHouseholdOrderIntents(households, context = {}) {
     }
 
     for (const [commodity, rawAmount] of Object.entries(inventory)) {
-      const amount = Math.max(0, Math.floor(Number(rawAmount) || 0));
+      const amount = calibratedQuantity(rawAmount);
       const reserve = reserveFor(household, commodity, weight);
-      const surplus = amount - reserve;
-      if (surplus <= 0) continue;
+      const surplus = calibratedQuantity(amount - reserve);
+      if (surplus < MIN_TRADE_QUANTITY) continue;
       orders.push({
         id: `day-${day}-${household.id}-sell-${commodity}`,
         householdId: household.id,
@@ -125,17 +130,17 @@ export function previewOrderMatches(orders) {
 
     while (bidIndex < bids.length && askIndex < asks.length) {
       if (bids[bidIndex].price < asks[askIndex].price) break;
-      const volume = Math.min(bidRemaining, askRemaining);
-      if (volume <= 0) break;
+      const volume = calibratedQuantity(Math.min(bidRemaining, askRemaining));
+      if (volume < MIN_TRADE_QUANTITY) break;
       potentialMatches += 1;
-      potentialVolume += volume;
-      bidRemaining -= volume;
-      askRemaining -= volume;
-      if (bidRemaining <= 0) {
+      potentialVolume = calibratedQuantity(potentialVolume + volume);
+      bidRemaining = calibratedQuantity(bidRemaining - volume);
+      askRemaining = calibratedQuantity(askRemaining - volume);
+      if (bidRemaining < MIN_TRADE_QUANTITY) {
         bidIndex += 1;
         bidRemaining = bids[bidIndex]?.quantity ?? 0;
       }
-      if (askRemaining <= 0) {
+      if (askRemaining < MIN_TRADE_QUANTITY) {
         askIndex += 1;
         askRemaining = asks[askIndex]?.quantity ?? 0;
       }
