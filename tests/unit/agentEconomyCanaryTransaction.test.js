@@ -14,9 +14,10 @@ import {
   createInitialAgentEconomy,
   createInitialEngineControl,
   ensureLiveStateAdapter,
+  isCanaryCampaignRunning,
   projectAgentEconomyToLegacyState,
   recordEngineComparison,
-  requestEngineMode,
+  startCanaryCampaign,
 } from "../../src/engine/agentEconomy/index.js";
 
 function fixedRandom(callback) {
@@ -52,8 +53,9 @@ function readyCanaryControl() {
     },
   });
   control = recordEngineComparison(control, safeComparison("eligibility"));
-  control = requestEngineMode(control, ENGINE_MODES.CANARY, 1);
+  control = startCanaryCampaign(control, { quarterLimit: 4, turn: 1 });
   assert.equal(control.activeMode, ENGINE_MODES.CANARY);
+  assert.equal(isCanaryCampaignRunning(control), true);
   assert.equal(control.writeBackEnabled, true);
   return control;
 }
@@ -236,6 +238,9 @@ test("canary transaction history is capped", () => {
   let control = readyCanaryControl();
 
   for (let index = 0; index < CANARY_TRANSACTION_HISTORY_LIMIT + 7; index += 1) {
+    if (!isCanaryCampaignRunning(control)) {
+      control = startCanaryCampaign(control, { quarterLimit: 4, turn: index + 1 });
+    }
     const result = applyCanaryTransaction({
       beforeState: before,
       legacyState: legacyAfter,

@@ -1,5 +1,10 @@
 import BUILDINGS from "../../data/buildings.js";
 import { ENGINE_MODES, normalizeEngineControl } from "./engineControlSystem.js";
+import {
+  CANARY_CAMPAIGN_STATUS,
+  getCanaryCampaignBlockers,
+  normalizeCanaryCampaign,
+} from "./canaryCampaignSystem.js";
 
 const FOOD_COMMODITIES = new Set(["grain", "livestock", "fish", "flour"]);
 const STATUS_PRIORITY = {
@@ -191,6 +196,8 @@ export function getEconomyMonitorViewModel(state = {}) {
   const priceRows = getPriceRows(agentEconomy.marketPrices);
   const buildingRows = getBuildingRows(agentEconomy.lastBuildingProduction);
   const comparison = control.lastComparison;
+  const campaign = normalizeCanaryCampaign(control.canaryCampaign);
+  const campaignBlockers = getCanaryCampaignBlockers(control);
   const metrics = agentEconomy.metrics ?? {};
   const latestQuarter = agentEconomy.lastQuarterSummary;
 
@@ -210,8 +217,31 @@ export function getEconomyMonitorViewModel(state = {}) {
       rollbackCount: control.rollbackCount,
       lastRollbackReason: control.lastRollbackReason,
       blockers: control.promotionBlockers,
+      writeBackEnabled: control.writeBackEnabled === true,
       isLegacyOnly: control.activeMode === ENGINE_MODES.LEGACY,
     },
+    campaign: {
+      status: campaign.status,
+      quarterLimit: campaign.quarterLimit,
+      attemptedQuarters: campaign.attemptedQuarters,
+      committedQuarters: campaign.committedQuarters,
+      remainingQuarters: Math.max(0, campaign.quarterLimit - campaign.committedQuarters),
+      progress: round((campaign.committedQuarters / Math.max(1, campaign.quarterLimit)) * 100),
+      startedTurn: campaign.startedTurn,
+      completedTurn: campaign.completedTurn,
+      lastStopReason: campaign.lastStopReason,
+      lastTransactionId: campaign.lastTransactionId,
+      blockers: campaignBlockers,
+      running: campaign.status === CANARY_CAMPAIGN_STATUS.RUNNING,
+      canStart: campaignBlockers.length === 0 && campaign.status !== CANARY_CAMPAIGN_STATUS.RUNNING,
+    },
+    transactions: (control.canaryTransactionHistory ?? []).slice(-6).reverse().map((transaction) => ({
+      id: transaction.id,
+      status: transaction.status,
+      turn: transaction.turn,
+      season: transaction.season,
+      issue: transaction.issues?.[0] ?? null,
+    })),
     householdStats,
     market: {
       totalDemand,

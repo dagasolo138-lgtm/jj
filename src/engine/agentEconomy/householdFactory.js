@@ -9,7 +9,7 @@ import {
 } from "./priceBeliefSystem.js";
 import { DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
 
-export const AGENT_ECONOMY_SCHEMA_VERSION = 10;
+export const AGENT_ECONOMY_SCHEMA_VERSION = 11;
 export const DEFAULT_MAX_HOUSEHOLDS = 120;
 
 export const HOUSEHOLD_COMMODITIES = [

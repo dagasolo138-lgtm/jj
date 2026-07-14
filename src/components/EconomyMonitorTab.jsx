@@ -168,6 +168,24 @@ function ModeButton({ active, disabled, onClick, children }) {
   );
 }
 
+function resolveOperatorMode() {
+  if (typeof window === "undefined") return false;
+  const query = new URLSearchParams(window.location.search).get("operator");
+  try {
+    if (query === "1") {
+      window.localStorage.setItem("lords-ledger-operator-mode", "1");
+      return true;
+    }
+    if (query === "0") {
+      window.localStorage.removeItem("lords-ledger-operator-mode");
+      return false;
+    }
+    return window.localStorage.getItem("lords-ledger-operator-mode") === "1";
+  } catch {
+    return query === "1";
+  }
+}
+
 function ComparisonValue({ label, legacy, agent }) {
   return (
     <div className="grid grid-cols-[1fr_auto_auto] items-center gap-3 py-2 border-b last:border-b-0" style={{ borderColor: "#30291f" }}>
@@ -182,6 +200,7 @@ export default function EconomyMonitorTab({ state, dispatch }) {
   const view = useMemo(() => getEconomyMonitorViewModel(state), [state]);
   const mode = view.mode;
   const comparison = view.comparison;
+  const operatorMode = useMemo(resolveOperatorMode, []);
 
   function setMode(nextMode) {
     dispatch({ type: "AGENT_ECONOMY_SET_MODE", payload: { mode: nextMode } });
@@ -218,36 +237,122 @@ export default function EconomyMonitorTab({ state, dispatch }) {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-2 lg:justify-end">
-            <ModeButton active={mode.active === ENGINE_MODES.LEGACY} onClick={() => setMode(ENGINE_MODES.LEGACY)}>
-              Legacy only
-            </ModeButton>
-            <ModeButton active={mode.active === ENGINE_MODES.SHADOW} onClick={() => setMode(ENGINE_MODES.SHADOW)}>
-              Shadow compare
-            </ModeButton>
-            <ModeButton active={mode.requested === ENGINE_MODES.CANARY} onClick={() => setMode(ENGINE_MODES.CANARY)}>
-              Request canary
-            </ModeButton>
-            <button
-              type="button"
-              onClick={() => dispatch({
-                type: "AGENT_ECONOMY_FORCE_ROLLBACK",
-                payload: { reason: "manual-monitor-rollback" },
-              })}
-              className="px-3 py-2 rounded-md border text-xs uppercase tracking-wide flex items-center gap-1.5"
-              style={{ borderColor: "#78433c", color: COLORS.red, backgroundColor: "rgba(120, 67, 60, 0.10)", fontFamily: "Cinzel, serif" }}
-            >
-              <RotateCcw size={13} /> Roll back
-            </button>
-          </div>
+          {operatorMode && (
+            <div className="flex flex-wrap gap-2 lg:justify-end">
+              <ModeButton active={mode.active === ENGINE_MODES.LEGACY} onClick={() => setMode(ENGINE_MODES.LEGACY)}>
+                Legacy only
+              </ModeButton>
+              <ModeButton active={mode.active === ENGINE_MODES.SHADOW} onClick={() => setMode(ENGINE_MODES.SHADOW)}>
+                Shadow compare
+              </ModeButton>
+              <button
+                type="button"
+                onClick={() => dispatch({
+                  type: "AGENT_ECONOMY_STOP_CANARY_CAMPAIGN",
+                  payload: { reason: "operator-emergency-stop" },
+                })}
+                className="px-3 py-2 rounded-md border text-xs uppercase tracking-wide flex items-center gap-1.5"
+                style={{ borderColor: "#78433c", color: COLORS.red, backgroundColor: "rgba(120, 67, 60, 0.10)", fontFamily: "Cinzel, serif" }}
+              >
+                <RotateCcw size={13} /> Emergency stop
+              </button>
+            </div>
+          )}
         </div>
 
-        {mode.blockers.length > 0 && mode.requested === ENGINE_MODES.CANARY && (
+        {operatorMode && mode.blockers.length > 0 && mode.requested === ENGINE_MODES.CANARY && (
           <div className="mt-4 rounded-md border p-3 text-xs" style={{ borderColor: "#6f532a", backgroundColor: "rgba(210, 154, 74, 0.08)", color: COLORS.amber }}>
             Canary remains blocked: {mode.blockers.join(" · ")}
           </div>
         )}
       </div>
+
+      {operatorMode && (
+        <Panel
+          title="Canary operator controls"
+          icon={view.campaign.running ? ShieldCheck : AlertTriangle}
+          action={(
+            <span className="text-xs uppercase" style={{ color: view.campaign.running ? COLORS.green : COLORS.amber }}>
+              {view.campaign.status}
+            </span>
+          )}
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-[1.2fr_0.8fr] gap-4">
+            <div>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {[
+                  ["Limit", `${view.campaign.quarterLimit} quarters`],
+                  ["Committed", `${view.campaign.committedQuarters}/${view.campaign.quarterLimit}`],
+                  ["Write-back", mode.writeBackEnabled ? "Enabled" : "Disabled"],
+                  ["Authority", mode.authority],
+                ].map(([label, value]) => (
+                  <div key={label} className="rounded-md p-3" style={{ backgroundColor: COLORS.panelDeep }}>
+                    <div className="text-sm font-semibold" style={{ color: COLORS.gold }}>{value}</div>
+                    <div className="text-[10px] uppercase mt-1" style={{ color: COLORS.muted }}>{label}</div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-4">
+                <div className="flex items-center justify-between text-xs mb-2">
+                  <span style={{ color: COLORS.muted }}>Campaign progress</span>
+                  <span style={{ color: COLORS.gold }}>{view.campaign.committedQuarters}/{view.campaign.quarterLimit}</span>
+                </div>
+                <ProgressBar value={view.campaign.progress} tone={view.campaign.running ? COLORS.green : COLORS.gold} />
+              </div>
+              {view.campaign.blockers.length > 0 && !view.campaign.running && (
+                <div className="mt-3 text-xs" style={{ color: COLORS.amber }}>
+                  Start blocked: {view.campaign.blockers.join(" · ")}
+                </div>
+              )}
+              {view.campaign.lastStopReason && (
+                <div className="mt-3 text-xs" style={{ color: view.campaign.status === "aborted" ? COLORS.red : COLORS.muted }}>
+                  Last stop: {view.campaign.lastStopReason}
+                </div>
+              )}
+              <div className="flex flex-wrap gap-2 mt-4">
+                <button
+                  type="button"
+                  disabled={!view.campaign.canStart}
+                  onClick={() => dispatch({
+                    type: "AGENT_ECONOMY_START_CANARY_CAMPAIGN",
+                    payload: { quarterLimit: 3 },
+                  })}
+                  className="px-4 py-2 rounded-md border text-xs uppercase tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
+                  style={{ borderColor: COLORS.green, color: COLORS.green, backgroundColor: "rgba(125, 168, 106, 0.10)", fontFamily: "Cinzel, serif" }}
+                >
+                  Start 3-quarter trial
+                </button>
+                <button
+                  type="button"
+                  disabled={!view.campaign.running}
+                  onClick={() => dispatch({
+                    type: "AGENT_ECONOMY_STOP_CANARY_CAMPAIGN",
+                    payload: { reason: "operator-stop" },
+                  })}
+                  className="px-4 py-2 rounded-md border text-xs uppercase tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
+                  style={{ borderColor: COLORS.red, color: COLORS.red, backgroundColor: "rgba(201, 108, 98, 0.08)", fontFamily: "Cinzel, serif" }}
+                >
+                  Stop and roll back
+                </button>
+              </div>
+            </div>
+            <div className="rounded-md p-3" style={{ backgroundColor: COLORS.panelDeep }}>
+              <div className="text-[10px] uppercase tracking-wider mb-2" style={{ color: COLORS.muted }}>Recent transactions</div>
+              {view.transactions.length === 0 ? (
+                <div className="text-xs" style={{ color: COLORS.muted }}>No Canary transactions recorded.</div>
+              ) : view.transactions.map((transaction) => (
+                <div key={transaction.id} className="py-2 border-t first:border-t-0 text-xs" style={{ borderColor: COLORS.border }}>
+                  <div className="flex items-center justify-between gap-3">
+                    <span style={{ color: COLORS.text }}>Turn {transaction.turn} · {transaction.season}</span>
+                    <span style={{ color: transaction.status === "committed" ? COLORS.green : COLORS.red }}>{transaction.status}</span>
+                  </div>
+                  {transaction.issue && <div className="mt-1" style={{ color: COLORS.red }}>{transaction.issue}</div>}
+                </div>
+              ))}
+            </div>
+          </div>
+        </Panel>
+      )}
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <MetricCard

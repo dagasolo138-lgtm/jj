@@ -5,6 +5,10 @@ import {
   normalizeEngineControl,
 } from "./engineControlSystem.js";
 import {
+  finalizeCanaryCampaignTransaction,
+  isCanaryCampaignRunning,
+} from "./canaryCampaignSystem.js";
+import {
   createLegacyLiveSnapshot,
   projectAgentEconomyToLegacyState,
 } from "./liveStateAdapter.js";
@@ -207,14 +211,19 @@ function recordTransaction(control, transaction, success) {
   };
 }
 
-function updateAdapterAfterTransaction(agentEconomy, officialState, transaction, applied) {
+function updateAdapterAfterTransaction(agentEconomy, officialState, transaction, applied, control) {
   const snapshot = createLegacyLiveSnapshot(officialState);
+  const canaryRemainsActive = applied
+    && control?.activeMode === ENGINE_MODES.CANARY
+    && control?.authority === ENGINE_MODES.CANARY
+    && control?.writeBackEnabled === true
+    && isCanaryCampaignRunning(control);
   return {
     ...agentEconomy,
     liveStateAdapter: {
       ...(agentEconomy.liveStateAdapter ?? {}),
-      shadowOnly: !applied,
-      writeBackEnabled: applied,
+      shadowOnly: !canaryRemainsActive,
+      writeBackEnabled: canaryRemainsActive,
       legacySnapshot: snapshot,
       treasury: {
         ...(agentEconomy.liveStateAdapter?.treasury ?? {}),
@@ -267,12 +276,18 @@ function rollbackTransaction({
     comparisonId: comparison?.id ?? null,
     checkpoint,
   };
-  const nextControl = recordTransaction(rolledBack, transaction, false);
+  const recordedControl = recordTransaction(rolledBack, transaction, false);
+  const nextControl = finalizeCanaryCampaignTransaction(
+    recordedControl,
+    transaction,
+    beforeState?.turn,
+  );
   const nextAgentEconomy = updateAdapterAfterTransaction(
     agentEconomy,
     legacyState,
     transaction,
     false,
+    nextControl,
   );
   return {
     applied: false,
@@ -300,16 +315,29 @@ export function applyCanaryTransaction({
   const normalized = normalizeEngineControl(control);
   const checkpoint = createCanaryCheckpoint(legacyState);
   const canWrite = normalized.activeMode === ENGINE_MODES.CANARY
-    && normalized.writeBackEnabled === true;
+    && normalized.writeBackEnabled === true
+    && isCanaryCampaignRunning(normalized);
 
-  if (!canWrite && !attemptedCanary) {
-    return {
-      applied: false,
-      state: legacyState,
+  if (!canWrite) {
+    if (!attemptedCanary) {
+      return {
+        applied: false,
+        state: legacyState,
+        agentEconomy,
+        control: normalized,
+        transaction: null,
+      };
+    }
+    return rollbackTransaction({
+      beforeState,
+      legacyState,
       agentEconomy,
       control: normalized,
-      transaction: null,
-    };
+      checkpoint,
+      issues: ["canary-campaign-not-running"],
+      comparison,
+      alreadyRolledBack: normalized.activeMode !== ENGINE_MODES.CANARY,
+    });
   }
 
   if (!comparison?.safe) {
@@ -393,12 +421,22 @@ export function applyCanaryTransaction({
     checkpoint,
     committed: createCanaryCheckpoint(officialState),
   };
-  const nextControl = recordTransaction(normalized, transaction, true);
+  const recordedControl = recordTransaction(normalized, transaction, true);
+  const nextControl = finalizeCanaryCampaignTransaction(
+    recordedControl,
+    transaction,
+    beforeState?.turn,
+  );
+  const canaryRemainsActive = nextControl.activeMode === ENGINE_MODES.CANARY
+    && nextControl.authority === ENGINE_MODES.CANARY
+    && nextControl.writeBackEnabled === true
+    && isCanaryCampaignRunning(nextControl);
   const nextAgentEconomy = updateAdapterAfterTransaction(
     agentEconomy,
     officialState,
     transaction,
     true,
+    nextControl,
   );
 
   return {
@@ -406,8 +444,8 @@ export function applyCanaryTransaction({
     state: officialState,
     agentEconomy: {
       ...nextAgentEconomy,
-      enabled: true,
-      shadowMode: false,
+      enabled: canaryRemainsActive,
+      shadowMode: !canaryRemainsActive,
       engineControl: nextControl,
     },
     control: nextControl,

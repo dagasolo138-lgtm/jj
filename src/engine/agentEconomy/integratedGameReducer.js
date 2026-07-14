@@ -15,6 +15,11 @@ import {
   shouldRunAgentEngine,
 } from "./engineControlSystem.js";
 import { hydrateAgentEconomy } from "./householdUtils.js";
+import {
+  isCanaryCampaignRunning,
+  startCanaryCampaign,
+  stopCanaryCampaign,
+} from "./canaryCampaignSystem.js";
 import { applyCanaryTransaction } from "./canaryTransactionSystem.js";
 import {
   ensureLiveStateAdapter,
@@ -64,6 +69,53 @@ function isValidSeasonSimulation(state, action) {
 }
 
 function applyControlAction(state, action) {
+  if (action?.type === "AGENT_ECONOMY_START_CANARY_CAMPAIGN") {
+    const engineControl = startCanaryCampaign(
+      state.agentEconomy.engineControl,
+      {
+        quarterLimit: action.payload?.quarterLimit,
+        turn: state.turn,
+      },
+    );
+    const running = isCanaryCampaignRunning(engineControl);
+    return {
+      ...state,
+      agentEconomy: {
+        ...state.agentEconomy,
+        enabled: running,
+        shadowMode: !running,
+        liveStateAdapter: {
+          ...(state.agentEconomy.liveStateAdapter ?? {}),
+          writeBackEnabled: running,
+          shadowOnly: !running,
+        },
+        engineControl,
+      },
+    };
+  }
+
+  if (action?.type === "AGENT_ECONOMY_STOP_CANARY_CAMPAIGN") {
+    const engineControl = stopCanaryCampaign(
+      state.agentEconomy.engineControl,
+      action.payload?.reason ?? "operator-stop",
+      state.turn,
+    );
+    return {
+      ...state,
+      agentEconomy: {
+        ...state.agentEconomy,
+        enabled: false,
+        shadowMode: true,
+        liveStateAdapter: {
+          ...(state.agentEconomy.liveStateAdapter ?? {}),
+          writeBackEnabled: false,
+          shadowOnly: true,
+        },
+        engineControl,
+      },
+    };
+  }
+
   if (action?.type === "AGENT_ECONOMY_SET_MODE") {
     const mode = action.payload?.mode;
     return {
@@ -102,6 +154,11 @@ function applyControlAction(state, action) {
   }
 
   if (action?.type === "AGENT_ECONOMY_FORCE_ROLLBACK") {
+    const engineControl = stopCanaryCampaign(
+      state.agentEconomy.engineControl,
+      action.payload?.reason ?? "manual-rollback",
+      state.turn,
+    );
     return {
       ...state,
       agentEconomy: {
@@ -113,11 +170,7 @@ function applyControlAction(state, action) {
           writeBackEnabled: false,
           shadowOnly: true,
         },
-        engineControl: forceEngineRollback(
-          state.agentEconomy.engineControl,
-          action.payload?.reason ?? "manual-rollback",
-          state.turn,
-        ),
+        engineControl,
       },
     };
   }
@@ -188,7 +241,8 @@ export function gameReducer(state, action) {
 
   const checkpoint = createLegacyCheckpoint(preparedState);
   const canaryWasActive = control.activeMode === ENGINE_MODES.CANARY
-    && control.writeBackEnabled === true;
+    && control.writeBackEnabled === true
+    && isCanaryCampaignRunning(control);
 
   try {
     const simulatedAgentEconomy = simulateAgentQuarter(

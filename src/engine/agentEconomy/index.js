@@ -55,6 +55,20 @@ export {
 } from "./engineControlSystem.js";
 
 export {
+  CANARY_CAMPAIGN_STATUS,
+  CANARY_CAMPAIGN_VERSION,
+  DEFAULT_CANARY_CAMPAIGN_QUARTERS,
+  MAX_CANARY_CAMPAIGN_QUARTERS,
+  createInitialCanaryCampaign,
+  finalizeCanaryCampaignTransaction,
+  getCanaryCampaignBlockers,
+  isCanaryCampaignRunning,
+  normalizeCanaryCampaign,
+  startCanaryCampaign,
+  stopCanaryCampaign,
+} from "./canaryCampaignSystem.js";
+
+export {
   CANARY_TRANSACTION_HISTORY_LIMIT,
   CANARY_TRANSACTION_VERSION,
   applyCanaryTransaction,
