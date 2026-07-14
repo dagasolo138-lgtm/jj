@@ -24,8 +24,12 @@ function foodStock(inventory) {
     total + Math.max(0, Number(inventory?.[commodity]) || 0), 0));
 }
 
-function addBuyRequest(requests, commodity, quantity, reason) {
-  const amount = calibratedQuantity(quantity);
+function addBuyRequest(requests, commodity, quantity, reason, minimumLot = false) {
+  const rawAmount = calibratedQuantity(quantity);
+  if (rawAmount <= 0) return;
+  const amount = minimumLot
+    ? Math.max(MIN_TRADE_QUANTITY, rawAmount)
+    : rawAmount;
   if (amount < MIN_TRADE_QUANTITY) return;
   const current = requests.get(commodity) ?? { quantity: 0, reasons: [] };
   current.quantity = calibratedQuantity(current.quantity + amount);
@@ -33,49 +37,57 @@ function addBuyRequest(requests, commodity, quantity, reason) {
   requests.set(commodity, current);
 }
 
+function dailySellLimit(weight, commodity) {
+  if (FOOD_COMMODITIES.includes(commodity)) return calibratedQuantity(Math.max(0.5, weight));
+  return calibratedQuantity(Math.max(0.25, weight * 0.5));
+}
+
 export function generateHouseholdOrderIntents(households, context = {}) {
   const day = Math.max(1, Math.floor(context.day ?? 1));
-  const orders = [];
+  const buyOrders = [];
+  const sellerCandidates = [];
 
   for (const household of households ?? []) {
     const weight = Math.max(1, Math.floor(household.weight ?? 1));
     const inventory = household.inventory ?? {};
-    const foodNeed = Math.max(0, Number(household.needs?.food) || 0);
     const currentFood = foodStock(inventory);
     const targetFood = Math.max(1, weight * 2);
     const buyRequests = new Map();
 
-    if (foodNeed >= 35 && currentFood < targetFood) {
+    if (currentFood < targetFood) {
       addBuyRequest(
         buyRequests,
         "grain",
-        Math.min(targetFood - currentFood, weight * Math.min(1.5, foodNeed / 70)),
-        "food-need",
+        targetFood - currentFood,
+        "food-stock",
+        true,
       );
     }
 
     if ((household.needs?.clothing ?? 0) >= 60 && (inventory.cloth ?? 0) < weight) {
-      addBuyRequest(buyRequests, "cloth", Math.max(MIN_TRADE_QUANTITY, weight / 2), "clothing-need");
+      addBuyRequest(buyRequests, "cloth", Math.max(MIN_TRADE_QUANTITY, weight / 2), "clothing-need", true);
     }
 
     if ((household.needs?.tools ?? 0) >= 65 && (inventory.tools ?? 0) < 1) {
-      addBuyRequest(buyRequests, "tools", 1, "tools-need");
+      addBuyRequest(buyRequests, "tools", 1, "tools-need", true);
     }
 
     for (const [commodity, amount] of Object.entries(household.productionNeeds ?? {})) {
       const currentStock = Math.max(0, Number(inventory[commodity]) || 0);
       const shortage = Math.max(0, Number(amount) || 0);
-      if (shortage <= 0) continue;
+      const missing = calibratedQuantity(shortage - currentStock);
+      if (missing <= 0) continue;
       addBuyRequest(
         buyRequests,
         commodity,
-        Math.max(0, shortage - currentStock),
+        missing,
         "production-input",
+        true,
       );
     }
 
     for (const [commodity, request] of buyRequests.entries()) {
-      orders.push({
+      buyOrders.push({
         id: `day-${day}-${household.id}-buy-${commodity}`,
         householdId: household.id,
         side: "buy",
@@ -91,19 +103,24 @@ export function generateHouseholdOrderIntents(households, context = {}) {
       const reserve = reserveFor(household, commodity, weight);
       const surplus = calibratedQuantity(amount - reserve);
       if (surplus < MIN_TRADE_QUANTITY) continue;
-      orders.push({
+      sellerCandidates.push({
         id: `day-${day}-${household.id}-sell-${commodity}`,
         householdId: household.id,
         side: "sell",
         commodity,
-        quantity: surplus,
+        quantity: Math.min(surplus, dailySellLimit(weight, commodity)),
         price: safePrice(household.priceBeliefs?.[commodity], "sell"),
-        reason: "surplus",
+        reason: "observed-demand-surplus",
       });
     }
   }
 
-  return orders;
+  const demandedCommodities = new Set(buyOrders.map((order) => order.commodity));
+  const sellOrders = sellerCandidates.filter((order) =>
+    demandedCommodities.has(order.commodity)
+    && order.quantity >= MIN_TRADE_QUANTITY);
+
+  return [...buyOrders, ...sellOrders];
 }
 
 /**
