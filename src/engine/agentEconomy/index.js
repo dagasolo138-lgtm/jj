@@ -67,6 +67,20 @@ export {
 } from "./tradeSettlement.js";
 
 export {
+  MIN_ABSOLUTE_PRICE,
+  PRICE_CEILING_MULTIPLIER,
+  PRICE_FLOOR_MULTIPLIER,
+  PRICE_HISTORY_LIMIT,
+  applyPriceLearning,
+  collectPriceOutcomes,
+  createInitialMarketPrices,
+  getCommodityPriceBounds,
+  getReferencePrice,
+  normalizePriceBelief,
+  updateMarketPriceIndex,
+} from "./priceBeliefSystem.js";
+
+export {
   DAILY_INCOME_BY_OCCUPATION,
   applyHouseholdTaxAndWelfare,
   payHouseholdIncome,
