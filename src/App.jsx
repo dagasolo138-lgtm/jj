@@ -1,5 +1,5 @@
 import { useReducer, useMemo, useState, useEffect, lazy, Suspense } from "react";
-import { gameReducer, initialState } from "./engine/gameReducer";
+import { gameReducer, initialState } from "./engine/agentEconomy/integratedGameReducer";
 import seasonalEventsData from "./data/seasonalEvents";
 import randomEventsData from "./data/randomEvents";
 import { ALL_FLIPS, computeFlipConsequences, isCyoaFlip, computeCyoaConsequences } from "./engine/flipEngine";

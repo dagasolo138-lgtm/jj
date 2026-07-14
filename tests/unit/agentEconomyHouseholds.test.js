@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { gameReducer, initialState } from "../../src/engine/gameReducer.js";
+import { gameReducer, initialState } from "../../src/engine/agentEconomy/integratedGameReducer.js";
 import {
   createHouseholdsForPopulation,
   createInitialAgentEconomy,
