@@ -1,0 +1,92 @@
+{
+  "validatedCommit": "6dc7c26b1676815e18536906ca2fe50ad88931db",
+  "cleanupCommit": "8f344a5d62ee774d10ed6cdd6cce26a3dd264aaf",
+  "nodeVersion": "24",
+  "schemaVersion": 9,
+  "liveStateAdapterVersion": 1,
+  "mode": {
+    "authoritativeEngine": "legacy",
+    "candidateEnabled": false,
+    "shadowMode": true,
+    "writeBackEnabled": false,
+    "promotionBlocker": "candidate-write-disabled"
+  },
+  "capabilities": {
+    "treasury": true,
+    "estateInventory": true,
+    "population": true,
+    "victoryAndGameOver": true
+  },
+  "adapterValidation": {
+    "externalTreasuryDeltaMirrored": "success",
+    "externalInventoryDeltaMirrored": "success",
+    "populationGrowthReconciled": "success",
+    "populationLossCashConserved": "success",
+    "populationLossInventoryConserved": "success",
+    "newGameReset": "success",
+    "saveMigrationPreservesHouseholdHistory": "success",
+    "victoryProjection": "success",
+    "gameOverProjection": "success",
+    "quarterFiscalProjection": "success",
+    "projectionIsPure": "success",
+    "officialLegacyStateUnchanged": "success"
+  },
+  "workflows": {
+    "agentEconomy": {
+      "runId": 29355295628,
+      "status": "success"
+    },
+    "calibration": {
+      "runId": 29355295571,
+      "artifactId": 8319874647,
+      "status": "success"
+    },
+    "stress": {
+      "runId": 29355295567,
+      "artifactId": 8319901578,
+      "status": "success"
+    }
+  },
+  "hardValidation": {
+    "agentEconomyTests": "success",
+    "legacyEconomyBaseline": "success",
+    "lint": "success",
+    "build": "success",
+    "calibrationMatrix": "meets-target",
+    "stressStatus": "pass",
+    "stressBalanceStatus": "stable"
+  },
+  "calibration": {
+    "scenarioCount": 7,
+    "seedsPerScenario": 12,
+    "quartersPerSeed": 12,
+    "totalQuarterSimulations": 1008,
+    "totalDaySimulations": 30240,
+    "targetMissCount": 0,
+    "directionalChecksPassed": 6,
+    "directionalChecksTotal": 6
+  },
+  "stress": {
+    "seedCount": 100,
+    "quartersPerSeed": 40,
+    "daysPerSeed": 1200,
+    "totalQuarterSimulations": 4000,
+    "totalDaySimulations": 120000,
+    "completionRate": 100,
+    "economicSurvivalRate": 100,
+    "invariantFailureRate": 0,
+    "foodFulfillmentRate": 99.35,
+    "employmentRate": 80,
+    "povertyRate": 3,
+    "marketFreezeSeedRate": 0,
+    "extremeInflationSeedRate": 0,
+    "priceCrashSeedRate": 0,
+    "chronicInputShortageSeedRate": 0,
+    "meanQuarterMs": 18.2901,
+    "p95QuarterMs": 19.5013,
+    "maxQuarterMs": 26.8295,
+    "runtimeGateMsPerQuarter": 250
+  },
+  "promotionDecision": "live-adapters-ready-write-back-still-disabled",
+  "nextGate": "atomic-canary-write-back-and-rollback"
+}
