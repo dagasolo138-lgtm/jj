@@ -87,6 +87,10 @@ function sanitizeMetrics(metrics = {}) {
     ordersGenerated: toNonNegativeNumber(metrics.ordersGenerated),
     potentialMatches: toNonNegativeNumber(metrics.potentialMatches),
     potentialMatchVolume: toNonNegativeNumber(metrics.potentialMatchVolume),
+    settledTrades: toNonNegativeNumber(metrics.settledTrades),
+    failedOrders: toNonNegativeNumber(metrics.failedOrders),
+    tradeVolume: toNonNegativeNumber(metrics.tradeVolume),
+    tradeValue: toNonNegativeNumber(metrics.tradeValue),
     grossIncome: toNonNegativeNumber(metrics.grossIncome),
     taxCollected: toNonNegativeNumber(metrics.taxCollected),
     welfarePaid: toNonNegativeNumber(metrics.welfarePaid),
@@ -127,6 +131,7 @@ function sanitizeAgentEconomy(savedAgentEconomy) {
     rngState,
     day: toPopulation(source.day),
     pendingOrders: Array.isArray(source.pendingOrders) ? source.pendingOrders.slice(-500) : [],
+    lastTrades: Array.isArray(source.lastTrades) ? source.lastTrades.slice(-100) : [],
     lastDailySummary: source.lastDailySummary && typeof source.lastDailySummary === "object"
       ? source.lastDailySummary
       : null,
@@ -173,6 +178,7 @@ export function reconcileAgentEconomyPopulation(agentEconomy, population, option
       rngState: sanitized.rngState,
       day: sanitized.day,
       pendingOrders: sanitized.pendingOrders,
+      lastTrades: sanitized.lastTrades,
       lastDailySummary: sanitized.lastDailySummary,
       lastQuarterSummary: sanitized.lastQuarterSummary,
       dailyHistory: sanitized.dailyHistory,
