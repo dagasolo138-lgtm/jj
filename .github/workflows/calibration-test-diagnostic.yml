@@ -1,0 +1,27 @@
+name: Calibration test diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/calibration-test-diagnostic.yml
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Capture tests
+        run: |
+          mkdir -p artifacts
+          npm run test:agent-economy > artifacts/calibration-unit-test-output.txt 2>&1 || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: calibration-unit-test-output
+          path: artifacts/calibration-unit-test-output.txt
+          retention-days: 3
