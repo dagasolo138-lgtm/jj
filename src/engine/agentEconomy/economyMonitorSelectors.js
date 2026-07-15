@@ -9,6 +9,10 @@ import {
   getCanaryReleaseGuardrails,
   normalizeCanaryObservation,
 } from "./canaryObservationSystem.js";
+import {
+  CANARY_PILOT_STATUS,
+  getCanaryPilotReport,
+} from "./canaryPilotSystem.js";
 
 const FOOD_COMMODITIES = new Set(["grain", "livestock", "fish", "flour"]);
 const STATUS_PRIORITY = {
@@ -204,6 +208,9 @@ export function getEconomyMonitorViewModel(state = {}) {
   const campaignBlockers = getCanaryCampaignBlockers(control, { quarterLimit: 3 });
   const extendedCampaignBlockers = getCanaryCampaignBlockers(control, { quarterLimit: 4 });
   const releaseGate = getCanaryReleaseGuardrails(control);
+  const pilot = getCanaryPilotReport(control);
+  const pilotActive = pilot.status === CANARY_PILOT_STATUS.RUNNING
+    || pilot.status === CANARY_PILOT_STATUS.AWAITING_REVIEW;
   const observationByTransaction = new Map(
     (control.canaryObservations ?? [])
       .map(normalizeCanaryObservation)
@@ -246,7 +253,9 @@ export function getEconomyMonitorViewModel(state = {}) {
       blockers: campaignBlockers,
       extendedBlockers: extendedCampaignBlockers,
       running: campaign.status === CANARY_CAMPAIGN_STATUS.RUNNING,
-      canStart: campaignBlockers.length === 0 && campaign.status !== CANARY_CAMPAIGN_STATUS.RUNNING,
+      canStart: campaignBlockers.length === 0
+        && campaign.status !== CANARY_CAMPAIGN_STATUS.RUNNING
+        && !pilotActive,
       canStartExtended: extendedCampaignBlockers.length === 0
         && campaign.status !== CANARY_CAMPAIGN_STATUS.RUNNING,
     },
@@ -259,6 +268,28 @@ export function getEconomyMonitorViewModel(state = {}) {
       requiredObservationWindow: releaseGate.requiredObservationWindow,
       maximumDriftRatios: releaseGate.maximumDriftRatios,
       limits: releaseGate.limits,
+    },
+    pilot: {
+      status: pilot.status,
+      targetCampaigns: pilot.targetCampaigns,
+      attemptedCampaigns: pilot.attemptedCampaigns,
+      completedCampaigns: pilot.completedCampaigns,
+      remainingCampaigns: pilot.remainingCampaigns,
+      committedQuarters: pilot.committedQuarters,
+      totalPlannedQuarters: pilot.totalPlannedQuarters,
+      rollbackCount: pilot.rollbackCount,
+      maximumDriftRatios: pilot.maximumDriftRatios,
+      progress: pilot.progress,
+      lastStopReason: pilot.lastStopReason,
+      active: pilotActive,
+      running: pilot.status === CANARY_PILOT_STATUS.RUNNING,
+      awaitingReview: pilot.status === CANARY_PILOT_STATUS.AWAITING_REVIEW,
+      canStart: campaignBlockers.length === 0
+        && !pilotActive
+        && campaign.status !== CANARY_CAMPAIGN_STATUS.RUNNING,
+      canContinue: pilot.canContinue
+        && campaignBlockers.length === 0
+        && campaign.status !== CANARY_CAMPAIGN_STATUS.RUNNING,
     },
     transactions: (control.canaryTransactionHistory ?? []).slice(-6).reverse().map((transaction) => {
       const observation = observationByTransaction.get(transaction.id);

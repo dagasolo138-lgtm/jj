@@ -309,6 +309,60 @@ export default function EconomyMonitorTab({ state, dispatch }) {
                   Last stop: {view.campaign.lastStopReason}
                 </div>
               )}
+              <div className="mt-4 rounded-md border p-3" style={{ backgroundColor: COLORS.panelDeep, borderColor: view.pilot.active ? COLORS.blue : COLORS.border }}>
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[10px] uppercase tracking-wider" style={{ color: COLORS.muted }}>Controlled pilot program</span>
+                  <span className="text-xs uppercase" style={{ color: view.pilot.running ? COLORS.green : view.pilot.awaitingReview ? COLORS.amber : COLORS.muted }}>
+                    {view.pilot.status}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3 text-xs">
+                  <span style={{ color: COLORS.text }}>Trials {view.pilot.completedCampaigns}/{view.pilot.targetCampaigns}</span>
+                  <span style={{ color: COLORS.text }}>Quarters {view.pilot.committedQuarters}/{view.pilot.totalPlannedQuarters}</span>
+                  <span style={{ color: COLORS.text }}>Rollbacks {view.pilot.rollbackCount}</span>
+                  <span style={{ color: COLORS.text }}>Remaining {view.pilot.remainingCampaigns}</span>
+                </div>
+                <div className="mt-3">
+                  <ProgressBar value={view.pilot.progress} tone={view.pilot.running ? COLORS.green : COLORS.blue} />
+                </div>
+                {view.pilot.lastStopReason && (
+                  <div className="mt-2 text-xs" style={{ color: view.pilot.status === "aborted" ? COLORS.red : COLORS.muted }}>
+                    Pilot state: {view.pilot.lastStopReason}
+                  </div>
+                )}
+                <div className="flex flex-wrap gap-2 mt-3">
+                  <button
+                    type="button"
+                    disabled={!view.pilot.canStart}
+                    onClick={() => dispatch({ type: "AGENT_ECONOMY_START_CANARY_PILOT" })}
+                    className="px-3 py-2 rounded-md border text-xs uppercase tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{ borderColor: COLORS.blue, color: COLORS.blue, backgroundColor: "rgba(109, 145, 168, 0.10)", fontFamily: "Cinzel, serif" }}
+                  >
+                    Start 3-trial pilot
+                  </button>
+                  <button
+                    type="button"
+                    disabled={!view.pilot.canContinue}
+                    onClick={() => dispatch({ type: "AGENT_ECONOMY_CONTINUE_CANARY_PILOT" })}
+                    className="px-3 py-2 rounded-md border text-xs uppercase tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{ borderColor: COLORS.amber, color: COLORS.amber, backgroundColor: "rgba(210, 154, 74, 0.08)", fontFamily: "Cinzel, serif" }}
+                  >
+                    Continue after review
+                  </button>
+                  <button
+                    type="button"
+                    disabled={!view.pilot.active}
+                    onClick={() => dispatch({
+                      type: "AGENT_ECONOMY_STOP_CANARY_PILOT",
+                      payload: { reason: "operator-pilot-stop" },
+                    })}
+                    className="px-3 py-2 rounded-md border text-xs uppercase tracking-wide disabled:opacity-40 disabled:cursor-not-allowed"
+                    style={{ borderColor: COLORS.red, color: COLORS.red, backgroundColor: "rgba(201, 108, 98, 0.08)", fontFamily: "Cinzel, serif" }}
+                  >
+                    Stop pilot
+                  </button>
+                </div>
+              </div>
               <div className="flex flex-wrap gap-2 mt-4">
                 <button
                   type="button"

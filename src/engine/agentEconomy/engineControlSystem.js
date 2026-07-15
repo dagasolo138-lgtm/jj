@@ -1,3 +1,7 @@
+import {
+  createInitialCanaryPilot,
+  normalizeCanaryPilot,
+} from "./canaryPilotSystem.js";
 import { getCommodityPriceBounds } from "./priceBeliefSystem.js";
 
 export const ENGINE_MODES = Object.freeze({
@@ -96,7 +100,7 @@ export function createInitialEngineControl(options = {}) {
     : ENGINE_MODES.SHADOW;
 
   return {
-    version: 3,
+    version: 4,
     requestedMode,
     activeMode: requestedMode === ENGINE_MODES.LEGACY
       ? ENGINE_MODES.LEGACY
@@ -126,6 +130,8 @@ export function createInitialEngineControl(options = {}) {
     canaryObservations: [],
     lastCanaryCampaignSummary: null,
     canaryCampaignHistory: [],
+    canaryPilotSequence: 0,
+    canaryPilot: createInitialCanaryPilot(),
     lastRollbackReason: null,
     lastModeChangeTurn: 0,
     lastComparison: null,
@@ -154,7 +160,7 @@ export function normalizeEngineControl(control) {
   return {
     ...fallback,
     ...source,
-    version: 3,
+    version: 4,
     requestedMode,
     activeMode,
     authority,
@@ -194,6 +200,8 @@ export function normalizeEngineControl(control) {
     canaryCampaignHistory: Array.isArray(source.canaryCampaignHistory)
       ? source.canaryCampaignHistory.slice(-12)
       : [],
+    canaryPilotSequence: integer(source.canaryPilotSequence),
+    canaryPilot: normalizeCanaryPilot(source.canaryPilot),
     lastRollbackReason: typeof source.lastRollbackReason === "string"
       ? source.lastRollbackReason
       : null,

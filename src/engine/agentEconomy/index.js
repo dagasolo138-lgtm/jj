@@ -91,6 +91,20 @@ export {
 } from "./canaryTransactionSystem.js";
 
 export {
+  CANARY_PILOT_STATUS,
+  CANARY_PILOT_VERSION,
+  DEFAULT_CANARY_PILOT_CAMPAIGNS,
+  abortCanaryPilot,
+  continueCanaryPilot,
+  createInitialCanaryPilot,
+  getCanaryPilotReport,
+  isCanaryPilotActive,
+  normalizeCanaryPilot,
+  startCanaryPilot,
+  synchronizeCanaryPilot,
+} from "./canaryPilotSystem.js";
+
+export {
   LIVE_STATE_ADAPTER_CAPABILITIES,
   LIVE_STATE_ADAPTER_VERSION,
   createInitialLiveStateAdapter,

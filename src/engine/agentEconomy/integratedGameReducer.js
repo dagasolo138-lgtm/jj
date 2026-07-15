@@ -20,6 +20,15 @@ import {
   startCanaryCampaign,
   stopCanaryCampaign,
 } from "./canaryCampaignSystem.js";
+import {
+  CANARY_PILOT_STATUS,
+  abortCanaryPilot,
+  continueCanaryPilot,
+  isCanaryPilotActive,
+  normalizeCanaryPilot,
+  startCanaryPilot,
+  synchronizeCanaryPilot,
+} from "./canaryPilotSystem.js";
 import { applyCanaryTransaction } from "./canaryTransactionSystem.js";
 import {
   ensureLiveStateAdapter,
@@ -68,125 +77,118 @@ function isValidSeasonSimulation(state, action) {
     && state.turn < 40;
 }
 
+function applyEngineControl(state, engineControl) {
+  const running = isCanaryCampaignRunning(engineControl)
+    && engineControl.activeMode === ENGINE_MODES.CANARY
+    && engineControl.writeBackEnabled === true;
+  return {
+    ...state,
+    agentEconomy: {
+      ...state.agentEconomy,
+      enabled: running,
+      shadowMode: !running,
+      liveStateAdapter: {
+        ...(state.agentEconomy.liveStateAdapter ?? {}),
+        writeBackEnabled: running,
+        shadowOnly: !running,
+      },
+      engineControl,
+    },
+  };
+}
+
 function applyControlAction(state, action) {
+  const currentControl = state.agentEconomy.engineControl;
+
+  if (action?.type === "AGENT_ECONOMY_START_CANARY_PILOT") {
+    if (isCanaryPilotActive(currentControl)) return state;
+    const campaignControl = startCanaryCampaign(currentControl, {
+      quarterLimit: 3,
+      turn: state.turn,
+    });
+    const engineControl = startCanaryPilot(
+      campaignControl,
+      campaignControl.canaryCampaign,
+      state.turn,
+    );
+    return applyEngineControl(state, engineControl);
+  }
+
+  if (action?.type === "AGENT_ECONOMY_CONTINUE_CANARY_PILOT") {
+    const pilot = normalizeCanaryPilot(currentControl.canaryPilot);
+    if (pilot.status !== CANARY_PILOT_STATUS.AWAITING_REVIEW) return state;
+    const campaignControl = startCanaryCampaign(currentControl, {
+      quarterLimit: 3,
+      turn: state.turn,
+    });
+    const engineControl = continueCanaryPilot(
+      campaignControl,
+      campaignControl.canaryCampaign,
+      state.turn,
+    );
+    return applyEngineControl(state, engineControl);
+  }
+
+  if (action?.type === "AGENT_ECONOMY_STOP_CANARY_PILOT") {
+    const reason = action.payload?.reason ?? "operator-pilot-stop";
+    const stopped = isCanaryCampaignRunning(currentControl)
+      ? stopCanaryCampaign(currentControl, reason, state.turn)
+      : currentControl;
+    const engineControl = abortCanaryPilot(stopped, reason, state.turn);
+    return applyEngineControl(state, engineControl);
+  }
+
   if (action?.type === "AGENT_ECONOMY_START_CANARY_CAMPAIGN") {
+    if (isCanaryPilotActive(currentControl)) return state;
     const engineControl = startCanaryCampaign(
-      state.agentEconomy.engineControl,
+      currentControl,
       {
         quarterLimit: action.payload?.quarterLimit,
         turn: state.turn,
       },
     );
-    const running = isCanaryCampaignRunning(engineControl);
-    return {
-      ...state,
-      agentEconomy: {
-        ...state.agentEconomy,
-        enabled: running,
-        shadowMode: !running,
-        liveStateAdapter: {
-          ...(state.agentEconomy.liveStateAdapter ?? {}),
-          writeBackEnabled: running,
-          shadowOnly: !running,
-        },
-        engineControl,
-      },
-    };
+    return applyEngineControl(state, engineControl);
   }
 
   if (action?.type === "AGENT_ECONOMY_STOP_CANARY_CAMPAIGN") {
-    const engineControl = stopCanaryCampaign(
-      state.agentEconomy.engineControl,
-      action.payload?.reason ?? "operator-stop",
-      state.turn,
-    );
-    return {
-      ...state,
-      agentEconomy: {
-        ...state.agentEconomy,
-        enabled: false,
-        shadowMode: true,
-        liveStateAdapter: {
-          ...(state.agentEconomy.liveStateAdapter ?? {}),
-          writeBackEnabled: false,
-          shadowOnly: true,
-        },
-        engineControl,
-      },
-    };
+    const reason = action.payload?.reason ?? "operator-stop";
+    const stopped = stopCanaryCampaign(currentControl, reason, state.turn);
+    const engineControl = isCanaryPilotActive(currentControl)
+      ? abortCanaryPilot(stopped, reason, state.turn)
+      : stopped;
+    return applyEngineControl(state, engineControl);
   }
 
   if (action?.type === "AGENT_ECONOMY_SET_MODE") {
     const mode = action.payload?.mode;
-    const currentControl = state.agentEconomy.engineControl;
-    const engineControl = isCanaryCampaignRunning(currentControl)
+    const stopped = isCanaryCampaignRunning(currentControl)
       && mode !== ENGINE_MODES.CANARY
       ? stopCanaryCampaign(currentControl, `mode-change:${mode ?? "unknown"}`, state.turn)
       : requestEngineMode(currentControl, mode, state.turn);
-    const running = isCanaryCampaignRunning(engineControl)
-      && engineControl.activeMode === ENGINE_MODES.CANARY
-      && engineControl.writeBackEnabled === true;
-    return {
-      ...state,
-      agentEconomy: {
-        ...state.agentEconomy,
-        enabled: running,
-        shadowMode: !running,
-        liveStateAdapter: {
-          ...(state.agentEconomy.liveStateAdapter ?? {}),
-          writeBackEnabled: running,
-          shadowOnly: !running,
-        },
-        engineControl,
-      },
-    };
+    const engineControl = isCanaryPilotActive(currentControl) && mode !== ENGINE_MODES.CANARY
+      ? abortCanaryPilot(stopped, `mode-change:${mode ?? "unknown"}`, state.turn)
+      : stopped;
+    return applyEngineControl(state, engineControl);
   }
 
   if (action?.type === "AGENT_ECONOMY_SET_WRITE_BACK") {
     const enabled = action.payload?.enabled === true;
-    const currentControl = state.agentEconomy.engineControl;
-    const engineControl = !enabled && isCanaryCampaignRunning(currentControl)
+    const stopped = !enabled && isCanaryCampaignRunning(currentControl)
       ? stopCanaryCampaign(currentControl, "writeback-disabled", state.turn)
       : setEngineWriteBackEnabled(currentControl, enabled);
-    const running = isCanaryCampaignRunning(engineControl)
-      && engineControl.activeMode === ENGINE_MODES.CANARY
-      && engineControl.writeBackEnabled === true;
-    return {
-      ...state,
-      agentEconomy: {
-        ...state.agentEconomy,
-        enabled: running,
-        shadowMode: !running,
-        liveStateAdapter: {
-          ...(state.agentEconomy.liveStateAdapter ?? {}),
-          writeBackEnabled: running,
-          shadowOnly: !running,
-        },
-        engineControl,
-      },
-    };
+    const engineControl = !enabled && isCanaryPilotActive(currentControl)
+      ? abortCanaryPilot(stopped, "writeback-disabled", state.turn)
+      : stopped;
+    return applyEngineControl(state, engineControl);
   }
 
   if (action?.type === "AGENT_ECONOMY_FORCE_ROLLBACK") {
-    const engineControl = stopCanaryCampaign(
-      state.agentEconomy.engineControl,
-      action.payload?.reason ?? "manual-rollback",
-      state.turn,
-    );
-    return {
-      ...state,
-      agentEconomy: {
-        ...state.agentEconomy,
-        enabled: false,
-        shadowMode: true,
-        liveStateAdapter: {
-          ...(state.agentEconomy.liveStateAdapter ?? {}),
-          writeBackEnabled: false,
-          shadowOnly: true,
-        },
-        engineControl,
-      },
-    };
+    const reason = action.payload?.reason ?? "manual-rollback";
+    const stopped = stopCanaryCampaign(currentControl, reason, state.turn);
+    const engineControl = isCanaryPilotActive(currentControl)
+      ? abortCanaryPilot(stopped, reason, state.turn)
+      : stopped;
+    return applyEngineControl(state, engineControl);
   }
 
   return null;
@@ -296,9 +298,13 @@ export function gameReducer(state, action) {
         comparison,
         attemptedCanary: true,
       });
+      const synchronizedControl = synchronizeCanaryPilot(transaction.control);
       return {
         ...transaction.state,
-        agentEconomy: transaction.agentEconomy,
+        agentEconomy: {
+          ...transaction.agentEconomy,
+          engineControl: synchronizedControl,
+        },
       };
     }
 
@@ -323,9 +329,13 @@ export function gameReducer(state, action) {
         comparison,
         attemptedCanary: true,
       });
+      const synchronizedControl = synchronizeCanaryPilot(transaction.control);
       return {
         ...transaction.state,
-        agentEconomy: transaction.agentEconomy,
+        agentEconomy: {
+          ...transaction.agentEconomy,
+          engineControl: synchronizedControl,
+        },
       };
     }
 
