@@ -1,0 +1,38 @@
+name: Canary population comparison order patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/patchCanaryPopulationComparisonOrder.mjs
+      - .github/workflows/canary-population-comparison-order-patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node scripts/patchCanaryPopulationComparisonOrder.mjs
+      - run: npm run test:agent-economy
+      - run: npm run test:economy
+      - run: npm run lint
+      - run: npm run build
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/engine/agentEconomy/integratedGameReducer.js \
+            src/engine/agentEconomy/engineControlSystem.js \
+            tests/unit/agentEconomyEngineControl.test.js
+          git diff --cached --quiet && exit 0
+          git commit -m "fix(agent-economy): compare after population alignment"
+          git push
