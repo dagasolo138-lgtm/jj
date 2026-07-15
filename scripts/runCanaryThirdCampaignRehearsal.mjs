@@ -393,14 +393,16 @@ try {
     writeBackClosedAfterPilot: control.writeBackEnabled === false,
     legacyAuthorityRestored: control.authority === "legacy",
     shadowModeRestored: control.activeMode === "shadow",
+  };
+  assertCondition(
+    Object.values(hardSafety).every(Boolean),
+    `Third campaign operational safety failed: ${JSON.stringify(hardSafety)}`,
+  );
+  const releaseReadiness = {
     ratiosWithinLimits: allRatiosWithinLimits,
     releaseGateReady: releaseGate.ready === true,
     releaseGateHasNoBlockers: (releaseGate.blockers ?? []).length === 0,
   };
-  assertCondition(
-    Object.values(hardSafety).every(Boolean),
-    `Third campaign hard safety failed: ${JSON.stringify(hardSafety)}`,
-  );
 
   const secondFood = finite(campaignRatios[1]?.food);
   const thirdFood = finite(campaignRatios[2]?.food);
@@ -466,6 +468,7 @@ try {
       allRatiosWithinLimits,
     },
     hardSafety,
+    releaseReadiness,
     recommendation,
     endingState: resourceSnapshot(state),
     endingDigest: stateDigest(state),
