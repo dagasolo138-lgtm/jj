@@ -12,6 +12,7 @@ import {
   getCanaryPilotReport,
   getCanaryReleaseGuardrails,
   normalizeEngineControl,
+  recordCanaryObservation,
   recordEngineComparison,
   startCanaryCampaign,
   startCanaryPilot,
@@ -123,12 +124,20 @@ test("three reviewed campaigns complete the pilot and unlock the release gate", 
 
 test("a rolled-back campaign aborts the pilot and leaves the write gate closed", () => {
   let control = startPilot(readyControl(), 1);
-  control = finalizeCanaryCampaignTransaction(control, {
+  const transaction = {
     id: "pilot-rollback",
     status: "rolled-back",
     applied: false,
+    turn: 2,
+    season: "summer",
     issues: ["invalid-denarii"],
-  }, 2);
+    checkpoint: {},
+  };
+  control = recordCanaryObservation(control, transaction, {
+    legacyDeltas: {},
+    agentDeltas: {},
+  });
+  control = finalizeCanaryCampaignTransaction(control, transaction, 2);
   control = synchronizeCanaryPilot(control);
   const report = getCanaryPilotReport(control);
 
