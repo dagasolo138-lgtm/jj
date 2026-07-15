@@ -113,6 +113,7 @@ export {
   finalizeAgentQuarterLiveState,
   normalizeLiveStateAdapter,
   projectAgentEconomyToLegacyState,
+  rebaseAgentEconomyForCanary,
   reconcileLiveStateTransition,
 } from "./liveStateAdapter.js";
 

@@ -3,7 +3,7 @@ import { createHousehold, createInitialAgentEconomy } from "./householdFactory.j
 import { reconcileAgentEconomyPopulation } from "./householdUtils.js";
 import { ENGINE_MODES, setEngineAdapterCapabilities } from "./engineControlSystem.js";
 
-export const LIVE_STATE_ADAPTER_VERSION = 1;
+export const LIVE_STATE_ADAPTER_VERSION = 2;
 
 export const LIVE_STATE_ADAPTER_CAPABILITIES = Object.freeze({
   treasury: true,
@@ -328,6 +328,88 @@ function attachAdapter(agentEconomy, adapter) {
 export function ensureLiveStateAdapter(agentEconomy, legacyState = {}) {
   const adapter = normalizeLiveStateAdapter(agentEconomy?.liveStateAdapter, legacyState);
   return attachAdapter(agentEconomy, adapter);
+}
+
+export function rebaseAgentEconomyForCanary(agentEconomy, legacyState = {}, options = {}) {
+  const snapshot = createLegacyLiveSnapshot(legacyState);
+  let working = ensureLiveStateAdapter(agentEconomy, legacyState);
+  const beforeInventory = getDistributedInventoryTotals(working.households);
+  const beforeProjected = projectAgentEconomyToLegacyState(working, legacyState);
+  const populationResult = conservePopulationAssets(working, snapshot.population, {
+    createdTurn: snapshot.turn,
+    origin: options.origin ?? "canary-activation-rebase",
+    legacyState,
+  });
+  working = populationResult.agentEconomy;
+
+  let households = distributeEstateInventory(working.households, snapshot.inventory, { replace: true });
+  const adapter = normalizeLiveStateAdapter(working.liveStateAdapter, legacyState);
+  const reserveCash = money(adapter.unassignedAssets?.cash);
+  if (reserveCash > 0 && households.length > 0) {
+    const [first, ...rest] = households;
+    households = [{ ...first, cash: money(finite(first.cash) + reserveCash) }, ...rest];
+  }
+
+  const rebasedAdapter = {
+    ...adapter,
+    legacySnapshot: snapshot,
+    treasury: {
+      ...adapter.treasury,
+      projectedDenarii: snapshot.denarii,
+      lastLegacyDenarii: snapshot.denarii,
+      lastExternalDelta: 0,
+      lastFiscalDelta: 0,
+    },
+    estateInventory: {
+      lastLegacyInventory: cloneInventory(snapshot.inventory),
+      lastAppliedDelta: {},
+      unresolvedDelta: {},
+    },
+    population: {
+      lastLegacyPopulation: snapshot.population,
+      lastDelta: 0,
+      conservedCash: populationResult.conservedCash,
+      conservedInventory: populationResult.conservedInventory,
+    },
+    outcome: {
+      phase: snapshot.phase,
+      gameOverReason: snapshot.gameOverReason,
+      victory: snapshot.phase === "victory",
+      pyrrhicVictory: snapshot.pyrrhicVictory,
+    },
+    unassignedAssets: normalizeReserve(),
+    activationBaseline: {
+      version: 1,
+      turn: snapshot.turn,
+      season: snapshot.season,
+      reason: options.reason ?? "canary-start",
+      official: {
+        denarii: snapshot.denarii,
+        food: sumFood(snapshot.inventory),
+        population: snapshot.population,
+        inventory: cloneInventory(snapshot.inventory),
+      },
+      previousProjection: {
+        denarii: money(beforeProjected.denarii),
+        food: quantity(beforeProjected.food),
+        population: integer(beforeProjected.population),
+        inventory: cloneInventory(beforeProjected.inventory),
+      },
+      previousHouseholdInventory: cloneInventory(beforeInventory),
+    },
+    lastTransition: {
+      actionType: "CANARY_ACTIVATION_REBASE",
+      turn: snapshot.turn,
+      phase: snapshot.phase,
+      reason: options.reason ?? "canary-start",
+    },
+  };
+
+  return attachAdapter({
+    ...working,
+    households,
+    pendingOrders: [],
+  }, rebasedAdapter);
 }
 
 export function reconcileLiveStateTransition(agentEconomy, beforeLegacy, afterLegacy, action = {}) {

@@ -16,6 +16,7 @@ import {
 } from "./engineControlSystem.js";
 import { hydrateAgentEconomy } from "./householdUtils.js";
 import {
+  getCanaryCampaignBlockers,
   isCanaryCampaignRunning,
   startCanaryCampaign,
   stopCanaryCampaign,
@@ -33,6 +34,7 @@ import { applyCanaryTransaction } from "./canaryTransactionSystem.js";
 import {
   ensureLiveStateAdapter,
   finalizeAgentQuarterLiveState,
+  rebaseAgentEconomyForCanary,
   reconcileLiveStateTransition,
 } from "./liveStateAdapter.js";
 
@@ -102,7 +104,19 @@ function applyControlAction(state, action) {
 
   if (action?.type === "AGENT_ECONOMY_START_CANARY_PILOT") {
     if (isCanaryPilotActive(currentControl)) return state;
-    const campaignControl = startCanaryCampaign(currentControl, {
+    const blockers = getCanaryCampaignBlockers(currentControl, { quarterLimit: 3 });
+    if (blockers.length > 0) {
+      const blockedControl = startCanaryCampaign(currentControl, { quarterLimit: 3, turn: state.turn });
+      return applyEngineControl(state, startCanaryPilot(
+        blockedControl,
+        blockedControl.canaryCampaign,
+        state.turn,
+      ));
+    }
+    const rebasedEconomy = rebaseAgentEconomyForCanary(state.agentEconomy, state, {
+      reason: "pilot-start",
+    });
+    const campaignControl = startCanaryCampaign(rebasedEconomy.engineControl, {
       quarterLimit: 3,
       turn: state.turn,
     });
@@ -111,13 +125,18 @@ function applyControlAction(state, action) {
       campaignControl.canaryCampaign,
       state.turn,
     );
-    return applyEngineControl(state, engineControl);
+    return applyEngineControl({ ...state, agentEconomy: rebasedEconomy }, engineControl);
   }
 
   if (action?.type === "AGENT_ECONOMY_CONTINUE_CANARY_PILOT") {
     const pilot = normalizeCanaryPilot(currentControl.canaryPilot);
     if (pilot.status !== CANARY_PILOT_STATUS.AWAITING_REVIEW) return state;
-    const campaignControl = startCanaryCampaign(currentControl, {
+    const blockers = getCanaryCampaignBlockers(currentControl, { quarterLimit: 3 });
+    if (blockers.length > 0) return state;
+    const rebasedEconomy = rebaseAgentEconomyForCanary(state.agentEconomy, state, {
+      reason: "pilot-continue",
+    });
+    const campaignControl = startCanaryCampaign(rebasedEconomy.engineControl, {
       quarterLimit: 3,
       turn: state.turn,
     });
@@ -126,7 +145,7 @@ function applyControlAction(state, action) {
       campaignControl.canaryCampaign,
       state.turn,
     );
-    return applyEngineControl(state, engineControl);
+    return applyEngineControl({ ...state, agentEconomy: rebasedEconomy }, engineControl);
   }
 
   if (action?.type === "AGENT_ECONOMY_STOP_CANARY_PILOT") {
@@ -140,14 +159,25 @@ function applyControlAction(state, action) {
 
   if (action?.type === "AGENT_ECONOMY_START_CANARY_CAMPAIGN") {
     if (isCanaryPilotActive(currentControl)) return state;
+    const quarterLimit = action.payload?.quarterLimit;
+    const blockers = getCanaryCampaignBlockers(currentControl, { quarterLimit });
+    if (blockers.length > 0) {
+      return applyEngineControl(state, startCanaryCampaign(currentControl, {
+        quarterLimit,
+        turn: state.turn,
+      }));
+    }
+    const rebasedEconomy = rebaseAgentEconomyForCanary(state.agentEconomy, state, {
+      reason: "campaign-start",
+    });
     const engineControl = startCanaryCampaign(
-      currentControl,
+      rebasedEconomy.engineControl,
       {
-        quarterLimit: action.payload?.quarterLimit,
+        quarterLimit,
         turn: state.turn,
       },
     );
-    return applyEngineControl(state, engineControl);
+    return applyEngineControl({ ...state, agentEconomy: rebasedEconomy }, engineControl);
   }
 
   if (action?.type === "AGENT_ECONOMY_STOP_CANARY_CAMPAIGN") {
