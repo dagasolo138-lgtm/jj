@@ -396,9 +396,6 @@ try {
     extensionAttemptedQuarters: extensionCampaign?.attemptedQuarters === EXTENSION_QUARTERS,
     extensionCommittedQuarters: extensionCampaign?.committedQuarters === EXTENSION_QUARTERS,
     extensionRollbackCountZero: extensionSummary?.rollbackCount === 0,
-    populationDriftZero: extensionRun.quarters.every(
-      (quarter) => finite(quarter.observation?.driftRatios?.population) === 0,
-    ),
     writeBackClosedAfterExtension: finalControl.writeBackEnabled === false,
     legacyAuthorityRestored: finalControl.authority === "legacy",
     shadowModeRestored: finalControl.activeMode === "shadow",
@@ -408,8 +405,12 @@ try {
     `Four-quarter extension operational safety failed: ${JSON.stringify(hardSafety)}`,
   );
 
+  const populationDriftZero = extensionRun.quarters.every(
+    (quarter) => finite(quarter.observation?.driftRatios?.population) === 0,
+  );
   const releaseReadiness = {
     extensionWithinLimits,
+    populationDriftZero,
     postExtensionGateReady: postExtensionGate.ready === true,
     postExtensionGateHasNoBlockers: (postExtensionGate.blockers ?? []).length === 0,
   };
