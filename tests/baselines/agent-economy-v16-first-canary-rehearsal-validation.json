@@ -1,0 +1,139 @@
+{
+  "productionFixCommit": "e2efc6106633d219f8f79d7d0917ca27de542491",
+  "validatedCommit": "91fbae6fd6d6e8f954503c475ddb3480bb2b403b",
+  "rehearsalCommit": "223595a2c1443c516a47cd46a560dd95160c9b6d",
+  "cleanupCommit": "d67a0d1df9ee8906be1e1e5adbea05bcea636891",
+  "nodeVersion": "24",
+  "schemaVersion": 13,
+  "liveStateAdapterVersion": 2,
+  "evidenceClass": "release-candidate-rehearsal",
+  "productionReleaseEvidence": false,
+  "scenario": {
+    "seed": 1511508451,
+    "difficulty": "normal",
+    "shadowWarmupQuarters": 8,
+    "canaryCampaignsCompleted": 1,
+    "canaryQuartersCommitted": 3,
+    "canaryRollbacks": 0,
+    "pilotStatus": "awaiting-review"
+  },
+  "preFixRehearsal": {
+    "runId": 29384596671,
+    "artifactId": 8330956057,
+    "status": "completed-with-release-hold",
+    "maximumDriftRatios": {
+      "denarii": 0.2306,
+      "food": 0.7442,
+      "population": 0,
+      "inventory": 0.0831
+    },
+    "releaseBlocker": "food-drift-limit",
+    "rootCause": "The first Canary write used inventory accumulated during shadow simulation instead of rebasing household inventory to the current official estate inventory.",
+    "firstQuarterDiscontinuity": {
+      "food": -152.7742,
+      "inventory": -73.2734
+    },
+    "decision": "second-campaign-blocked"
+  },
+  "activationRebase": {
+    "treasuryAlignedToOfficialState": true,
+    "estateInventoryReplacedFromOfficialState": true,
+    "populationReconciled": true,
+    "pendingOrdersCleared": true,
+    "unassignedAssetsCleared": true,
+    "householdNeedsPreserved": true,
+    "householdHealthPreserved": true,
+    "householdSatisfactionPreserved": true,
+    "occupationsPreserved": true,
+    "priceBeliefsPreserved": true,
+    "activationBaselineAudited": true,
+    "blockedCampaignDoesNotMutateShadowState": true
+  },
+  "postFixRehearsal": {
+    "runId": 29385175054,
+    "artifactId": 8331146353,
+    "status": "success",
+    "hardSafety": {
+      "safeWarmup": "8/8",
+      "pilotPausedForReview": true,
+      "completedCampaigns": 1,
+      "committedQuarters": 3,
+      "rollbackCount": 0,
+      "allTransactionsCommitted": true,
+      "populationDriftZero": true,
+      "writeBackClosedAfterCampaign": true,
+      "legacyAuthorityRestored": true,
+      "shadowModeRestored": true
+    },
+    "maximumDriftRatios": {
+      "denarii": 0.2062,
+      "food": 0.0897,
+      "population": 0,
+      "inventory": 0.072
+    },
+    "campaignResourceShift": {
+      "denarii": -52.9,
+      "food": -19.6549,
+      "population": 0,
+      "inventory": -26.0477
+    },
+    "firstQuarterResourceShift": {
+      "denarii": 2.7,
+      "food": -1.5924,
+      "population": 0,
+      "inventory": -4.3216
+    },
+    "releaseGate": {
+      "ready": false,
+      "blockers": [
+        "completed-trials:1/3",
+        "observation-window:1/3"
+      ],
+      "foodDriftLimitPassed": true,
+      "inventoryDriftLimitPassed": true,
+      "denariiDriftLimitPassed": true,
+      "populationDriftLimitPassed": true
+    },
+    "recommendation": "continue-to-second-campaign-after-operator-review"
+  },
+  "improvement": {
+    "foodDriftRatioBefore": 0.7442,
+    "foodDriftRatioAfter": 0.0897,
+    "foodDriftReductionPercent": 87.95,
+    "staleFirstQuarterFoodDiscontinuityRemoved": true,
+    "staleFirstQuarterInventoryDiscontinuityRemoved": true
+  },
+  "workflows": {
+    "agentEconomy": {
+      "runId": 29385100876,
+      "status": "success"
+    },
+    "calibration": {
+      "runId": 29385100860,
+      "status": "success"
+    },
+    "stress": {
+      "runId": 29385100877,
+      "status": "success",
+      "seedCount": 100,
+      "quartersPerSeed": 40,
+      "totalEconomicDays": 120000
+    },
+    "fixedRehearsal": {
+      "runId": 29385175054,
+      "status": "success"
+    }
+  },
+  "hardValidation": {
+    "agentEconomyTests": "success",
+    "legacyEconomyBaseline": "success",
+    "lint": "success",
+    "build": "success",
+    "calibrationMatrix": "meets-target",
+    "stressStatus": "pass",
+    "stressBalanceStatus": "stable"
+  },
+  "productionState": "first-rehearsal-reviewed-second-campaign-eligible",
+  "promotionDecision": "continue-second-standard-campaign-only-after-explicit-operator-action",
+  "nextGate": "run-second-three-quarter-canary-campaign-and-review-drift"
+}
