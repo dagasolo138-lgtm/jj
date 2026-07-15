@@ -90,7 +90,7 @@ function isTerminal(state) {
 
 function resolveSeasonFlow(state) {
   let next = state;
-  for (let step = 0; step < 20; step += 1) {
+  for (let step = 0; step < 60; step += 1) {
     if (isTerminal(next)) return next;
     switch (next.phase) {
       case "raid_warning":
@@ -109,7 +109,20 @@ function resolveSeasonFlow(state) {
         next = gameReducer(next, { type: "SELECT_RANDOM_RESPONSE", payload: { optionIndex: 0 } });
         break;
       case "random_resolve":
-        return gameReducer(next, { type: "ADVANCE_TURN" });
+        next = gameReducer(next, { type: "ADVANCE_TURN" });
+        break;
+      case "flip_intro":
+        next = gameReducer(next, { type: "DISMISS_FLIP_INTRO" });
+        break;
+      case "flip_decision":
+        next = gameReducer(next, { type: "SELECT_FLIP_OPTION", payload: { optionIndex: 0 } });
+        break;
+      case "flip_outcome":
+        next = gameReducer(next, { type: "CONTINUE_FLIP" });
+        break;
+      case "flip_summary":
+        next = gameReducer(next, { type: "DISMISS_FLIP_SUMMARY" });
+        break;
       case "management":
         return next;
       default:
