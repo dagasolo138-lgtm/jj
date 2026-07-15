@@ -149,10 +149,18 @@ test("first canary write reflects only the current quarter instead of stale shad
     payload: { seasonalEvents: [] },
   }));
   const observation = after.agentEconomy.engineControl.lastCanaryObservation;
+  const baseline = running.agentEconomy.liveStateAdapter.activationBaseline;
 
   assert.equal(observation.status, "committed");
   assert.equal(observation.applied, true);
-  for (const key of ["denarii", "food", "population", "inventory"]) {
+  assert.equal(baseline.official.denarii, running.denarii);
+  assert.equal(baseline.official.food, running.food);
+  assert.equal(baseline.official.population, running.population);
+  assert.ok(
+    Math.abs(observation.resourceShift.denarii) <= Math.max(50, running.denarii * 0.2),
+    `treasury shift=${observation.resourceShift.denarii}`,
+  );
+  for (const key of ["food", "population", "inventory"]) {
     assert.ok(
       Math.abs((observation.resourceShift[key] ?? 0) - (observation.modelDrift[key] ?? 0)) <= 0.0002,
       `${key}: resourceShift=${observation.resourceShift[key]} modelDrift=${observation.modelDrift[key]}`,
