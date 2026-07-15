@@ -1,0 +1,94 @@
+{
+  "validatedCommit": "f1cbe2e93ffb6a9b5cd0bb2d04318934f06f4756",
+  "nodeVersion": "24",
+  "schemaVersion": 13,
+  "engineControlVersion": 4,
+  "canaryPilotVersion": 1,
+  "pilotDesign": {
+    "targetCampaigns": 3,
+    "quartersPerCampaign": 3,
+    "totalPlannedQuarters": 9,
+    "automaticCrossCampaignContinuation": false,
+    "operatorReviewRequiredBetweenCampaigns": true,
+    "writeBackClosedDuringReview": true,
+    "legacyAuthorityRestoredDuringReview": true,
+    "rollbackAbortsPilot": true,
+    "manualStopAbortsPilot": true,
+    "saveResumeSupported": true
+  },
+  "pilotStates": [
+    "idle",
+    "blocked",
+    "running",
+    "awaiting-review",
+    "completed",
+    "aborted"
+  ],
+  "operatorActions": [
+    "AGENT_ECONOMY_START_CANARY_PILOT",
+    "AGENT_ECONOMY_CONTINUE_CANARY_PILOT",
+    "AGENT_ECONOMY_STOP_CANARY_PILOT"
+  ],
+  "operatorMonitor": {
+    "showsPilotStatus": true,
+    "showsCompletedTrials": true,
+    "showsCommittedQuarters": true,
+    "showsRollbackCount": true,
+    "showsRemainingTrials": true,
+    "showsProgress": true,
+    "startButtonRequiresEligibility": true,
+    "continueButtonRequiresAwaitingReview": true,
+    "stopButtonRequiresActivePilot": true
+  },
+  "releaseEvidence": {
+    "testRunsPersistToPlayerSave": false,
+    "testRunsUnlockProductionExtension": false,
+    "productionPilotMustBeStartedByOperator": true,
+    "threeCompletedProductionCampaignsStillRequired": true,
+    "fourQuarterExtensionInitiallyLocked": true
+  },
+  "validation": {
+    "boundedFirstCampaign": "success",
+    "reviewPauseAfterThreeQuarters": "success",
+    "noAutomaticWriteBackRestart": "success",
+    "threeReviewedCampaignsCompletePilot": "success",
+    "completedPilotFeedsReleaseHistory": "success",
+    "rollbackAbortsPilot": "success",
+    "manualStopPersists": "success",
+    "jsonSaveResume": "success",
+    "reducerStartStopActions": "success",
+    "monitorProgressSelector": "success",
+    "legacyEconomyUnchangedOutsidePilot": "success"
+  },
+  "workflows": {
+    "agentEconomy": {
+      "runId": 29383673684,
+      "status": "success"
+    },
+    "calibration": {
+      "runId": 29383673677,
+      "artifactId": 8330654091,
+      "status": "success"
+    },
+    "stress": {
+      "runId": 29383673718,
+      "artifactId": 8330665132,
+      "status": "success"
+    }
+  },
+  "hardValidation": {
+    "agentEconomyTests": "success",
+    "legacyEconomyBaseline": "success",
+    "lint": "success",
+    "build": "success",
+    "calibrationMatrix": "meets-target",
+    "stressSeedCount": 100,
+    "stressQuartersPerSeed": 40,
+    "stressTotalEconomicDays": 120000,
+    "stressStatus": "pass",
+    "stressBalanceStatus": "stable"
+  },
+  "currentProductionState": "pilot-ready-not-started",
+  "promotionDecision": "ready-for-operator-controlled-three-trial-pilot",
+  "nextGate": "run-first-real-three-quarter-pilot-campaign-and-review-drift-before-continuing"
+}
