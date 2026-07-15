@@ -41,10 +41,16 @@ jobs:
           INPUT_DIFFICULTY: ${{ inputs.difficulty || 'normal' }}
         run: |
           mkdir -p artifacts
+          set +e
           node scripts/runCanaryReleaseCandidateRehearsal.mjs \
             --seed="$INPUT_SEED" \
             --difficulty="$INPUT_DIFFICULTY" \
-            --output=artifacts/canary-release-candidate-rehearsal.json
+            --output=artifacts/canary-release-candidate-rehearsal.json \
+            > artifacts/canary-release-candidate-rehearsal.log 2>&1
+          status=$?
+          cat artifacts/canary-release-candidate-rehearsal.log
+          echo "$status" > artifacts/rehearsal-exit-code.txt
+          exit "$status"
       - run: npm run test:agent-economy
       - run: npm run test:economy
       - run: npm run lint
@@ -53,6 +59,6 @@ jobs:
         if: always()
         with:
           name: canary-release-candidate-rehearsal
-          path: artifacts/canary-release-candidate-rehearsal.json
+          path: artifacts/
           if-no-files-found: error
           retention-days: 30
