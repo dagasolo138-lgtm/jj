@@ -1,0 +1,155 @@
+{
+  "validatedCommit": "6c04e5f035cc80bf75c9c6c2b13ee860d6f8fa0b",
+  "workflowRunId": 29385648527,
+  "artifactId": 8331306154,
+  "nodeVersion": "24",
+  "schemaVersion": 17,
+  "evidenceClass": "release-candidate-rehearsal",
+  "productionReleaseEvidence": false,
+  "scenario": {
+    "seed": 1511508451,
+    "difficulty": "normal",
+    "shadowWarmupQuarters": 8,
+    "canaryCampaignsCompleted": 2,
+    "canaryQuartersCommitted": 6,
+    "canaryRollbacks": 0,
+    "pilotStatus": "awaiting-review",
+    "pilotProgressPercent": 66.7
+  },
+  "activationRebases": {
+    "firstCampaign": {
+      "reason": "pilot-start",
+      "treasuryDelta": 0,
+      "foodDelta": 0,
+      "populationDelta": 0,
+      "inventoryMismatches": 0,
+      "pendingOrders": 0,
+      "aligned": true
+    },
+    "secondCampaign": {
+      "reason": "pilot-continue",
+      "treasuryDelta": 0,
+      "foodDelta": 0,
+      "populationDelta": 0,
+      "inventoryMismatches": 0,
+      "pendingOrders": 0,
+      "aligned": true
+    }
+  },
+  "firstCampaign": {
+    "id": "canary-campaign-0001",
+    "startedTurn": 9,
+    "completedTurn": 11,
+    "committedQuarters": 3,
+    "rollbackCount": 0,
+    "maximumDriftRatios": {
+      "denarii": 0.2062,
+      "food": 0.0897,
+      "population": 0,
+      "inventory": 0.072
+    },
+    "totalResourceShift": {
+      "denarii": -52.9,
+      "food": -19.6549,
+      "population": 0,
+      "inventory": -26.0477
+    }
+  },
+  "secondCampaign": {
+    "id": "canary-campaign-0002",
+    "startedTurn": 12,
+    "completedTurn": 14,
+    "committedQuarters": 3,
+    "rollbackCount": 0,
+    "maximumDriftRatios": {
+      "denarii": 0.1887,
+      "food": 0.1852,
+      "population": 0,
+      "inventory": 0.1317
+    },
+    "totalResourceShift": {
+      "denarii": 8.1,
+      "food": -31.3919,
+      "population": 0,
+      "inventory": -39.2949
+    },
+    "quarterDriftRatios": [
+      {
+        "turn": 12,
+        "season": "winter",
+        "denarii": 0.1887,
+        "food": 0.1852,
+        "population": 0,
+        "inventory": 0.1317
+      },
+      {
+        "turn": 13,
+        "season": "spring",
+        "denarii": 0.1853,
+        "food": 0.0589,
+        "population": 0,
+        "inventory": 0.0393
+      },
+      {
+        "turn": 14,
+        "season": "summer",
+        "denarii": 0.1821,
+        "food": 0.0574,
+        "population": 0,
+        "inventory": 0.0631
+      }
+    ],
+    "interpretation": "The largest food and inventory drift occurred in the first low-stock winter quarter. Both food drift and inventory drift fell sharply in the following two quarters, so the deviation did not compound across the campaign."
+  },
+  "combinedPilot": {
+    "completedCampaigns": 2,
+    "committedQuarters": 6,
+    "rollbackCount": 0,
+    "remainingCampaigns": 1,
+    "maximumDriftRatios": {
+      "denarii": 0.2062,
+      "food": 0.1852,
+      "population": 0,
+      "inventory": 0.1317
+    },
+    "releaseLimits": {
+      "denarii": 0.35,
+      "food": 0.5,
+      "populationAbsolute": 0,
+      "inventory": 0.5
+    },
+    "allRatiosWithinLimits": true
+  },
+  "hardSafety": {
+    "safeWarmup": true,
+    "firstActivationAligned": true,
+    "firstCampaignCommitted": true,
+    "secondActivationAligned": true,
+    "secondCampaignCommitted": true,
+    "pilotPausedForReview": true,
+    "completedCampaigns": true,
+    "committedQuarters": true,
+    "rollbackCountZero": true,
+    "secondCampaignPopulationDriftZero": true,
+    "writeBackClosedAfterCampaign": true,
+    "legacyAuthorityRestored": true,
+    "shadowModeRestored": true
+  },
+  "workflow": {
+    "rehearsal": "success",
+    "agentEconomyTests": "success",
+    "legacyEconomyBaseline": "success",
+    "lint": "success",
+    "build": "success"
+  },
+  "releaseGate": {
+    "ready": false,
+    "blockers": [
+      "completed-trials:2/3",
+      "observation-window:2/3"
+    ],
+    "decision": "continue-to-third-campaign-after-explicit-operator-review"
+  },
+  "productionState": "second-rehearsal-reviewed-third-campaign-eligible",
+  "nextGate": "run-third-three-quarter-canary-campaign-and-review-final-release-gate"
+}
