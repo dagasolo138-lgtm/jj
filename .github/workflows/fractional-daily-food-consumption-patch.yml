@@ -23,7 +23,15 @@ jobs:
           cache: npm
       - run: npm ci
       - run: node scripts/patchFractionalDailyFoodConsumption.mjs
-      - run: npm run test:agent-economy
+      - name: Capture agent economy tests
+        run: |
+          mkdir -p artifacts
+          set +e
+          npm run test:agent-economy > artifacts/fractional-consumption-tests.log 2>&1
+          status=$?
+          cat artifacts/fractional-consumption-tests.log
+          echo "$status" > artifacts/test-exit-code.txt
+          exit "$status"
       - run: npm run test:economy
       - run: npm run lint
       - run: npm run build
@@ -35,3 +43,10 @@ jobs:
           git diff --cached --quiet && exit 0
           git commit -m "fix(agent-economy): use fractional daily food consumption"
           git push
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: fractional-consumption-test-output
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 7
