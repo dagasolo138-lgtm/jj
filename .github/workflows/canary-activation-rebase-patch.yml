@@ -1,0 +1,41 @@
+name: Canary activation rebase patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/applyCanaryActivationRebasePatch.mjs
+      - .github/workflows/canary-activation-rebase-patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node scripts/applyCanaryActivationRebasePatch.mjs
+      - run: npm run test:agent-economy
+      - run: npm run test:economy
+      - run: npm run lint
+      - run: npm run build
+      - name: Commit patch
+        run: |
+          if git diff --quiet; then
+            echo "No patch changes needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            src/engine/agentEconomy/liveStateAdapter.js \
+            src/engine/agentEconomy/integratedGameReducer.js \
+            src/engine/agentEconomy/index.js
+          git commit -m "fix(agent-economy): rebase candidate assets before canary"
+          git push
