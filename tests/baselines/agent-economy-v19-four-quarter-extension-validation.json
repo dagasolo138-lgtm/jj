@@ -1,0 +1,245 @@
+{
+  "version": "V19",
+  "validatedAt": "2026-07-15",
+  "nodeVersion": "24",
+  "schemaVersion": 14,
+  "evidenceClass": "release-candidate-rehearsal",
+  "productionReleaseEvidence": false,
+  "productionFixCommits": {
+    "populationComparisonAfterAdapter": "0fee9d64fe4dd340fe059402f3592e3640cba3cd",
+    "populationAssetConservation": "8001bdeee107c1b71feb7a23d7f8d677024e94ac",
+    "emergencyReserveCalibration": "d411394b4318396b12c51fd9503e29a0b28ce8e6",
+    "fractionalDailyFoodConsumption": "4d9c90e847d61152167049bbddf8106278d28ad1",
+    "permanentRegressionTests": "bf55afc9039d0ca01a2cce3f24b5980b80b328e1"
+  },
+  "rehearsalCommits": {
+    "standardWindow": "7959e044257cfa1e64ea171c8744006b65d9db05",
+    "fourQuarterExtension": "22ae1eba4f8c38b6bcd09c833c89312ac2d76bd1"
+  },
+  "cleanupCommit": "f43581389ad899ebfa64067cfa094e9813b6b265",
+  "rootCausesAndFixes": [
+    {
+      "issue": "population-drift-was-measured-before-live-adapter-alignment",
+      "effect": "The candidate appeared to conserve population while legacy migration changed it, even though the live adapter later synchronized household weights.",
+      "fix": "Finalize the quarter live-state adapter before building the engine comparison; retain a zero population-drift release limit."
+    },
+    {
+      "issue": "population-growth-minted-default-household-assets",
+      "effect": "A legacy population increase created a household with default cash and grain and triggered accounting rollback.",
+      "fix": "Population synchronization changes household structure without seeding cash or inventory."
+    },
+    {
+      "issue": "protected-emergency-reserve-was-too-large",
+      "effect": "A 0.5 food-per-person reserve preserved too much food when legacy exhausted stores and households departed.",
+      "fix": "Calibrate the protected reserve to 0.3 food per represented family while retaining the 3.0 food-per-person activation threshold."
+    },
+    {
+      "issue": "daily-food-demand-used-zero-or-one-stochastic-rounding",
+      "effect": "Small daily targets accumulated large quarter-level variance; the fixed extension seed consumed 31.1629 food against a theoretical 22.55 target.",
+      "fix": "Consume exact four-decimal daily food quantities and normalize arithmetic after every deduction."
+    }
+  ],
+  "auditTrail": {
+    "initialExtension": {
+      "workflowRunId": 29424696243,
+      "artifactId": 8346744856,
+      "operationalStatus": "pass",
+      "releaseStatus": "hold",
+      "blockers": [
+        "population-drift",
+        "food-drift-limit"
+      ],
+      "maximumDriftRatios": {
+        "denarii": 0.1135,
+        "food": 0.7843,
+        "population": 4,
+        "inventory": 0.1801
+      }
+    },
+    "standardWindowAfterPopulationFixes": {
+      "workflowRunId": 29426062780,
+      "artifactId": 8347311091,
+      "operationalStatus": "pass",
+      "releaseStatus": "hold",
+      "blocker": "food-drift-limit",
+      "maximumFoodDriftRatio": 0.6375
+    },
+    "extensionAfterReserveCalibration": {
+      "workflowRunId": 29426687910,
+      "artifactId": 8347562761,
+      "operationalStatus": "pass",
+      "releaseStatus": "hold",
+      "blocker": "food-drift-limit",
+      "maximumFoodDriftRatio": 0.7805,
+      "finding": "Daily stochastic rounding amplified quarter food consumption."
+    }
+  },
+  "finalStandardWindow": {
+    "workflowRunId": 29427819154,
+    "artifactId": 8348039577,
+    "seed": 1511508451,
+    "difficulty": "normal",
+    "shadowWarmupQuarters": 8,
+    "campaignsCompleted": 3,
+    "quartersCommitted": 9,
+    "rollbackCount": 0,
+    "pilotStatus": "completed",
+    "maximumDriftRatios": {
+      "denarii": 0.2062,
+      "food": 0.2853,
+      "population": 0,
+      "inventory": 0.1455
+    },
+    "releaseGate": {
+      "ready": true,
+      "blockers": [],
+      "completedStandardTrials": 3,
+      "requiredStandardTrials": 3,
+      "denariiRatioLimit": 0.35,
+      "foodRatioLimit": 0.5,
+      "inventoryRatioLimit": 0.5,
+      "populationAbsoluteLimit": 0
+    },
+    "recommendation": "unlock-four-quarter-extension-after-operator-review"
+  },
+  "finalFourQuarterExtension": {
+    "workflowRunId": 29427844513,
+    "artifactId": 8348051788,
+    "status": "success",
+    "tier": "extended",
+    "quartersAttempted": 4,
+    "quartersCommitted": 4,
+    "rollbackCount": 0,
+    "maximumDriftRatios": {
+      "denarii": 0.093,
+      "food": 0.1916,
+      "population": 0,
+      "inventory": 0.0778
+    },
+    "quarterDriftRatios": [
+      {
+        "turn": 18,
+        "season": "summer",
+        "denarii": 0.093,
+        "food": 0.1916,
+        "population": 0,
+        "inventory": 0.0778
+      },
+      {
+        "turn": 19,
+        "season": "autumn",
+        "denarii": 0.0507,
+        "food": 0.0314,
+        "population": 0,
+        "inventory": 0.059
+      },
+      {
+        "turn": 20,
+        "season": "winter",
+        "denarii": 0.0925,
+        "food": 0,
+        "population": 0,
+        "inventory": 0.0557
+      },
+      {
+        "turn": 21,
+        "season": "spring",
+        "denarii": 0.0384,
+        "food": 0.0665,
+        "population": 0,
+        "inventory": 0.0579
+      }
+    ],
+    "endingState": {
+      "turn": 22,
+      "season": "summer",
+      "year": 6,
+      "denarii": 835.7,
+      "food": 17.7371,
+      "population": 4,
+      "garrison": 0,
+      "totalInventory": 85.583
+    },
+    "postExtensionGate": {
+      "ready": true,
+      "blockers": [],
+      "maximumDriftRatios": {
+        "denarii": 0.1887,
+        "food": 0.2853,
+        "population": 0,
+        "inventory": 0.1455
+      }
+    },
+    "recommendation": "qualify-for-real-save-canary-after-operator-review"
+  },
+  "improvement": {
+    "extensionMaximumFoodDriftBeforeFractionalConsumption": 0.7805,
+    "extensionMaximumFoodDriftAfterFractionalConsumption": 0.1916,
+    "foodDriftReductionPercent": 75.45,
+    "populationDriftBeforeAlignmentFix": 4,
+    "populationDriftAfterAlignmentFix": 0
+  },
+  "officialWorkflows": {
+    "agentEconomy": {
+      "runId": 29427756871,
+      "status": "success"
+    },
+    "calibration": {
+      "runId": 29427756644,
+      "artifactId": 8348023941,
+      "status": "success",
+      "hardStatus": "pass",
+      "calibrationStatus": "needs-calibration",
+      "targetMissCount": 7,
+      "directionalStatus": "pass",
+      "directionalChecksPassed": 6,
+      "directionalChecksTotal": 6,
+      "defaultEstateStatus": "meets-target",
+      "remainingFindings": [
+        "Agricultural-shortage scenario collapses and misses survival, poverty and health targets.",
+        "Labor-shortage scenario collapses and misses survival, poverty and health targets.",
+        "Expanded-estate input-shortage rate is 16.52% versus a 15% target."
+      ]
+    },
+    "stress": {
+      "runId": 29427757228,
+      "artifactId": 8348061865,
+      "status": "success",
+      "stressStatus": "pass",
+      "balanceStatus": "stable",
+      "seedCount": 100,
+      "quartersPerSeed": 40,
+      "totalEconomicDays": 120000,
+      "completionRate": 100,
+      "economicSurvivalRate": 100,
+      "foodFulfillmentRate": 99.98,
+      "employmentRate": 80,
+      "povertyRate": 0,
+      "meanQuarterMs": 23.0943,
+      "p95QuarterMs": 23.8913,
+      "maxQuarterMs": 31.714,
+      "runtimeGateMsPerQuarter": 250
+    }
+  },
+  "hardValidation": {
+    "agentEconomyTests": "success",
+    "legacyEconomyBaseline": "success",
+    "lint": "success",
+    "build": "success",
+    "defaultEstateCalibration": "meets-target",
+    "directionalCalibrationChecks": "6/6-pass",
+    "stressStatus": "pass",
+    "stressBalanceStatus": "stable",
+    "standardCanaryTransactionsCommitted": 9,
+    "extensionCanaryTransactionsCommitted": 4,
+    "canaryRollbackCount": 0,
+    "populationDriftZero": true,
+    "writeBackClosedAfterExtension": true,
+    "legacyAuthorityRestored": true,
+    "shadowModeRestored": true
+  },
+  "productionState": "four-quarter-release-candidate-rehearsal-complete",
+  "promotionDecision": "eligible-for-one-explicit-real-save-canary-after-operator-review",
+  "nextGate": "run-one-real-browser-save-canary-with-automatic-rollback-and-review-the-four-quarter-audit",
+  "evidenceWarning": "This deterministic repository rehearsal is not a player's browser save and must not be represented as production release evidence."
+}
