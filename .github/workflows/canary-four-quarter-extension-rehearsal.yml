@@ -1,0 +1,64 @@
+name: Canary four-quarter extension rehearsal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/runCanaryFourQuarterExtensionRehearsal.mjs
+      - .github/workflows/canary-four-quarter-extension-rehearsal.yml
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: Deterministic rehearsal seed
+        required: false
+        default: "1511508451"
+      difficulty:
+        description: Game difficulty
+        required: false
+        default: normal
+        type: choice
+        options:
+          - easy
+          - normal
+          - hard
+
+permissions:
+  contents: read
+
+jobs:
+  rehearsal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - name: Run four-quarter Canary extension rehearsal
+        env:
+          INPUT_SEED: ${{ inputs.seed || '1511508451' }}
+          INPUT_DIFFICULTY: ${{ inputs.difficulty || 'normal' }}
+        run: |
+          mkdir -p artifacts
+          set +e
+          node scripts/runCanaryFourQuarterExtensionRehearsal.mjs \
+            --seed="$INPUT_SEED" \
+            --difficulty="$INPUT_DIFFICULTY" \
+            --output=artifacts/canary-four-quarter-extension-rehearsal.json \
+            > artifacts/canary-four-quarter-extension-rehearsal.log 2>&1
+          status=$?
+          cat artifacts/canary-four-quarter-extension-rehearsal.log
+          echo "$status" > artifacts/rehearsal-exit-code.txt
+          exit "$status"
+      - run: npm run test:agent-economy
+      - run: npm run test:economy
+      - run: npm run lint
+      - run: npm run build
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canary-four-quarter-extension-rehearsal
+          path: artifacts/
+          if-no-files-found: error
+          retention-days: 30
