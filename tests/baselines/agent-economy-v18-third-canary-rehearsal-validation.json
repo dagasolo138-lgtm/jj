@@ -1,0 +1,178 @@
+{
+  "productionFixCommits": {
+    "emergencyRationing": "8c15d308683b6dd18683fa07dec5a0face4bbfb4",
+    "protectedReserve": "d03a82c9f16b6bf6650d02d929dc1b9aeba3ceb9",
+    "regressionTests": "a147800b34dd01b15826d84bff21343cc9cf4961"
+  },
+  "validatedCommit": "a147800b34dd01b15826d84bff21343cc9cf4961",
+  "rehearsalCommit": "d93e18b3ab443e87664d53e08b61c48fa5fdfff5",
+  "cleanupCommit": "424efac15b83ef8191a5428e8538c0bf49e86fda",
+  "nodeVersion": "24",
+  "schemaVersion": 14,
+  "evidenceClass": "release-candidate-rehearsal",
+  "productionReleaseEvidence": false,
+  "scenario": {
+    "seed": 1511508451,
+    "difficulty": "normal",
+    "shadowWarmupQuarters": 8,
+    "canaryCampaignsCompleted": 3,
+    "canaryQuartersCommitted": 9,
+    "canaryRollbacks": 0,
+    "pilotStatus": "completed",
+    "pilotProgressPercent": 100
+  },
+  "preFixThirdCampaign": {
+    "workflowRunId": 29421991678,
+    "artifactId": 8345608360,
+    "operationalSafety": "pass",
+    "releaseGateReady": false,
+    "releaseBlocker": "food-drift-limit",
+    "maximumDriftRatios": {
+      "denarii": 0.176,
+      "food": 1.1482,
+      "population": 0,
+      "inventory": 0.1748
+    },
+    "quarterFoodDriftRatios": [
+      0.2674,
+      0.5982,
+      1.1482
+    ],
+    "rootCause": "At low aggregate food stock, household ownership and cash constraints stranded edible inventory in some households while other households recorded unmet food demand. The agent economy therefore preserved estate food while families remained hungry."
+  },
+  "firstRationingIteration": {
+    "workflowRunId": 29422941184,
+    "artifactId": 8345997930,
+    "operationalSafety": "pass",
+    "releaseGateReady": false,
+    "releaseBlocker": "food-drift-limit",
+    "maximumFoodDriftRatio": 0.6479,
+    "endingFood": 0.1223,
+    "finding": "Pooling eliminated stranded food but allowed emergency distribution to consume almost the entire estate reserve."
+  },
+  "finalEmergencyRationingPolicy": {
+    "activationStockPerPerson": 3,
+    "protectedReservePerPerson": 0.5,
+    "marketRemainsPrimaryAboveActivationThreshold": true,
+    "rationingUsesOnlyFoodAboveProtectedReserve": true,
+    "hungryHouseholdsPrioritizedDeterministically": true,
+    "fractionalInventoryConserved": true,
+    "metricsRecorded": [
+      "emergencyFoodRationed",
+      "emergencyRationingDays",
+      "emergencyRationingRecipients"
+    ]
+  },
+  "finalThirdCampaign": {
+    "workflowRunId": 29423429673,
+    "artifactId": 8346205151,
+    "status": "success",
+    "activationRebasesAligned": 3,
+    "campaignsCompleted": 3,
+    "quartersCommitted": 9,
+    "rollbackCount": 0,
+    "maximumDriftRatios": {
+      "denarii": 0.2062,
+      "food": 0.2674,
+      "population": 0,
+      "inventory": 0.1317
+    },
+    "thirdCampaignMaximumDriftRatios": {
+      "denarii": 0.176,
+      "food": 0.2674,
+      "population": 0,
+      "inventory": 0.0588
+    },
+    "thirdCampaignQuarterFoodDriftRatios": {
+      "autumn": 0.2674,
+      "winter": 0.1683,
+      "spring": 0.0698
+    },
+    "endingState": {
+      "turn": 18,
+      "season": "summer",
+      "year": 5,
+      "denarii": 882.4,
+      "food": 7.299,
+      "population": 15,
+      "garrison": 4,
+      "totalInventory": 77.7633
+    },
+    "releaseGate": {
+      "ready": true,
+      "blockers": [],
+      "completedStandardTrials": 3,
+      "requiredStandardTrials": 3,
+      "denariiRatioLimit": 0.35,
+      "foodRatioLimit": 0.5,
+      "inventoryRatioLimit": 0.5,
+      "populationAbsoluteLimit": 0
+    },
+    "recommendation": "unlock-four-quarter-extension-after-operator-review"
+  },
+  "improvement": {
+    "thirdCampaignFoodDriftBefore": 1.1482,
+    "thirdCampaignFoodDriftAfter": 0.2674,
+    "foodDriftReductionPercent": 76.71,
+    "springFoodDriftBefore": 1.1482,
+    "springFoodDriftAfter": 0.0698,
+    "springFoodDriftReductionPercent": 93.92,
+    "endingFoodBeforeProtectedReserve": 0.1223,
+    "endingFoodAfterProtectedReserve": 7.299,
+    "fourQuarterExtensionGateUnlocked": true
+  },
+  "workflows": {
+    "agentEconomy": {
+      "runId": 29423315977,
+      "status": "success"
+    },
+    "calibration": {
+      "runId": 29423315891,
+      "artifactId": 8346166149,
+      "status": "success",
+      "hardStatus": "pass",
+      "calibrationStatus": "meets-target",
+      "targetMissCount": 0,
+      "directionalChecksPassed": 6,
+      "directionalChecksTotal": 6
+    },
+    "stress": {
+      "runId": 29423316010,
+      "artifactId": 8346193496,
+      "status": "success",
+      "stressStatus": "pass",
+      "balanceStatus": "stable",
+      "seedCount": 100,
+      "quartersPerSeed": 40,
+      "totalEconomicDays": 120000,
+      "completionRate": 100,
+      "economicSurvivalRate": 100,
+      "foodFulfillmentRate": 99.35,
+      "employmentRate": 80,
+      "povertyRate": 3,
+      "meanQuarterMs": 17.0195,
+      "p95QuarterMs": 18.5696,
+      "maxQuarterMs": 26.5733,
+      "runtimeGateMsPerQuarter": 250
+    }
+  },
+  "hardValidation": {
+    "agentEconomyTests": "success",
+    "legacyEconomyBaseline": "success",
+    "lint": "success",
+    "build": "success",
+    "calibrationMatrix": "meets-target",
+    "stressStatus": "pass",
+    "stressBalanceStatus": "stable",
+    "allNineCanaryTransactionsCommitted": true,
+    "canaryRollbackCountZero": true,
+    "populationDriftZero": true,
+    "writeBackClosedAfterPilot": true,
+    "legacyAuthorityRestored": true,
+    "shadowModeRestored": true
+  },
+  "productionState": "three-campaign-rehearsal-complete-four-quarter-extension-unlocked",
+  "promotionDecision": "four-quarter-extension-eligible-after-explicit-operator-action",
+  "nextGate": "run-one-four-quarter-extension-campaign-and-review-drift",
+  "evidenceWarning": "This deterministic repository rehearsal is not a player's browser save and must not be represented as production release evidence."
+}
