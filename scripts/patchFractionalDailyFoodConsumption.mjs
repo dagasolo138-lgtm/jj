@@ -31,5 +31,26 @@ replaceOnce(
   "replace stochastic daily target with exact fractional target",
 );
 
-const testPath = "tests/unit/agentEconomyConsumption.test.js";
-fs.writeFileSync(testPath, `import assert from "node:assert/strict";\nimport test from "node:test";\n\nimport {\n  consumeHousehold,\n  createHousehold,\n} from "../../src/engine/agentEconomy/index.js";\n\nconst unusedRng = { next: () => 0 };\n\nfunction householdWithGrain(grain) {\n  const household = createHousehold({ id: \`grain-\${grain}\`, weight: 1, occupation: "farmer" });\n  return {\n    ...household,\n    inventory: {\n      ...household.inventory,\n      flour: 0,\n      fish: 0,\n      grain,\n      livestock: 0,\n    },\n  };\n}\n\ntest("food consumption uses the exact fractional daily target", () => {\n  const result = consumeHousehold(householdWithGrain(0.75), unusedRng, { day: 1 });\n\n  assert.equal(result.targetFood, 0.0683);\n  assert.equal(result.consumedFood, 0.0683);\n  assert.equal(result.unmetFood, 0);\n  assert.equal(result.household.inventory.grain, 0.6817);\n  assert.equal(result.totalConsumed, 0.0683);\n});\n\ntest("food consumption records a fractional shortfall without losing inventory", () => {\n  const result = consumeHousehold(householdWithGrain(0.05), unusedRng, { day: 1 });\n\n  assert.equal(result.targetFood, 0.0683);\n  assert.equal(result.consumedFood, 0.05);\n  assert.equal(result.unmetFood, 0.0183);\n  assert.equal(result.household.inventory.grain, 0);\n  assert.equal(result.totalConsumed, 0.05);\n});\n`, "utf8");
+replaceOnce(
+  "src/engine/agentEconomy/consumptionSystem.js",
+  `    if (result.consumed > 0) consumed[commodity] = result.consumed;\n    remainingFood -= result.consumed;\n  }\n\n  const consumedFood = targetFood - remainingFood;`,
+  `    if (result.consumed > 0) consumed[commodity] = result.consumed;\n    remainingFood = inventoryQuantity(remainingFood - result.consumed);\n  }\n\n  const consumedFood = inventoryQuantity(targetFood - remainingFood);`,
+  "normalize fractional food arithmetic",
+);
+
+replaceOnce(
+  "src/engine/agentEconomy/consumptionSystem.js",
+  `    totalConsumed: Object.values(consumed).reduce((total, amount) => total + amount, 0),`,
+  `    totalConsumed: inventoryQuantity(\n      Object.values(consumed).reduce((total, amount) => total + amount, 0),\n    ),`,
+  "normalize total consumed",
+);
+
+const consumptionTestPath = "tests/unit/agentEconomyConsumption.test.js";
+fs.writeFileSync(consumptionTestPath, `import assert from "node:assert/strict";\nimport test from "node:test";\n\nimport {\n  consumeHousehold,\n  createHousehold,\n} from "../../src/engine/agentEconomy/index.js";\n\nconst unusedRng = { next: () => 0 };\n\nfunction householdWithGrain(grain) {\n  const household = createHousehold({ id: \`grain-\${grain}\`, weight: 1, occupation: "farmer" });\n  return {\n    ...household,\n    inventory: {\n      ...household.inventory,\n      flour: 0,\n      fish: 0,\n      grain,\n      livestock: 0,\n    },\n  };\n}\n\ntest("food consumption uses the exact fractional daily target", () => {\n  const result = consumeHousehold(householdWithGrain(0.75), unusedRng, { day: 1 });\n\n  assert.equal(result.targetFood, 0.0683);\n  assert.equal(result.consumedFood, 0.0683);\n  assert.equal(result.unmetFood, 0);\n  assert.equal(result.household.inventory.grain, 0.6817);\n  assert.equal(result.totalConsumed, 0.0683);\n});\n\ntest("food consumption records a fractional shortfall without losing inventory", () => {\n  const result = consumeHousehold(householdWithGrain(0.05), unusedRng, { day: 1 });\n\n  assert.equal(result.targetFood, 0.0683);\n  assert.equal(result.consumedFood, 0.05);\n  assert.equal(result.unmetFood, 0.0183);\n  assert.equal(result.household.inventory.grain, 0);\n  assert.equal(result.totalConsumed, 0.05);\n});\n`, "utf8");
+
+replaceOnce(
+  "tests/unit/agentEconomyCanaryTransaction.test.js",
+  `  assert.equal(after.food, after.inventory.grain + after.inventory.livestock + after.inventory.fish + after.inventory.flour);`,
+  `  const projectedFood = after.inventory.grain\n    + after.inventory.livestock\n    + after.inventory.fish\n    + after.inventory.flour;\n  assert.ok(Math.abs(after.food - projectedFood) <= 0.0002);`,
+  "allow four-decimal projection tolerance",
+);
