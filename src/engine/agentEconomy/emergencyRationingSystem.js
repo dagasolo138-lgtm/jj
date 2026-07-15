@@ -5,6 +5,7 @@ import {
 import { clampNeed } from "./needsSystem.js";
 
 export const EMERGENCY_RATIONING_STOCK_PER_PERSON = FOOD_STOCK_TARGET_PER_PERSON * 1.5;
+export const EMERGENCY_RATIONING_RESERVE_PER_PERSON = 0.5;
 
 const FOOD_PRIORITY = ["flour", "fish", "grain", "livestock"];
 const EPSILON = 0.0001;
@@ -113,11 +114,20 @@ export function applyEmergencyFoodRationing(consumption = {}, context = {}) {
     FOOD_STOCK_TARGET_PER_PERSON,
     finite(context.emergencyRationingStockPerPerson, EMERGENCY_RATIONING_STOCK_PER_PERSON),
   );
+  const reservePerPerson = Math.max(
+    0,
+    finite(
+      context.emergencyRationingReservePerPerson,
+      EMERGENCY_RATIONING_RESERVE_PER_PERSON,
+    ),
+  );
+  const protectedReserve = quantity(population * reservePerPerson);
+  const rationingBudget = quantity(Math.max(0, availableFood - protectedReserve));
   const enabled = context.emergencyRationing !== false;
   const triggered = enabled
     && population > 0
     && totalUnmet > EPSILON
-    && availableFood > EPSILON
+    && rationingBudget > EPSILON
     && stockPerPerson <= threshold;
 
   if (!triggered) {
@@ -127,6 +137,9 @@ export function applyEmergencyFoodRationing(consumption = {}, context = {}) {
         triggered: false,
         stockPerPerson: quantity(stockPerPerson),
         threshold: quantity(threshold),
+        reservePerPerson: quantity(reservePerPerson),
+        protectedReserve,
+        availableBudget: rationingBudget,
         foodRationed: 0,
         recipients: 0,
         consumedByCommodity: {},
@@ -140,6 +153,7 @@ export function applyEmergencyFoodRationing(consumption = {}, context = {}) {
   const targetFoodByHousehold = { ...(consumption.targetFoodByHousehold ?? {}) };
   let emergencyConsumed = {};
   let foodRationed = 0;
+  let remainingBudget = rationingBudget;
   const recipientIds = new Set();
 
   const recipients = households
@@ -160,14 +174,20 @@ export function applyEmergencyFoodRationing(consumption = {}, context = {}) {
     ));
 
   let progress = true;
-  while (progress && recipients.some((recipient) => recipient.unmet > EPSILON)) {
+  while (
+    progress
+    && remainingBudget > EPSILON
+    && recipients.some((recipient) => recipient.unmet > EPSILON)
+  ) {
     progress = false;
     for (const recipient of recipients) {
-      if (recipient.unmet <= EPSILON) continue;
-      const allocation = withdrawFood(households, Math.min(1, recipient.unmet));
+      if (recipient.unmet <= EPSILON || remainingBudget <= EPSILON) continue;
+      const requested = Math.min(1, recipient.unmet, remainingBudget);
+      const allocation = withdrawFood(households, requested);
       if (allocation.amount <= EPSILON) break;
 
       progress = true;
+      remainingBudget = quantity(remainingBudget - allocation.amount);
       recipient.unmet = quantity(recipient.unmet - allocation.amount);
       foodRationed = quantity(foodRationed + allocation.amount);
       emergencyConsumed = mergeCommodityTotals(emergencyConsumed, allocation.consumed);
@@ -212,6 +232,10 @@ export function applyEmergencyFoodRationing(consumption = {}, context = {}) {
       triggered: true,
       stockPerPerson: quantity(stockPerPerson),
       threshold: quantity(threshold),
+      reservePerPerson: quantity(reservePerPerson),
+      protectedReserve,
+      availableBudget: rationingBudget,
+      remainingBudget,
       foodRationed,
       recipients: recipientIds.size,
       consumedByCommodity: emergencyConsumed,
