@@ -9,7 +9,7 @@ import {
 } from "./priceBeliefSystem.js";
 import { DEFAULT_AGENT_ECONOMY_SEED, normalizeSeed } from "./seededRng.js";
 
-export const AGENT_ECONOMY_SCHEMA_VERSION = 13;
+export const AGENT_ECONOMY_SCHEMA_VERSION = 14;
 export const DEFAULT_MAX_HOUSEHOLDS = 120;
 
 export const HOUSEHOLD_COMMODITIES = [
@@ -285,6 +285,9 @@ export function createInitialAgentEconomy(population, options = {}) {
       foodConsumed: 0,
       productionInputsConsumed: 0,
       unmetFood: 0,
+      emergencyFoodRationed: 0,
+      emergencyRationingDays: 0,
+      emergencyRationingRecipients: 0,
       ordersGenerated: 0,
       potentialMatches: 0,
       potentialMatchVolume: 0,
