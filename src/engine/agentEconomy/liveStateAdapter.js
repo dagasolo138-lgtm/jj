@@ -254,7 +254,10 @@ function conservePopulationAssets(agentEconomy, targetPopulation, options = {}) 
   const adapter = normalizeLiveStateAdapter(agentEconomy?.liveStateAdapter, options.legacyState);
   let reserve = normalizeReserve(adapter.unassignedAssets);
 
-  let reconciled = reconcileAgentEconomyPopulation(agentEconomy, targetPopulation, options);
+  let reconciled = reconcileAgentEconomyPopulation(agentEconomy, targetPopulation, {
+    ...options,
+    seedMigrationAssets: false,
+  });
   const afterCash = sumHouseholdCash(reconciled.households);
   const afterInventory = getDistributedInventoryTotals(reconciled.households);
   const lostCash = money(Math.max(0, beforeCash - afterCash));

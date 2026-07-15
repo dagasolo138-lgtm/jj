@@ -36,6 +36,14 @@ export function getHouseholdPopulation(households) {
     total + Math.max(0, Math.floor(household?.weight ?? 0)), 0);
 }
 
+function removeSeedAssets(household) {
+  return {
+    ...household,
+    cash: 0,
+    inventory: Object.fromEntries(HOUSEHOLD_COMMODITIES.map((commodity) => [commodity, 0])),
+  };
+}
+
 export function validateHouseholds(households, expectedPopulation = null) {
   const errors = [];
   const ids = new Set();
@@ -263,6 +271,9 @@ export function reconcileAgentEconomyPopulation(agentEconomy, population, option
     });
     return {
       ...created,
+      households: options.seedMigrationAssets === false
+        ? created.households.map(removeSeedAssets)
+        : created.households,
       enabled: sanitized.enabled,
       shadowMode: sanitized.shadowMode,
       engineControl: sanitized.engineControl,
@@ -292,13 +303,16 @@ export function reconcileAgentEconomyPopulation(agentEconomy, population, option
 
     while (missing > 0 && households.length < maxHouseholds) {
       const index = households.length;
-      households.push(createHousehold({
+      const createdHousehold = createHousehold({
         id: `hh-${String(nextHouseholdId).padStart(6, "0")}`,
         index,
         weight: 1,
         createdTurn: options.createdTurn ?? 0,
         origin: options.origin ?? "population-growth",
-      }));
+      });
+      households.push(options.seedMigrationAssets === false
+        ? removeSeedAssets(createdHousehold)
+        : createdHousehold);
       nextHouseholdId += 1;
       missing -= 1;
     }

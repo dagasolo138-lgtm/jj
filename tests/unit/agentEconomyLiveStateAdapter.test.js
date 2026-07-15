@@ -118,6 +118,34 @@ test("population loss preserves removed household cash and inventory", () => {
   assert.ok(next.liveStateAdapter.population.conservedCash > 0);
 });
 
+test("population growth through the live adapter does not mint household assets", () => {
+  const legacyBefore = {
+    turn: 4,
+    season: "autumn",
+    denarii: 100,
+    population: 1,
+    inventory: { grain: 4, iron: 1 },
+    phase: "management",
+  };
+  const legacyAfter = { ...legacyBefore, population: 2, phase: "seasonal_resolve" };
+  const before = ensureLiveStateAdapter(createInitialAgentEconomy(1, {
+    estateInventory: legacyBefore.inventory,
+  }), legacyBefore);
+  const beforeCash = sumCash(before.households) + before.liveStateAdapter.unassignedAssets.cash;
+  const beforeInventory = getDistributedInventoryTotals(before.households);
+  const finalized = finalizeAgentQuarterLiveState(before, before, legacyAfter);
+  const afterCash = sumCash(finalized.households) + finalized.liveStateAdapter.unassignedAssets.cash;
+  const afterInventory = getDistributedInventoryTotals(finalized.households);
+  const migrant = finalized.households.at(-1);
+
+  assert.equal(getHouseholdPopulation(finalized.households), 2);
+  assert.equal(afterCash, beforeCash);
+  assert.equal(afterInventory.grain + (finalized.liveStateAdapter.unassignedAssets.inventory.grain ?? 0), beforeInventory.grain);
+  assert.equal(afterInventory.iron + (finalized.liveStateAdapter.unassignedAssets.inventory.iron ?? 0), beforeInventory.iron);
+  assert.equal(migrant.cash, 0);
+  assert.equal(Object.values(migrant.inventory).reduce((total, amount) => total + amount, 0), 0);
+});
+
 test("victory and game-over fields are mirrored without taking authority", () => {
   const before = {
     turn: 40,
