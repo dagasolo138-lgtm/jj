@@ -5,7 +5,7 @@ import {
 import { clampNeed } from "./needsSystem.js";
 
 export const EMERGENCY_RATIONING_STOCK_PER_PERSON = FOOD_STOCK_TARGET_PER_PERSON * 1.5;
-export const EMERGENCY_RATIONING_RESERVE_PER_PERSON = 0.5;
+export const EMERGENCY_RATIONING_RESERVE_PER_PERSON = 0.3;
 
 const FOOD_PRIORITY = ["flour", "fish", "grain", "livestock"];
 const EPSILON = 0.0001;
