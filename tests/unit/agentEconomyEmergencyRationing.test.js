@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+  EMERGENCY_RATIONING_RESERVE_PER_PERSON,
   EMERGENCY_RATIONING_STOCK_PER_PERSON,
   applyEmergencyFoodRationing,
   createHousehold,
@@ -59,7 +60,7 @@ function consumptionState(households, overrides = {}) {
   };
 }
 
-test("low-stock rationing consumes pooled food for a hungry household", () => {
+test("low-stock rationing consumes pooled food while preserving the estate reserve", () => {
   const households = [
     makeHousehold("donor", { grain: 3 }),
     makeHousehold("hungry", {}),
@@ -69,7 +70,9 @@ test("low-stock rationing consumes pooled food for a hungry household", () => {
   const afterFood = foodTotal(result.households);
 
   assert.equal(EMERGENCY_RATIONING_STOCK_PER_PERSON, 3);
+  assert.equal(EMERGENCY_RATIONING_RESERVE_PER_PERSON, 0.5);
   assert.equal(result.emergencyRationing.triggered, true);
+  assert.equal(result.emergencyRationing.protectedReserve, 1);
   assert.equal(result.emergencyRationing.foodRationed, 2);
   assert.equal(result.emergencyRationing.recipients, 1);
   assert.equal(result.emergencyRationing.consumedByCommodity.grain, 2);
@@ -79,6 +82,7 @@ test("low-stock rationing consumes pooled food for a hungry household", () => {
   assert.equal(result.unmetFoodByHousehold.hungry, 0);
   assert.equal(result.consumedFoodByHousehold.hungry, 2);
   assert.equal(beforeFood - afterFood, 2);
+  assert.equal(afterFood, 1);
 });
 
 test("healthy stock levels continue to rely on the household market", () => {
@@ -95,7 +99,7 @@ test("healthy stock levels continue to rely on the household market", () => {
   assert.deepEqual(result.households, before);
 });
 
-test("rationing draws fractional food without losing inventory", () => {
+test("rationing draws fractional food without crossing the reserve floor", () => {
   const households = [
     makeHousehold("donor", { grain: 0.75, fish: 0.75, flour: 0.5 }),
     makeHousehold("hungry", {}),
@@ -107,10 +111,25 @@ test("rationing draws fractional food without losing inventory", () => {
     .reduce((total, amount) => total + amount, 0);
 
   assert.equal(result.emergencyRationing.triggered, true);
-  assert.equal(result.emergencyRationing.foodRationed, 2);
-  assert.equal(consumed, 2);
-  assert.equal(afterFood, 0);
+  assert.equal(result.emergencyRationing.foodRationed, 1);
+  assert.equal(consumed, 1);
+  assert.equal(afterFood, 1);
+  assert.equal(result.unmetFood, 1);
   assert.equal(beforeFood - afterFood, result.emergencyRationing.foodRationed);
+});
+
+test("rationing does not trigger when only the protected reserve remains", () => {
+  const households = [
+    makeHousehold("donor", { grain: 1 }),
+    makeHousehold("hungry", {}),
+  ];
+  const result = applyEmergencyFoodRationing(consumptionState(households));
+
+  assert.equal(result.emergencyRationing.triggered, false);
+  assert.equal(result.emergencyRationing.protectedReserve, 1);
+  assert.equal(result.emergencyRationing.availableBudget, 0);
+  assert.equal(result.unmetFood, 2);
+  assert.equal(foodTotal(result.households), 1);
 });
 
 test("rationing can be disabled explicitly for comparison runs", () => {
