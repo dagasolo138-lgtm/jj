@@ -26,7 +26,7 @@ permissions:
   contents: read
 
 env:
-  REHEARSAL_REVISION: "3"
+  REHEARSAL_REVISION: "4"
 
 jobs:
   rehearsal:
