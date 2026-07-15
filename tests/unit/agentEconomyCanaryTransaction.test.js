@@ -282,7 +282,11 @@ test("integrated reducer writes only candidate resource fields during an active 
   assert.deepEqual(after.chronicle, legacyAfter.chronicle);
   assert.deepEqual(after.currentEvent, legacyAfter.currentEvent);
   assert.deepEqual(after.currentRandomEvent, legacyAfter.currentRandomEvent);
-  assert.equal(after.food, after.inventory.grain + after.inventory.livestock + after.inventory.fish + after.inventory.flour);
+  const projectedFood = after.inventory.grain
+    + after.inventory.livestock
+    + after.inventory.fish
+    + after.inventory.flour;
+  assert.ok(Math.abs(after.food - projectedFood) <= 0.0002);
 });
 
 test("disabling write-back immediately demotes an active canary", () => {

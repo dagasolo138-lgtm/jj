@@ -5,7 +5,6 @@ import {
   calibratedQuantity,
 } from "./economyCalibration.js";
 import { clampNeed, normalizeNeeds } from "./needsSystem.js";
-import { stochasticRound } from "./seededRng.js";
 
 const FOOD_PRIORITY = ["flour", "fish", "grain", "livestock"];
 
@@ -53,8 +52,8 @@ export function updateHouseholdNeeds(household, context = {}) {
 
 function consumeFromInventory(inventory, commodity, requestedQuantity) {
   const available = inventoryQuantity(inventory[commodity]);
-  const requested = Math.max(0, Math.floor(Number(requestedQuantity) || 0));
-  const consumed = Math.min(Math.floor(available), requested);
+  const requested = inventoryQuantity(requestedQuantity);
+  const consumed = inventoryQuantity(Math.min(available, requested));
   return {
     inventory: {
       ...inventory,
@@ -64,12 +63,11 @@ function consumeFromInventory(inventory, commodity, requestedQuantity) {
   };
 }
 
-export function consumeHousehold(household, rng, context = {}) {
+export function consumeHousehold(household, _rng, context = {}) {
   const weight = Math.max(1, Math.floor(household.weight ?? 1));
   const seasonalMultiplier = SEASON_CONSUMPTION_MULTIPLIERS[context.season] ?? 1;
-  const targetFood = stochasticRound(
+  const targetFood = inventoryQuantity(
     weight * DAILY_FOOD_TARGET_PER_PERSON * seasonalMultiplier,
-    rng,
   );
   let remainingFood = targetFood;
   let inventory = { ...household.inventory };
@@ -80,10 +78,10 @@ export function consumeHousehold(household, rng, context = {}) {
     const result = consumeFromInventory(inventory, commodity, remainingFood);
     inventory = result.inventory;
     if (result.consumed > 0) consumed[commodity] = result.consumed;
-    remainingFood -= result.consumed;
+    remainingFood = inventoryQuantity(remainingFood - result.consumed);
   }
 
-  const consumedFood = targetFood - remainingFood;
+  const consumedFood = inventoryQuantity(targetFood - remainingFood);
   let needs = normalizeNeeds(household.needs);
   if (targetFood > 0) {
     const foodRatio = consumedFood / targetFood;
@@ -115,7 +113,9 @@ export function consumeHousehold(household, rng, context = {}) {
     targetFood,
     consumedFood,
     unmetFood: remainingFood,
-    totalConsumed: Object.values(consumed).reduce((total, amount) => total + amount, 0),
+    totalConsumed: inventoryQuantity(
+      Object.values(consumed).reduce((total, amount) => total + amount, 0),
+    ),
     contextDay: context.day ?? null,
   };
 }
