@@ -1,0 +1,37 @@
+name: Emergency ration reserve V19 patch
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/patchEmergencyRationReserveV19.mjs
+      - .github/workflows/emergency-ration-reserve-v19-patch.yml
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: node scripts/patchEmergencyRationReserveV19.mjs
+      - run: npm run test:agent-economy
+      - run: npm run test:economy
+      - run: npm run lint
+      - run: npm run build
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/engine/agentEconomy/emergencyRationingSystem.js \
+            tests/unit/agentEconomyEmergencyRationing.test.js
+          git diff --cached --quiet && exit 0
+          git commit -m "fix(agent-economy): calibrate emergency ration reserve"
+          git push
