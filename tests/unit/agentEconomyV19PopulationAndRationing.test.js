@@ -3,6 +3,8 @@ import test from "node:test";
 
 import {
   EMERGENCY_RATIONING_RESERVE_PER_PERSON,
+  consumeHousehold,
+  createHousehold,
   createInitialAgentEconomy,
   ensureLiveStateAdapter,
   finalizeAgentQuarterLiveState,
@@ -19,6 +21,25 @@ function cashTotal(agentEconomy) {
 
 test("V19 emergency rationing keeps a 0.3 food reserve per represented family", () => {
   assert.equal(EMERGENCY_RATIONING_RESERVE_PER_PERSON, 0.3);
+});
+
+test("V19 daily food consumption uses an exact fractional target", () => {
+  const household = createHousehold({ id: "fractional-food", weight: 1 });
+  const result = consumeHousehold({
+    ...household,
+    inventory: {
+      ...household.inventory,
+      flour: 0,
+      fish: 0,
+      grain: 1,
+      livestock: 0,
+    },
+  }, { next: () => 0 }, { day: 1, season: "summer" });
+
+  assert.equal(result.targetFood, 0.0683);
+  assert.equal(result.consumedFood, 0.0683);
+  assert.equal(result.unmetFood, 0);
+  assert.equal(result.household.inventory.grain, 0.9317);
 });
 
 test("V19 population alignment changes household structure without minting assets", () => {
