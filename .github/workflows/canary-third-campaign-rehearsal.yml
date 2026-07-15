@@ -25,6 +25,9 @@ on:
 permissions:
   contents: read
 
+env:
+  REHEARSAL_REVISION: "2"
+
 jobs:
   rehearsal:
     runs-on: ubuntu-latest
