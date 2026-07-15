@@ -303,21 +303,21 @@ export function gameReducer(state, action) {
       },
     );
 
-    const comparison = buildEngineComparison({
-      beforeLegacy: preparedState,
-      afterLegacy: reconciledState,
-      beforeAgent: preparedState.agentEconomy,
-      projectedAgent: simulatedAgentEconomy,
-      turn: preparedState.turn,
-      season: preparedState.season,
-      expectedDays: AGENT_DAYS_PER_QUARTER,
-    });
-    const nextControl = recordEngineComparison(control, comparison, checkpoint);
     const nextAgentEconomy = finalizeAgentQuarterLiveState(
       preparedState.agentEconomy,
       simulatedAgentEconomy,
       reconciledState,
     );
+    const comparison = buildEngineComparison({
+      beforeLegacy: preparedState,
+      afterLegacy: reconciledState,
+      beforeAgent: preparedState.agentEconomy,
+      projectedAgent: nextAgentEconomy,
+      turn: preparedState.turn,
+      season: preparedState.season,
+      expectedDays: AGENT_DAYS_PER_QUARTER,
+    });
+    const nextControl = recordEngineComparison(control, comparison, checkpoint);
 
     if (canaryWasActive) {
       const transaction = applyCanaryTransaction({

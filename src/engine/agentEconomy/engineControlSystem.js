@@ -303,12 +303,6 @@ export function buildEngineComparison({
 
   const dayDelta = integer(projectedAgent?.day) - integer(beforeAgent?.day);
   if (dayDelta !== expectedDays) criticalIssues.push(`unexpected-day-delta:${dayDelta}`);
-  if (projectedAgentTotals.population !== beforeAgentTotals.population) {
-    criticalIssues.push(
-      `agent-population-not-conserved:${beforeAgentTotals.population}->${projectedAgentTotals.population}`,
-    );
-  }
-
   const grossIncome = metricDelta(beforeAgent, projectedAgent, "grossIncome");
   const taxCollected = metricDelta(beforeAgent, projectedAgent, "taxCollected");
   const welfarePaid = metricDelta(beforeAgent, projectedAgent, "welfarePaid");

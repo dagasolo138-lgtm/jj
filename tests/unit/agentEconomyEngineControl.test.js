@@ -199,6 +199,37 @@ test("comparison detects corrupt household output", () => {
   assert.ok(comparison.criticalIssues.some((item) => item.startsWith("invalid-household-cash:")));
 });
 
+test("comparison evaluates population after the live adapter has aligned the quarter", () => {
+  const beforeAgent = createInitialAgentEconomy(1, { seed: 17 });
+  const projected = simulateAgentQuarter(beforeAgent, {
+    days: 30,
+    turn: 1,
+    season: "spring",
+    taxRate: "medium",
+    buildings: [],
+    laborAllocation: { construction: 0 },
+  });
+  projected.households[0] = {
+    ...projected.households[0],
+    weight: 2,
+  };
+
+  const comparison = buildEngineComparison({
+    beforeLegacy: { denarii: 100, food: 20, population: 1, garrison: 0, inventory: {} },
+    afterLegacy: { denarii: 100, food: 20, population: 2, garrison: 0, inventory: {} },
+    beforeAgent,
+    projectedAgent: projected,
+    turn: 1,
+    season: "spring",
+    expectedDays: 30,
+  });
+
+  assert.equal(comparison.safe, true, comparison.criticalIssues?.join("\n"));
+  assert.equal(comparison.agentDeltas.population, 1);
+  assert.equal(comparison.legacyDeltas.population, 1);
+  assert.ok(!comparison.warnings.includes("population-model-divergence"));
+});
+
 test("comparison history is capped at forty quarters", () => {
   let control = createInitialEngineControl();
   for (let index = 1; index <= 55; index += 1) {
