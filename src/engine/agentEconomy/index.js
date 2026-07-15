@@ -168,6 +168,7 @@ export {
 } from "./consumptionSystem.js";
 
 export {
+  EMERGENCY_RATIONING_RESERVE_PER_PERSON,
   EMERGENCY_RATIONING_STOCK_PER_PERSON,
   applyEmergencyFoodRationing,
 } from "./emergencyRationingSystem.js";
